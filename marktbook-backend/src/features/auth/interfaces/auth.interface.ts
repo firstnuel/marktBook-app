@@ -47,7 +47,7 @@ export interface IAuthDocument extends Document {
   businessId: string; 
   businessName: string; 
   email: string; 
-  password?: string; 
+  password: string; 
   createdAt: Date; 
   passwordResetToken?: string; 
   passwordResetExpires?: number | string; 

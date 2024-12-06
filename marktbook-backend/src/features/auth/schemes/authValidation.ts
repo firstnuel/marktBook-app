@@ -7,7 +7,7 @@ const password = z
     invalid_type_error: 'Password must be a string',
   })
   .min(4, { message: 'Invalid password' })
-  .max(10, { message: 'Invalid password' })
+  .max(15, { message: 'Invalid password' })
 
 const email = z.string().email({ message: 'Field must be valid' })
 
@@ -28,16 +28,17 @@ const loginSchema = z.object({
 
 
 const registerSchema = z.object({
-  email,
-  name: z.string({ required_error: 'Name is required' }),
-  username,
+  email: email.trim(),
+  name: z.string({ required_error: 'Name is required' }).trim(),
+  username: username.trim(),
   password,
-  businessName: z.string({ required_error: 'Business name is required' }),
-  businessAddress: z.string().optional(),
+  businessName: z.string({ required_error: 'Business name is required' }).trim(),
+  businessAddress: z.string().trim().optional(),
   businessType: z.nativeEnum(BusinessType),
   businessCategory: z.nativeEnum(BusinessCategory),
-  businessLogo: z.string().optional(),
+  businessLogo: z.string().trim().optional(),
 })
+
 
 
 const passwordSchema = z

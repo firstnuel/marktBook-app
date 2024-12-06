@@ -7,57 +7,67 @@ import { IAuthDocument, IRegisterBusinessData } from '@auth/interfaces/auth.inte
 import { authService } from '@root/shared/services/db/auth.service'
 import { Utils } from '@root/shared/globals/helpers/utils'
 // import { UploadApiResponse } from 'cloudinary'
-// import { uploads } from '@root/shared/globals/helpers/cloudinary-upload'
+import { uploads } from '@root/shared/globals/helpers/cloudinary-upload'
 import { v4 as uuidv4 } from 'uuid'
 
 
 export class Register {
     public async create(req: Request, res: Response, next: NextFunction ): Promise<void> {
-    const parsedDataOrError = Utils.schemaParser(registerSchema, req.body)
-    if (parsedDataOrError !== true) {
-      return next(new ZodValidationError(parsedDataOrError.toString()))
-    }
-    const { email, username, password, businessName } = req.body
-    const checkIfUserExist: IAuthDocument = await authService.getUserByUsernameAndBusinessEmail(username, email)
-    if (checkIfUserExist) {
-      return next(new BadRequestError('Invalid credentials'))
+      const parsedDataOrError = Utils.schemaParser(registerSchema, req.body)
+
+      if (parsedDataOrError !== true) {
+        return next(new ZodValidationError(parsedDataOrError.toString()))
       }
 
-      const authObjectId: ObjectId = new ObjectId()
-    //   const buisnessObjectId: ObjectId = new ObjectId()
-      const uId = `${Utils.generateRandomIntegers(12)}`
-  
-      const authData: IAuthDocument = Register.prototype.RegisterBusinessData({
-          _id: authObjectId,
-          uId,
-          username,
-          businessName,
-          email,
-          password,
-        })
+      const { email, username, password, businessName, businessLogo } = req.body
+      const checkIfUserExist: IAuthDocument = await authService.getUserByUsernameAndBusinessEmail(username, email)
+      if (checkIfUserExist) {
+        return next(new BadRequestError('Invalid credentials'))
+        }
 
-        // const uploadResult: UploadApiResponse = await uploads(businessLogo, `${buisnessObjectId}`, true, true) as UploadApiResponse
-        // if (!uploadResult?.public_id) {
-        //     throw new BadRequestError('File Error: error occured try agian')
-        //   }
-        
-        res.status(HTTP_STATUS.CREATED).json({ message: 'User created successfully', authData})
-    }   
-
-    private RegisterBusinessData (data: IRegisterBusinessData): IAuthDocument {
-        const { username, businessName, email, password, uId, _id } = data
-
-        return {
-            _id,
+        const authObjectId: ObjectId = new ObjectId()
+        const businessObjectId: ObjectId = new ObjectId()
+        const uId = `${Utils.generateRandomIntegers(12)}`
+    
+        const authData: IAuthDocument = Register.prototype.RegisterBusinessData({
+            _id: authObjectId,
             uId,
-            email: Utils.lowerCase(email),
-            username:  Utils.firstLetterToUpperCase(username),
-            password, 
-            businessId: uuidv4(),
+            username,
             businessName,
-            createdAt: new Date()
-        } as IAuthDocument
-      }
+            email,
+            password,
+          })
+
+          try {
+            if (businessLogo) {
+              const uploadResult = await uploads(businessLogo, businessObjectId.toString(), true, true)
+              if (!uploadResult?.public_id) {
+                return next(new BadRequestError('File Error: Failed to upload business logo. Please try again.'))
+              }
+            }
+            // ...rest of logic
+          } catch (error) {
+            return next(new BadRequestError(`File Upload Error: ${error instanceof Error ? error.message : 'Unknown error occurred.'}`))
+          }
+          
+          
+          res.status(HTTP_STATUS.CREATED).json({ message: 'User created successfully', authData})
+      }   
+
+      private RegisterBusinessData (data: IRegisterBusinessData): IAuthDocument {
+          const { username, businessName, email, password, uId, _id } = data
+
+          return {
+              _id,
+              uId,
+              email: Utils.lowerCase(email),
+              username:  Utils.firstLetterToUpperCase(username),
+              password, 
+              businessId: uuidv4(),
+              businessName,
+              createdAt: new Date()
+          } as IAuthDocument
+        }
 }
 
 
