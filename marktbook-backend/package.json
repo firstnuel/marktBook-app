@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node src/app.ts | ./node_modules/.bin/bunyan",
+    "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "lint": "eslint 'src/**/*.ts' --fix",
     "lint:check": "eslint 'src/**/*.ts'"
   },
@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "bunyan": "^1.8.15",
     "cloudinary": "^2.5.1",
     "compression": "^1.7.5",
@@ -29,11 +30,14 @@
     "mongodb": "^6.11.0",
     "mongoose": "^8.8.3",
     "socket.io": "^4.8.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "uuid": "^11.0.3",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.16.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/bunyan": "^1.8.11",
     "@types/compression": "^1.7.5",
     "@types/cookie-session": "^2.0.49",

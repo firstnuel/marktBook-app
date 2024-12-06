@@ -1,12 +1,15 @@
 import compression from 'compression'
 import cookieSession from 'cookie-session'
-import { Application, json, urlencoded } from 'express'
+import { Application, Request, Response, json, NextFunction, urlencoded } from 'express'
+import HTTP_STATUS from 'http-status-codes'
 import helmet from 'helmet'
 import hpp from 'hpp'
 import http from 'http'
 import cors from 'cors'
 import { config } from './config'
 import Logger from 'bunyan'
+import applicationRoutes from './routes'
+import { CustomError, IErrorResponse } from '@global/helpers/error-handlers'
 
 const log: Logger = config.createLogger('server')
 
@@ -22,8 +25,8 @@ export class MarktBookServer {
     public start(): void {
         this.securityMiddleware(this.app)
         this.standardMiddleware(this.app)
-        // this.routesMiddleware(this.app)
-        // this.globalErrorHandler(this.app)
+        this.routesMiddleware(this.app)
+        this.globalErrorHandler(this.app)
         this.startServer(this.app)
       }
 
@@ -32,6 +35,11 @@ export class MarktBookServer {
         app.use(json({ limit: '50mb' }))
         app.use(urlencoded({ extended: true, limit: '50mb' }))
     }
+
+    private routesMiddleware(app: Application): void {
+      applicationRoutes(app)
+    }
+  
     private securityMiddleware(app: Application): void {
         app.use(
             cookieSession({
@@ -53,7 +61,20 @@ export class MarktBookServer {
           )
     }
 
-    // private globalErrorHandler(app: Application): void {}
+    private globalErrorHandler(app: Application): void {
+      app.all('*', (req: Request, res: Response) => {
+        res.status(HTTP_STATUS.NOT_FOUND).json({ message: `${req.originalUrl} not found` })
+      })
+  
+      app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
+        log.error(error)
+        if (error instanceof CustomError) {
+          res.status(error.statusCode).json(error.serializeErrors())
+          return
+        }
+        next()
+      })
+    }
 
     private async startServer(app: Application): Promise<void> {
         try {
