@@ -8,6 +8,7 @@
 | 6.12. | 3 | Worked on authentication validation, schemas, routes, and interfaces | 
 |  | 1 | Researched business data for the business schema | 
 |  | 3 | Added business schemas and interfaces | 
-| Total | 9 | |
+| 7.12. | 4 | Researched and implemented caching using redis for auth and business data | 
+| Total | 13 | |
 
 
