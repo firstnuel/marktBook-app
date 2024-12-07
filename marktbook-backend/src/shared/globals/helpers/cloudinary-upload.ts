@@ -5,17 +5,28 @@ export const uploads = (
   public_id?: string,
   overwrite?: boolean,
   invalidate?: boolean
-): Promise<UploadApiResponse> => {
-  return new Promise((resolve, reject) => {
+): Promise<UploadApiResponse | UploadApiErrorResponse | undefined> => {
+
+  return new Promise((resolve) => {
     cloudinary.uploader.upload(
       file,
-      { public_id, overwrite, invalidate, folder: 'marktBook' },
+      { 
+        public_id, 
+        overwrite, 
+        invalidate, 
+        folder: 'marktBook' 
+      },
       (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
         if (error) {
-          return reject(new Error(`Cloudinary upload failed: ${error.message}`))
+          resolve(error)
         }
         if (!result) {
-          return reject(new Error('No result returned from Cloudinary.'))
+          const resultError: UploadApiErrorResponse = {
+            message: 'No result returned from Cloudinary.',
+            name: 'UploadApiErrorResponse',
+            http_code: 500
+          }
+           resolve(resultError)
         }
         resolve(result)
       }

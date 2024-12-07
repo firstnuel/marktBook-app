@@ -29,8 +29,7 @@ const loginSchema = z.object({
 
 const registerSchema = z.object({
   email: email.trim(),
-  name: z.string({ required_error: 'Name is required' }).trim(),
-  username: username.trim(),
+  adminFullName: z.string({ required_error: 'Admin full name is required' }).trim(),
   password,
   businessName: z.string({ required_error: 'Business name is required' }).trim(),
   businessAddress: z.string().trim().optional(),

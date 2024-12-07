@@ -13,6 +13,11 @@ export enum BusinessType {
   Retail = 'Retail',
   Service = 'Service',
   Manufacturing = 'Manufacturing',
+  Wholesale = 'Wholesale',
+  Distribution = 'Distribution',
+  ImportExport = 'Import/Export',
+  FoodAndBeverage = 'Food&Beverage',
+  Other = 'Other',
 }
 
 export enum BusinessCategory {
@@ -22,7 +27,6 @@ export enum BusinessCategory {
   Grocery = 'Grocery',
   Pharmacy = 'Pharmacy',
   Technology = 'Technology',
-  Entertainment = 'Entertainment',
   Beauty = 'Beauty',
   Auto = 'Automobile',
   Construction = 'Construction',
@@ -43,12 +47,15 @@ export interface AuthPayload {
 export interface IAuthDocument extends Document {
   _id: string | ObjectId; 
   uId: string; 
-  username: string; 
-  businessId: string; 
+  adminFullName: string; 
   businessName: string; 
   email: string; 
   password: string; 
   createdAt: Date; 
+  businessAddress?: string;
+  businessType?: BusinessType;
+  businessCategory?: BusinessCategory;
+  businessLogo?: string;
   passwordResetToken?: string; 
   passwordResetExpires?: number | string; 
   comparePassword(password: string): Promise<boolean>;
@@ -60,13 +67,12 @@ export interface IRegisterBusinessData {
   _id: ObjectId;
   uId: string; 
   email: string; 
-  // adminFullName: string; 
-  username: string;
+  adminFullName: string; 
   password: string; 
   businessName: string;
-  // businessAddress?: string; 
-  // businessType: BusinessType; 
-  // businessCategory: BusinessCategory; 
+  businessAddress?: string; 
+  businessType: BusinessType; 
+  businessCategory: BusinessCategory; 
   businessLogo?: string;
 }
 

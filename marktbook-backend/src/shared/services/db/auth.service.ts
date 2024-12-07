@@ -4,9 +4,9 @@ import { Utils } from '@root/shared/globals/helpers/utils'
 
 class AuthService {
 
-  public async getUserByUsernameAndBusinessEmail(username: string, email: string): Promise<IAuthDocument> {
+  public async getBusinessByNameAndEmail(businessName: string, email: string): Promise<IAuthDocument> {
       const query = {
-        username: Utils.firstLetterToUpperCase(username),
+        businessName: Utils.firstLetterToUpperCase(businessName),
         email: Utils.lowerCase(email),
       }
       const user: IAuthDocument  = await AuthModel.findOne(query).exec() as IAuthDocument

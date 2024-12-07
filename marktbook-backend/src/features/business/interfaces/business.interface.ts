@@ -9,7 +9,7 @@ export interface IBusinessDocument extends Document {
   authId: string | ObjectId;
   businessName?: string;
   email?: string;
-  admins: string[];
+  admins: IBusinessAdmin[];
   password?: string;
   businessLogo?: string;
   uId?: string;
@@ -53,3 +53,12 @@ export interface ISocialLinks {
   youtube?: string;
   website?: string;
 }
+
+export interface IBusinessAdmin {
+  userId: string | ObjectId; 
+  role: BusinessRole; 
+  addedAt: Date; 
+  status: 'active' | 'inactive'; 
+}
+
+export type BusinessRole = 'Owner' | 'Manager' | 'Staff';
