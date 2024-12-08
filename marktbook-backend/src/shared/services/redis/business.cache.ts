@@ -25,7 +25,6 @@ export class BusinessCache extends Basecache {
           businessName,
           email,
           admins,
-          password,
           businessLogo,
           uId,
           businessCategory,
@@ -44,7 +43,6 @@ export class BusinessCache extends Basecache {
           'authId', `${authId}`,
           'businessName', businessName || '',
           'email', email || '',
-          'password', password || '',
           'uId', uId || '',
         ]
       
@@ -86,48 +84,47 @@ export class BusinessCache extends Basecache {
 
       }
       
-    //   public async retrieveBusinessFromCache(key: string): Promise<IBusinessDocument | null> {
-    //     try {
-    //         if (!this.client.isOpen) {
-    //             await this.client.connect()
-    //         }
+      public async retrieveBusinessFromCache(key: string): Promise<IBusinessDocument | null> {
+        try {
+            if (!this.client.isOpen) {
+                await this.client.connect()
+            }
     
-    //         const cacheData = await this.client.HGETALL(`business:${key}`)
+            const cacheData = await this.client.HGETALL(`business:${key}`)
             
-    //         if (Object.keys(cacheData).length === 0) {
-    //             return null // No data found for the given key
-    //         }
+            if (Object.keys(cacheData).length === 0) {
+                return null // No data found for the given key
+            }
     
-    //         // Parse the retrieved data to reconstruct the IBusinessDocument object
-    //         const businessData = {
-    //             _id: cacheData['_id'],
-    //             authId: cacheData['authId'],
-    //             businessName: cacheData['businessName'] || undefined,
-    //             email: cacheData['email'] || undefined,
-    //             password: cacheData['password'] || undefined,
-    //             uId: cacheData['uId'] || undefined,
-    //             verifiedStatus: JSON.parse(cacheData['verifiedStatus']),
-    //             verifyData: JSON.parse(cacheData['verifyData']),
-    //             businessCategory: JSON.parse(cacheData['businessCategory']),
-    //             businessAddress: cacheData['businessAddress'] || undefined,
-    //             businessType: JSON.parse(cacheData['businessType']),
-    //             businessAccount: JSON.parse(cacheData['businessAccount']),
-    //             businessBio: cacheData['businessBio'] || undefined,
-    //             admins: JSON.parse(cacheData['admins']),
-    //             businessLogo: cacheData['businessLogo'] || undefined,
-    //             notifications: JSON.parse(cacheData['notifications']),
-    //             social: JSON.parse(cacheData['social']),
-    //             bgImageVersion: cacheData['bgImageVersion'],
-    //             bgImageId: cacheData['bgImageId'],
-    //             createdAt: new Date(cacheData['createdAt']),
-    //         } as IBusinessDocument
+            // Parse the retrieved data to reconstruct the IBusinessDocument object
+            const businessData = {
+                _id: cacheData['_id'],
+                authId: cacheData['authId'],
+                businessName: cacheData['businessName'] || undefined,
+                email: cacheData['email'] || undefined,
+                uId: cacheData['uId'] || undefined,
+                verifiedStatus: JSON.parse(cacheData['verifiedStatus']),
+                verifyData: JSON.parse(cacheData['verifyData']),
+                businessCategory: JSON.parse(cacheData['businessCategory']),
+                businessAddress: cacheData['businessAddress'] || undefined,
+                businessType: JSON.parse(cacheData['businessType']),
+                businessAccount: JSON.parse(cacheData['businessAccount']),
+                businessBio: cacheData['businessBio'] || undefined,
+                admins: JSON.parse(cacheData['admins']),
+                businessLogo: cacheData['businessLogo'] || undefined,
+                notifications: JSON.parse(cacheData['notifications']),
+                social: JSON.parse(cacheData['social']),
+                bgImageVersion: cacheData['bgImageVersion'],
+                bgImageId: cacheData['bgImageId'],
+                createdAt: new Date(cacheData['createdAt']),
+            } as IBusinessDocument
     
-    //         return businessData
-    //     } catch (error) {
-    //         log.error(error)
-    //         throw new ServerError('Error retrieving business data from cache, try again')
-    //     }
-    // }
+            return businessData
+        } catch (error) {
+            log.error(error)
+            throw new ServerError('Error retrieving business data from cache, try again')
+        }
+    }
     
 
 }

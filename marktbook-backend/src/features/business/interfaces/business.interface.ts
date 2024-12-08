@@ -1,3 +1,4 @@
+
 import { Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
 import { BusinessCategory, BusinessType } from '@auth/interfaces/auth.interface'
@@ -8,9 +9,9 @@ export interface IBusinessDocument extends Document {
   verifyData?: IVerifyBusinessData;
   authId: string | ObjectId;
   businessName?: string;
-  email?: string;
+  username: string;
+  email: string;
   admins: IBusinessAdmin[];
-  password?: string;
   businessLogo?: string;
   uId?: string;
   businessCategory?: BusinessCategory;
@@ -56,9 +57,14 @@ export interface ISocialLinks {
 
 export interface IBusinessAdmin {
   userId: string | ObjectId; 
+  username: string;
+  name: string;
   role: BusinessRole; 
   addedAt: Date; 
   status: 'active' | 'inactive'; 
 }
 
-export type BusinessRole = 'Owner' | 'Manager' | 'Staff';
+export type BusinessRole = 'Owner' | 'Manager' | 'Staff'
+export interface IBusinessJob {
+  value?: string | IBusinessDocument;
+}

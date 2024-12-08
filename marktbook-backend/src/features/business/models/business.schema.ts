@@ -3,22 +3,37 @@ import { model, Model, Schema } from 'mongoose'
 import { BusinessCategory, BusinessType } from '@auth/interfaces/auth.interface'
 
 const businessSchema: Schema = new Schema(
-    {
+  {
     authId: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Auth', 
-        index: true, 
-        required: true 
+      type: Schema.Types.ObjectId, 
+      ref: 'Auth', 
+      index: true, 
+      required: true 
     },
     verifiedStatus: { type: Boolean, default: false },
     verifyData: {
-      owner: { type: String, required: true },
-      TIN: { type: String, required: true },
-      CAC: { type: String, required: true },
-      location: { type: String, required: true },
+      owner: { type: String, required: false },
+      TIN: { type: String, required: false },
+      CAC: { type: String, required: false },
+      location: { type: String, required: false },
     },
-    admins: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }], 
+    businessName: { type: String, required: true },
+    email: { type: String, required: true },
+    
+    // Updated admins field to accept subdocuments
+    admins: [
+      {
+        userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        username: { type: String, required: true },
+        name: { type: String, required: true },
+        role: { type: String, enum: ['Owner', 'Manager', 'Staff'], required: true },
+        addedAt: { type: Date, default: Date.now },
+        status: { type: String, enum: ['active', 'inactive'], default: 'active' }
+      }
+    ],
+    
     businessLogo: { type: String, required: false },
+    uId: { type: String, required: false },
     businessAddress: { type: String, required: false },
     businessType: { 
       type: String, 
@@ -26,14 +41,14 @@ const businessSchema: Schema = new Schema(
       required: false 
     },
     businessCategory: { 
-        type: String, 
-        enum: Object.values(BusinessCategory), 
-        required: false 
-      },
+      type: String, 
+      enum: Object.values(BusinessCategory), 
+      required: false 
+    },
     businessAccount: {
-      accountName: { type: String, required: true },
-      accountNumber: { type: String, required: true },
-      bankName: { type: String, required: true },
+      accountName: { type: String, required: false },
+      accountNumber: { type: String, required: false },
+      bankName: { type: String, required: false },
       accountType: { type: String, required: false },
     },
     businessBio: { type: String, required: false },
@@ -50,13 +65,12 @@ const businessSchema: Schema = new Schema(
       youtube: { type: String, required: false },
       website: { type: String, required: false },
     },
-    bgImageVersion: { type: String, required: true },
-    bgImageId: { type: String, required: true },
+    bgImageVersion: { type: String, required: false },
+    bgImageId: { type: String, required: false },
   },
   {
     timestamps: true,
   }
 )
-
 
 export const BusinessModel: Model<IBusinessDocument> = model<IBusinessDocument>('Business', businessSchema, 'Business')

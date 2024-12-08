@@ -1,6 +1,7 @@
 import { Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
 
+
 declare global {
   namespace Express {
     interface Request {
@@ -46,10 +47,11 @@ export interface AuthPayload {
 // Interface for authentication documents
 export interface IAuthDocument extends Document {
   _id: string | ObjectId; 
-  uId: string; 
+  uIds: {userUId: string, businessUId: string}; 
   adminFullName: string; 
   businessName: string; 
   email: string; 
+  username: string;
   password: string; 
   createdAt: Date; 
   businessAddress?: string;
@@ -65,9 +67,10 @@ export interface IAuthDocument extends Document {
 // Interface for registering business data
 export interface IRegisterBusinessData {
   _id: ObjectId;
-  uId: string; 
+  uIds: {userUId: string, businessUId: string}; 
   email: string; 
   adminFullName: string; 
+  username: string;
   password: string; 
   businessName: string;
   businessAddress?: string; 
@@ -78,6 +81,6 @@ export interface IRegisterBusinessData {
 
 // Interface for authentication jobs
 export interface IAuthJob {
-  value?: string | IAuthDocument; 
+  value?: string | IAuthDocument;
 }
 
