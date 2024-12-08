@@ -9,6 +9,7 @@
 |  | 1 | Researched business data for the business schema | 
 |  | 3 | Added business schemas and interfaces | 
 | 7.12. | 4 | Researched and implemented caching using redis for auth/business data | 
-| **Total** | **13** | |
+| | 4 | Added workers and queues for Auth, Business and User | 
+| **Total** | **17** | |
 
 
