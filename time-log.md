@@ -10,6 +10,7 @@
 |  | 3 | Added business schemas and interfaces | 
 | 7.12. | 4 | Researched and implemented caching using redis for auth/business data | 
 | | 4 | Added workers and queues for Auth, Business and User | 
-| **Total** | **17** | |
+| 10.12. | 3 | Implemented login router and route |
+| **Total** | **20** | |
 
 
