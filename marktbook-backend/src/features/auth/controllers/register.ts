@@ -8,9 +8,9 @@ import { authService } from '@root/shared/services/db/auth.service'
 import { Utils } from '@root/shared/globals/helpers/utils'
 import { constructCloudinaryURL, uploads } from '@root/shared/globals/helpers/cloudinary-upload'
 import { IBusinessDocument } from '@business/interfaces/business.interface'
-import { BusinessCache } from '@service/redis/business.cache'
+import { businessCache } from '@service/redis/business.cache'
 import { IuserDocument } from '@root/features/users/interfaces/user.interface'
-import { UserCache } from '@service/redis/user.cache'
+import { userCache } from '@service/redis/user.cache'
 import { omit } from 'lodash'
 import { authQueue } from '@service/queues/auth.queue'
 import { userQueue } from '@service/queues/user.queue'
@@ -19,12 +19,10 @@ import JWT from 'jsonwebtoken'
 import { config } from '@root/config'
 import Logger from 'bunyan'
 
+
 const logger: Logger = config.createLogger('registerController')
 
-const businessCache: BusinessCache = new BusinessCache()
-const userCache: UserCache = new UserCache()
-
-export class Register {
+class Register {
 
   constructor( ) {
     this.create = this.create.bind(this)
@@ -170,10 +168,8 @@ export class Register {
         userId: userId.toHexString(),
         businessId: businessId.toHexString(),
         email: data.email,
-        businessName: data.businessName,
         username: data.username,
-        businessType: data.businessType,
-        businessCategory: data.businessCategory,
+        uId: data.uIds
       },
       config.JWT_SECRET!,
       { expiresIn: '1h' } // Set appropriate expiration
@@ -335,3 +331,7 @@ export class Register {
     } as unknown as IuserDocument
   }
 }
+
+
+
+export const register: Register = new Register()

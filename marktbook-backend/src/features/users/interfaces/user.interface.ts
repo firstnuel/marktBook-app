@@ -14,9 +14,9 @@ export interface IuserDocument extends Document {
     address: string;
     nin: string;
     username: string;
-    associatedBusinessesId: ObjectId;
+    associatedBusinessesId: string | ObjectId;
     associatedBusinesses?: Array<{
-        businessId: ObjectId;
+        businessId: string | ObjectId;
         businessName: string;
         role: BusinessRole;
       }>;

@@ -15,6 +15,8 @@
   "dependencies": {
     "@bull-board/express": "^6.5.3",
     "@bull-board/ui": "^6.5.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.7",
     "bcryptjs": "^2.4.3",
     "bull": "^4.16.4",
     "bunyan": "^1.8.15",
@@ -37,8 +39,11 @@
     "redis": "^4.7.0",
     "sanitize-html": "^2.13.1",
     "socket.io": "^4.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "typescript": "^5.7.2",
     "uuid": "^11.0.3",
+    "yamljs": "^0.3.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -58,6 +63,7 @@
     "@types/lodash": "^4.17.13",
     "@types/sanitize-html": "^2.13.0",
     "@types/supertest": "^6.0.2",
+    "@types/yamljs": "^0.2.34",
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
     "eslint": "^9.16.0",

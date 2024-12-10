@@ -6,7 +6,7 @@ import { ServerError } from '@global/helpers/error-handlers'
 
 const log: Logger = config.createLogger('businessCache')
 
-export class BusinessCache extends Basecache {
+class BusinessCache extends Basecache {
     constructor() {
         super('businessCache')
     }
@@ -82,7 +82,7 @@ export class BusinessCache extends Basecache {
 
       }
       
-      public async retrieveBusinessFromCache(key: string): Promise<IBusinessDocument | null> {
+      public async getBusinessFromCache(key: string): Promise<IBusinessDocument | null> {
         try {
             if (!this.client.isOpen) {
                 await this.client.connect()
@@ -125,3 +125,6 @@ export class BusinessCache extends Basecache {
     
 
 }
+
+
+export const businessCache: BusinessCache = new BusinessCache()

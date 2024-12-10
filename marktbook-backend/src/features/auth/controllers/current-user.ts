@@ -1,0 +1,44 @@
+import HTTP_STATUS  from 'http-status-codes'
+import { userService } from '@service/db/user.service'
+import { IuserDocument } from '@root/features/users/interfaces/user.interface'
+import { Request, Response } from 'express'
+import { userCache } from '@service/redis/user.cache'
+import { omit } from 'lodash'
+
+class CurrentUser{
+    public async read(req: Request, res: Response): Promise<void> {
+        let isUser = false
+        let token = null 
+        let user = null 
+
+        const cachedUser: IuserDocument = await userCache.getUserfromCache(`${req.currentUser?.userId}`) as IuserDocument
+
+        const existingUser: IuserDocument = cachedUser? cachedUser 
+            : await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
+
+        if (Object.keys(existingUser).length) {
+            isUser = true
+            token = req.session?.jwt
+            user = omit(existingUser.toObject(), [
+                'authId',
+                '__v',
+                'createdAt',
+                'updatedAt',
+                'emergencyContact',
+                'notificationPreferences',
+                'address',
+                'mobileNumber',
+                'profilePicture',
+                'status',
+                'associatedBusinessesId',
+                'isVerified'
+            ])
+        }
+
+
+        res.status(HTTP_STATUS.OK).json({isUser, token, user })
+    }
+}
+
+
+export const currentUser: CurrentUser = new CurrentUser()

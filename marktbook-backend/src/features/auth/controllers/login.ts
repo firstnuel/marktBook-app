@@ -15,7 +15,7 @@ import { omit } from 'lodash'
 const logger: Logger = config.createLogger('signinController')
 
 
-export class Login {
+class Login {
     constructor( ) {
         this.read = this.read.bind(this)
       }
@@ -61,7 +61,8 @@ export class Login {
           config.JWT_SECRET!
         )
         req.session = { jwt: userToken }
-        const nonSensitiveData = omit(authUser.toObject(), ['authId', '__v', 'createdAt', 'updatedAt', 'lastLogin'])
+
+        const nonSensitiveData = omit(authUser.toObject(), ['authId', '__v', 'createdAt', 'updatedAt', 'lastLogin', 'emergencyContact', 'notificationPreferences'])
 
         // Respond to client
         res.status(HTTP_STATUS.OK).json({
@@ -72,6 +73,7 @@ export class Login {
     }
     
        
-       
 
 }
+
+export const login: Login = new Login()

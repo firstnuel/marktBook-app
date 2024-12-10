@@ -38,7 +38,7 @@ export enum BusinessCategory {
 export interface AuthPayload {
   userId: string; 
   businessId: string; 
-  uId: string; 
+  uId:  {userUId: string, businessUId: string}; 
   email: string; 
   username: string; 
   iat?: number; 

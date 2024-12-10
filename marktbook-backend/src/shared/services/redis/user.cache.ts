@@ -6,7 +6,7 @@ import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 
 const log: Logger = config.createLogger('userCache')
 
-export class UserCache extends Basecache {
+class UserCache extends Basecache {
   constructor() {
     super('userCache')
   }
@@ -86,4 +86,49 @@ export class UserCache extends Basecache {
       throw new ServerError('redis server error, try again')
     }
   }
+
+  public async getUserfromCache(key: string): Promise<IuserDocument | null> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect()
+      }
+  
+      const cacheData = await this.client.HGETALL(`users:${key}`)
+            
+      if (Object.keys(cacheData).length === 0) {
+        return null // No data found for the given key
+      }
+  
+      const userData = {
+        _id: cacheData['_id'],
+        uId: cacheData['uId'] || undefined,
+        name: cacheData['name'] || '',
+        authId: cacheData['authId'],
+        email: cacheData['email'] || '',
+        mobileNumber: cacheData['mobileNumber'] || '',
+        role: JSON.parse(cacheData['role'] || '{}'),
+        status: cacheData['status'] as 'active' | 'inactive' || 'inactive',
+        address: cacheData['address'] || '',
+        nin: cacheData['nin'] || '',
+        username: cacheData['username'] || '',
+        associatedBusinessesId: cacheData['associatedBusinessesId'],
+        associatedBusinesses: JSON.parse(cacheData['associatedBusinesses'] || '[]'),
+        emergencyContact: JSON.parse(cacheData['emergencyContact'] || '{}'),
+        notificationPreferences: JSON.parse(cacheData['notificationPreferences'] || '{}'),
+        languagePreference: cacheData['languagePreference'] || '',
+        isVerified: JSON.parse(cacheData['isVerified'] || 'false'),
+        profilePicture: cacheData['profilePicture'] || '',
+        createdAt: new Date(cacheData['createdAt'] || Date.now()),
+        updatedAt: cacheData['updatedAt'] ? new Date(cacheData['updatedAt']) : undefined,
+        lastLogin: cacheData['lastLogin'] ? new Date(cacheData['lastLogin']) : undefined
+      }
+  
+      return userData as IuserDocument
+    } catch (error) {
+      log.error(error)
+      throw new ServerError('Error retrieving user data from cache, try again')
+    }
+  }
 }
+
+export const userCache: UserCache = new UserCache()

@@ -7,6 +7,11 @@ class UserService {
         await UserModel.create(data)
       }
 
+      public async getUserById(userId: string): Promise<IuserDocument | null> {
+        const user = await UserModel.findById(userId).exec()
+        return user 
+      }
+
 }
 
 
