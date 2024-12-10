@@ -11,6 +11,8 @@
 | 7.12. | 4 | Researched and implemented caching using redis for auth/business data | 
 | | 4 | Added workers and queues for Auth, Business and User | 
 | 10.12. | 3 | Implemented login router and route |
-| **Total** | **20** | |
+|  | 2 | 	Added API documentation and implemented an API-route endpoint |
+|  | 4 |  Implemented logout and current user routes, refactored middleware |
+| **Total** | **26** | |
 
 
