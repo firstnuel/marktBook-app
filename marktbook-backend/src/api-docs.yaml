@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: marktBook API
+  version: 1.0.0
+servers:
+  - url: http://localhost:5001/api/v1
+paths:
+  /register:
+    post:
+      summary: Register a new business and owner
+      description: Endpoint for business and owner registration with comprehensive details
+      tags:
+        - Authentication
+      requestBody:
+        description: Business and owner registration details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - businessName
+                - username
+                - businessLogo
+                - adminFullName
+                - businessAddress
+                - businessType
+                - businessCategory
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: business@example.com
+                password:
+                  type: string
+                  format: password
+                  example: secure_password_123
+                businessName:
+                  type: string
+                  example: My Awesome Business
+                username:
+                  type: string
+                  example: new_admin
+                businessLogo:
+                  type: string
+                  format: binary
+                  description: Base64 encoded image or file upload
+                  example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACoUlEQVR4nO2Yy2oUURCGv0TjQpNWY/QFRN2Iju7ERdwoKGJGoq4Ece1WVzreAgkieQmjCxVRhMFnMOMlm/GScaOCaCKijqIRTEtDBYrD9Ex3nQYJc34oGJj+qqv61KnuUxAUFNR12giMAc+AH8AX4AkwCezIwA8Bl4EZ4KeB99Io8A2I29hDYFsKfwCY9+C9g//b4eZL9hs4B/Qqfh/wx4P30ibnydeBEWBASuIoUG0RyCNgHbAGeGfgq0BEARpTTl8Aa1Ou2wM8dYJIrr/iwdeBzb4JzCiHyZNrpz5gok15WPg5oOSTwHflLFn2LDqdUvNW/s1yT6DhET/PlaOyZwlZ+E/ATp8EripnL9tswr1Osq02cV6+XsQmTt6+X5XTV9L6IvlvVFpmWhtdDbw18NWi2ihyw6wvsl/AWedFNAwsePCFqOysRCu7D2xJ4fdLS7TyhWhIajp54TTlY6wGXAe2Z+A3ABedj8FaDj5oWekwMJ1j8yX2QXWOQwY+FlsQ9qBP8LHBzqjgF40+YmWL1iRqxhtuFX66gOBjsceWBPSyD3ry6w38oHPAyS39BP4H7+0jJEBYAUIJxWETE7pQ3LVttGmYJKTx/QY+UnwyFcyt18pByZO3TJ1Lzhk6t24pBxVP/ryBryh+ysBzQjmYM0wHjiv+Y84yjJyz8zEMWiXjvCUn9zJOCZJrVsiAqqH420BPBr4HuKu4WfFlHqXEThJpQynks/kBcEpNMTR/p8NKRE7wyWHmCJ665gQxL1OF3dJdBuT3JeCzXPNeBlqkjAkvALuE75fflRYjl3EKUG+LJLIcA08qfsLAjxc92Co7NZ1mDTlPuxqReu7EzxZRNmnqk45wU4a0TRlOJT3/hnSelTn5pgyAp+Q/84YNCupG/QO1lSfdR9agAAAAAABJRU5ErkJggg=="
+                adminFullName:
+                  type: string
+                  example: John Doe
+                businessAddress:
+                  type: string
+                  example: 123 Business Street, City, Country
+                businessType:
+                  type: string
+                  example: Retail
+                businessCategory:
+                  type: string
+                  example: Electronics
+      responses:
+        '201':
+          description: Business and user account created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Business account and user created successfully
+                  data:
+                    type: object
+                    properties:
+                      businessName:
+                        type: string
+                      businessType:
+                        type: string
+                      businessCategory:
+                        type: string
+                      businessAddress:
+                        type: string
+                  token:
+                    type: string
+                    description: JWT authentication token
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - Business with this name or email already exists
+                      - Invalid business logo
+                      - Validation failed
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to process registration. Please try again.
+  /login:
+    post:
+      summary: User Login
+      description: Authenticate user with business email, username and password
+      tags:
+        - Authentication
+      requestBody:
+        description: User login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address (optional if username provided)
+                  example: user@example.com
+                username:
+                  type: string
+                  description: Username (optional if email provided)
+                  example: johndoe
+                password:
+                  type: string
+                  format: password
+                  example: secure_password_123
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: user login successful
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: User's unique identifier
+                      name:
+                        type: string
+                        description: User's full name
+                      email:
+                        type: string
+                        description: User's email address
+                      username:
+                        type: string
+                        description: User's username
+                      role:
+                        type: string
+                        description: User's role in the system
+                      status:
+                        type: string
+                        description: User's account status
+                      associatedBusinesses:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            businessId:
+                              type: string
+                            businessName:
+                              type: string
+                            role:
+                              type: string
+                  token:
+                    type: string
+                    description: JWT authentication token
+        '400':
+          description: Authentication Failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - invalid credentials, user not found
+                      - invalid credentials, password not correct
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
