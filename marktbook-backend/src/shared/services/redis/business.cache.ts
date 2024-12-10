@@ -21,7 +21,6 @@ export class BusinessCache extends Basecache {
           _id,
           verifiedStatus,
           verifyData,
-          authId,
           businessName,
           email,
           admins,
@@ -40,7 +39,6 @@ export class BusinessCache extends Basecache {
       
         const firstList: string[] = [
           '_id', `${_id}`,
-          'authId', `${authId}`,
           'businessName', businessName || '',
           'email', email || '',
           'uId', uId || '',
@@ -99,7 +97,6 @@ export class BusinessCache extends Basecache {
             // Parse the retrieved data to reconstruct the IBusinessDocument object
             const businessData = {
                 _id: cacheData['_id'],
-                authId: cacheData['authId'],
                 businessName: cacheData['businessName'] || undefined,
                 email: cacheData['email'] || undefined,
                 uId: cacheData['uId'] || undefined,

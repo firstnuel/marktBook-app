@@ -4,12 +4,6 @@ import { BusinessCategory, BusinessType } from '@auth/interfaces/auth.interface'
 
 const businessSchema: Schema = new Schema(
   {
-    authId: { 
-      type: Schema.Types.ObjectId, 
-      ref: 'Auth', 
-      index: true, 
-      required: true 
-    },
     verifiedStatus: { type: Boolean, default: false },
     verifyData: {
       owner: { type: String, required: false },

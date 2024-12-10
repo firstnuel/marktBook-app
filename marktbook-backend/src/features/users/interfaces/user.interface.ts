@@ -4,9 +4,10 @@ import { BusinessRole } from '@business/interfaces/business.interface'
 
 export interface IuserDocument extends Document {
     _id: string | ObjectId;
+    authId: string | ObjectId;
     name: string;
     email: string;
-    uId: string,
+    uId?: string,
     mobileNumber: string;
     role: BusinessRole;
     status: 'active' | 'inactive'; 

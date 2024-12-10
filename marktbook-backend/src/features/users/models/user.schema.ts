@@ -3,20 +3,26 @@ import { IuserDocument } from '../interfaces/user.interface'
 
 const userSchema: Schema = new Schema(
     {
-      // Basic Identity & Contact Information
       name: { type: String, required: true },
       uId: { type: String, required: false},
-      email: { 
-        type: String, 
-        required: false, 
-        unique: true, 
-        lowercase: true, 
-        trim: true 
-      }, 
-      mobileNumber: { 
-        type: String, 
-        required: false, 
-        trim: true 
+      email: {
+        type: String,
+        required: true, 
+        unique: true,
+        lowercase: true,
+        trim: true,
+        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'invalid email']
+      },
+      authId: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Auth', 
+        index: true, 
+        required: true 
+      },
+      mobileNumber: {
+        type: String,
+        required: false,
+        trim: true,
       },
       role: { 
         type: String, 
@@ -34,11 +40,11 @@ const userSchema: Schema = new Schema(
         required: false, 
         trim: true 
       },
-      nin: { 
-        type: String, 
-        required: false, 
+      nin: {
+        type: String,
+        trim: true,
         unique: true, 
-        trim: true 
+        sparse: true, // Allows multiple null/empty values
       },
       username: { 
         type: String, 
@@ -108,9 +114,18 @@ const userSchema: Schema = new Schema(
   )
   
   // Indexing for efficient queries
-  userSchema.index({ email: 1 })
+  userSchema.index({ email: 1 }, { unique: true, sparse: true })
   userSchema.index({ username: 1 })
-  userSchema.index({ nin: 1 })
+  userSchema.index({ nin: 1 }, { unique: true, sparse: true })
+
+
+  userSchema.pre('save', function(next) {
+    if (this.nin === '') {
+      this.nin = undefined
+    }
+    next()
+  })
+
   
   export const UserModel: Model<IuserDocument> = model<IuserDocument>('User', userSchema, 'User')
   

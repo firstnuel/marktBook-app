@@ -7,7 +7,6 @@ export interface IBusinessDocument extends Document {
   _id: string | ObjectId;
   verifiedStatus?: boolean;
   verifyData?: IVerifyBusinessData;
-  authId: string | ObjectId;
   businessName?: string;
   username: string;
   email: string;

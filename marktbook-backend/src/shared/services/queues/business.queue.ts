@@ -9,7 +9,7 @@ class BusinessQueue extends BaseQueue {
         this.processJob('addBusinessToDb', 5, businessWorker.addBusinessJob)
     }
 
-    public addBuisnessJob(name: string, data: IBusinessJob): void {
+    public addBusinessJob(name: string, data: IBusinessJob): void {
         this.addJob(name, data)
     }
 

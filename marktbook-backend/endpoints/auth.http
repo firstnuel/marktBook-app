@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:5001
+@urlpath = api/v1
+
+###
+POST {{baseUrl}}/{{urlpath}}/register
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+{
+ "email": "johndoe@example.com",
+ "name": "John Doe",
+ "username": "johnd",
+ "password": "SecurePass123!",
+ "businessName": "Tech Innovations LLC",
+ "businessType": "Retail",
+ "businessCategory": "Technology"
+}

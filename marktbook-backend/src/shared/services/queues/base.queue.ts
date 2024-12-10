@@ -37,7 +37,7 @@ export abstract class BaseQueue {
         this.log = config.createLogger(`${queueName}Queue`)
 
         this.queue.on('completed', (job: Job) => {
-            // job.remove()
+            job.remove()
         })
 
         this.queue.on('global:completed', (jobId: string) => {

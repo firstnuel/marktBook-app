@@ -1,4 +1,5 @@
 import { v2 as cloudinary, UploadApiResponse, UploadApiErrorResponse } from 'cloudinary'
+import { config } from '@root/config'
 
 export const uploads = (
   file: string,
@@ -33,3 +34,11 @@ export const uploads = (
     )
   })
 }
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const constructCloudinaryURL = (uploadResult: any): string => {
+  return `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${uploadResult.version}/${uploadResult.public_id}`
+}
+
+
