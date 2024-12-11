@@ -15,6 +15,10 @@ class Config {
     public CLOUD_API_KEY: string | undefined
     public CLOUD_API_SECRET: string | undefined
     public REDIS_HOST: string | undefined
+    public SENDER_EMAIL: string | undefined
+    public SENDER_EMAIL_PASSWORD: string | undefined
+    public SENDGRID_API_KEY: string | undefined
+    public SENDGRID_SENDER_EMAIL: string | undefined
 
 
     constructor() {
@@ -28,6 +32,10 @@ class Config {
         this.CLOUD_NAME = process.env.CLOUD_NAME
         this.CLOUD_API_KEY = process.env.CLOUD_API_KEY
         this.CLOUD_API_SECRET = process.env.CLOUD_API_SECRET
+        this.SENDER_EMAIL = process.env.SENDER_EMAIL
+        this.SENDER_EMAIL_PASSWORD = process.env.SENDER_EMAIL_PASSWORD
+        this.SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
+        this.SENDGRID_SENDER_EMAIL = process.env.SENDGRID_SENDER_EMAIL
     }
 
     public createLogger(name: string): bunyan {

@@ -62,6 +62,7 @@ export interface IAuthDocument extends Document {
   passwordResetExpires?: number | string; 
   comparePassword(password: string): Promise<boolean>;
   hashPassword(password: string): Promise<string>; 
+  resetPassword(password: string): void; 
 }
 
 // Interface for registering business data

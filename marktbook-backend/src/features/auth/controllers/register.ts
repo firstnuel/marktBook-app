@@ -60,7 +60,7 @@ class Register {
       } = body
 
       // Check for existing business
-      const checkIfBusinessExist: IAuthDocument = await authService.getBusinessByNameAndEmail(businessName, email)
+      const checkIfBusinessExist: IAuthDocument | null  = await authService.getBusinessByNameAndEmail(businessName, email)
       if (checkIfBusinessExist) {
         logger.warn(`Business registration failed: Business with name "${businessName}" or email "${email}" already exists.`)
         return next(new BadRequestError('Business with this name or email already exists.'))
@@ -89,28 +89,31 @@ class Register {
       })
 
       // Validate businessLogo before uploading
-      if (!businessLogo || !Utils.isValidImage(businessLogo)) {
+      if (businessLogo && !Utils.isValidImage(businessLogo)) {
         logger.warn('Invalid business logo provided.')
         return next(new BadRequestError('Invalid business logo. Please upload a valid image file.'))
       }
 
       // Perform file upload and data preparation in parallel
-      const [uploadResult, userDataForCache, businessDataForCache] = await Promise.all([
-        uploads(businessLogo, `${businessObjectId}`, true, true),
+      const [ userDataForCache, businessDataForCache] = await Promise.all([
+        // uploads(businessLogo, `${businessObjectId}`, true, true),
         this.UserData(authData, ownerId, businessObjectId),
         this.BusinessData(authData, businessObjectId, ownerId),
       ])
 
-      // Check upload result
-      if (!uploadResult?.public_id) {
-        logger.error('Business logo upload failed.')
-        return next(new BadRequestError('File Error: Failed to upload business logo. Please try again.'))
+      if (businessLogo && Utils.isValidImage(businessLogo)) {
+        const uploadResult = await  uploads(businessLogo, `${businessObjectId}`, true, true)
+        // Check upload result
+        if (!uploadResult?.public_id) {
+          logger.error('Business logo upload failed.')
+          return next(new BadRequestError('File Error: Failed to upload business logo. Please try again.'))
+        }
+  
+        logger.info(`Business logo uploaded successfully: ${uploadResult.public_id}`)
+  
+        // Update business logo URL
+        businessDataForCache.businessLogo = constructCloudinaryURL(uploadResult)
       }
-
-      logger.info(`Business logo uploaded successfully: ${uploadResult.public_id}`)
-
-      // Update business logo URL
-      businessDataForCache.businessLogo = constructCloudinaryURL(uploadResult)
 
       // Save data to cache
       await Promise.all([

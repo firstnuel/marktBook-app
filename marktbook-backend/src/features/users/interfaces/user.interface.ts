@@ -40,3 +40,9 @@ export interface IuserDocument extends Document {
   export interface IUserJob {
     value?: string | IuserDocument;
   }
+
+  export interface IEmailJob {
+    receiveEmail: string;
+    template: string;
+    subject: string;
+  }

@@ -43,6 +43,14 @@ const authSchema: Schema = new Schema(
   authSchema.methods.hashPassword = async function (password: string): Promise<string> {
     return hash(password, SALT_ROUND)
   }
+
+  authSchema.methods.resetPassword = function (password: string): void {
+    this.password = password
+    this.passwordResetToken = undefined
+    this.passwordResetExpires = undefined
+  }
+
+
   
   const AuthModel: Model<IAuthDocument> = model<IAuthDocument>('Auth', authSchema, 'Auth')
   export { AuthModel }

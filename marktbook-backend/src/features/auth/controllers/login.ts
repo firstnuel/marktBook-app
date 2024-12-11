@@ -10,7 +10,7 @@ import { IAuthDocument } from '@auth/interfaces/auth.interface'
 import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 import JWT from 'jsonwebtoken'
 import { omit } from 'lodash'
-
+import { userService } from '@service/db/user.service'
 
 const logger: Logger = config.createLogger('signinController')
 
@@ -38,7 +38,7 @@ class Login {
         const body = Utils.sanitizeInput(req.body)
         const { username, email, password } = body
 
-        const existingUser: IAuthDocument | null = await authService.findUser(email, username)
+        const existingUser: IAuthDocument | null = await authService.getUserByEmailAndUsername(email, username)
         if(!existingUser) {
             logger.warn('user not found')
             return next(new BadRequestError('invalid credentials, user not found'))
@@ -49,7 +49,8 @@ class Login {
             logger.warn('incorrect password')
             return next(new BadRequestError('invalid credentials, password not correct'))
         }
-
+        // Update last login 
+        await userService.updateUserLogin(authUser._id)
         // Generate JWT token
         const userToken: string = JWT.sign(
           {
