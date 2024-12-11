@@ -13,8 +13,8 @@
 | 10.12. | 3 | Implemented login router and route |
 |  | 2 | 	Added API documentation and implemented an API-route endpoint |
 |  | 4 |  Implemented logout and current user routes, refactored middleware |
-| 10.12. | 5 |  Implemented forgot and password reset routes, refactored auth schema |
-| | 1 | Updated API documentation|
-| **Total** | **32** | |
+| 11.12. | 5 |  Implemented forgot and password reset routes, refactored auth schema |
+| | 3 | Updated API documentation, Added workers and queues for email |
+| **Total** | **34** | |
 
 
