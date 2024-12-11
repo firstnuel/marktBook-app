@@ -5,13 +5,14 @@ import { BullAdapter } from '@bull-board/api/bullAdapter'
 import { ExpressAdapter } from '@bull-board/express'
 import { config } from '@root/config'
 import { IAuthJob } from '@auth/interfaces/auth.interface'
-import { IUserJob } from '@root/features/users/interfaces/user.interface'
+import { IEmailJob, IUserJob } from '@root/features/users/interfaces/user.interface'
 import { IBusinessJob } from '@business/interfaces/business.interface'
 
 type IBaseJobData = 
     | IAuthJob
     | IUserJob
     | IBusinessJob
+    | IEmailJob
 
 
 let bullAdapters: Array<BullAdapter> = []

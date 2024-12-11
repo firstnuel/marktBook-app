@@ -19,7 +19,7 @@ class CurrentUser{
         if (Object.keys(existingUser).length) {
             isUser = true
             token = req.session?.jwt
-            user = omit(existingUser.toObject(), [
+            user = omit(existingUser, [
                 'authId',
                 '__v',
                 'createdAt',
