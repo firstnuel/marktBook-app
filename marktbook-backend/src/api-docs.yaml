@@ -404,3 +404,30 @@ paths:
                   error:
                     type: string
                     example: Failed to retrieve user details due to server error
+  /logout:
+    get:
+      summary: User Logout
+      description: Invalidate the user's authentication token
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User logged out successfully
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to logout user due to server error

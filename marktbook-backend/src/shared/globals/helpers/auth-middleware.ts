@@ -7,6 +7,12 @@ import { AuthPayload } from '@auth/interfaces/auth.interface'
 const log = config.createLogger('authMiddleware')
 
 class AuthMiddleware {
+      /**
+       * Handles authentication for a logged in user.
+       * @param req Express Request object
+       * @param res Express Response object
+       * @param next Express NextFunction for error handling
+       */
     public verifyUser(req: Request, res: Response, next: NextFunction): void {
         // Check if JWT token exists in session
         if (!req.session?.jwt) {
