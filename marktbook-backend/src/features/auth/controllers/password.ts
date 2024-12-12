@@ -22,7 +22,7 @@ class Password {
       }
     
       /**
-       * Handles the registration of a new business and associated user.
+       * Handles pasword reset.
        * @param req Express Request object
        * @param res Express Response object
        * @param next Express NextFunction for error handling
@@ -64,6 +64,12 @@ class Password {
 
     }
 
+       /**
+       * Handles pasword update.
+       * @param req Express Request object
+       * @param res Express Response object
+       * @param next Express NextFunction for error handling
+       */
     public async update(req: Request, res: Response, next: NextFunction): Promise<void> {
         // parse data
         const parsedDataOrError = Utils.schemaParser(passwordSchema, req.body)

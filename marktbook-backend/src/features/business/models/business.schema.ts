@@ -14,7 +14,6 @@ const businessSchema: Schema = new Schema(
     businessName: { type: String, required: true },
     email: { type: String, required: true },
     
-    // Updated admins field to accept subdocuments
     admins: [
       {
         userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },

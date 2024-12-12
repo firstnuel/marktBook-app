@@ -21,7 +21,7 @@ class Login {
       }
     
       /**
-       * Handles the registration of a new business and associated user.
+       * Handles singing in an existing user.
        * @param req Express Request object
        * @param res Express Response object
        * @param next Express NextFunction for error handling
