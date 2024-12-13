@@ -20,7 +20,8 @@
 | **13.12.** | 2 | Implemented product validation schema and product model |
 |            | 3 | Developed product controller for product creation, added queue, workers, and endpoint |
 |             | 1 | Updated Api documentation to include new product endpoint |
-| **Total**  | **41** | |
+|             | 4 | Implemented User controller for creating and fetching users, refactored API route and file structure|
+| **Total**  | **45** | |
 
 
 
