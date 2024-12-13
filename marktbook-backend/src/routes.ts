@@ -1,5 +1,6 @@
 import { authRoutes } from '@auth/routes/authRoutes'
 import { currentUserRoutes } from '@auth/routes/currentUserRoutes'
+import { productRoutes } from '@inventory/routes/productRoutes'
 import { serverAdapter } from '@service/queues/base.queue'
 import { Application } from 'express'
 import swaggerUi from 'swagger-ui-express'
@@ -19,6 +20,7 @@ export default (app: Application) => {
     app.use(BASE_PATH, authRoutes.logoutRoute())
 
     app.use(BASE_PATH, authMiddleware.verifyUser, currentUserRoutes.currentUserRoute())
+    app.use(BASE_PATH, authMiddleware.verifyUser, productRoutes.productRoutes())
   }
 
   routes()

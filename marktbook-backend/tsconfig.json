@@ -28,6 +28,10 @@
       ],
       "paths": {
         "@auth/*": ["src/features/auth/*"],
+        "@inventory/*": ["src/features/inventory/*"],
+        "@customers/*": ["src/features/customers/*"],
+        "@transactions/*": ["src/features/transactions/*"],
+        "@suppliers/*": ["src/features/suppliers/*"],
         "@user/*": ["src/features/user/*"],
         "@business/*": ["src/features/business/*"],
         "@global/*": ["src/shared/globals/*"],

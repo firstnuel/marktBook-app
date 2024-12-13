@@ -1,11 +1,8 @@
 import { DoneCallback, Job } from 'bull'
-import Logger from 'bunyan'
 import { config } from '@root/config'
 import { authService } from '@service/db/auth.service'
 
-
-
-const log: Logger = config.createLogger('authWorker')
+const log = config.createLogger('authWorker')
 
 
 class AuthWorker {

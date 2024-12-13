@@ -7,12 +7,14 @@ import { config } from '@root/config'
 import { IAuthJob } from '@auth/interfaces/auth.interface'
 import { IEmailJob, IUserJob } from '@root/features/users/interfaces/user.interface'
 import { IBusinessJob } from '@business/interfaces/business.interface'
+import { IProductJob } from '@inventory/interfaces/products.interface'
 
 type IBaseJobData = 
     | IAuthJob
     | IUserJob
     | IBusinessJob
     | IEmailJob
+    | IProductJob
 
 
 let bullAdapters: Array<BullAdapter> = []
