@@ -51,6 +51,7 @@ class Login {
         }
         // Update last login 
         await userService.updateUserLogin(authUser._id)
+
         // Generate JWT token
         const userToken: string = JWT.sign(
           {

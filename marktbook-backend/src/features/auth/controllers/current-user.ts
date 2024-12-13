@@ -6,6 +6,12 @@ import { userCache } from '@service/redis/user.cache'
 import { omit } from 'lodash'
 
 class CurrentUser{
+
+    /**
+     * Handles reurning current authenticated user
+     * @param req Express Request object
+     * @param res Express Response object
+     */
     public async read(req: Request, res: Response): Promise<void> {
         let isUser = false
         let token = null 

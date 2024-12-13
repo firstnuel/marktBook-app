@@ -9,7 +9,7 @@ withCredentials: true
 
 {
  "email": "johndoe@example.com",
- "name": "John Doe",
+ "adminFullName": "John Doe",
  "username": "johnd",
  "password": "SecurePass123!",
  "businessName": "Tech Innovations LLC",
@@ -24,9 +24,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "email": "Evgeni@example.com",
-  "password": "SuperSec33456!",
-  "username": "Evgeni5"
+ "email": "johndoe@example.com",
+ "password": "SecurePass123!",
+ "username": "johnd"
 }
 
 ###
@@ -37,6 +37,59 @@ withCredentials: true
 
 ###
 GET {{baseUrl}}/{{urlpath}}/currentuser
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+POST {{baseUrl}}/{{urlpath}}/products
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "sku": "PRD12345",
+    "productName": "Wireless Earbuds",
+    "businessId": "675c8260292e852649a22a97",
+    "longDescription": "High-quality wireless earbuds with noise cancellation and 20-hour battery life.",
+    "shortDescription": "Wireless earbuds with long battery life.",
+    "currency": "USD",
+    "productCategory": "Electronics",
+    "productType": "Physical",
+    "barcode": "1234567890123",
+    "basePrice": 50.0,
+    "salePrice": 40.0,
+    "discount": 20.0,
+    "unit": "piece",
+    "tags": ["wireless", "audio", "earbuds"],
+    "isActive": true,
+    "productImages":[{
+        "url": "",
+        "isPrimary": true
+    }]
+}
+
+###
+POST {{baseUrl}}/{{urlpath}}/users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "email": "janedoe@example.com",
+  "username": "janedoe123",
+  "mobileNumber": "1234567890",
+  "name": "Jane Doe",
+  "role": "Manager",
+  "status": "active",
+  "address": "123 Main Street, Springfield",
+  "nin": "A123456789",
+  "businessId": "675c8260292e852649a22a97"
+}
+
+###
+GET  {{baseUrl}}/{{urlpath}}/users
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

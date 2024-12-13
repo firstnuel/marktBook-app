@@ -13,10 +13,22 @@ class UserService {
         return user 
       }
 
+      public async getUserByUsernameAndEmail(username: string, email: string): Promise<IuserDocument | null> {
+        const user = await UserModel.findOne({ username, email }).exec()
+        return user
+      }
+
       public async updateUserLogin(userId: string | ObjectId): Promise<void> {
-        await UserModel.updateOne({ _id: userId }, {
+        await UserModel.findByIdAndUpdate(userId, {
           lastLogin: Date.now()
         })
+      }
+
+      public async getAllUsers(businessId: string | ObjectId): Promise<IuserDocument[]> {
+        const result = await UserModel.find({ associatedBusinessesId: businessId }) 
+          .select(['name', '_id', 'email', 'username', 'status', 'profilePicture', 'role', 'associatedBusinessesId'])
+      
+        return result
       }
 
 }

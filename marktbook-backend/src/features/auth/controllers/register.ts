@@ -147,6 +147,7 @@ class Register {
 
       // Respond to client
       res.status(HTTP_STATUS.CREATED).json({
+        status: 'success',
         message: 'Business account and user created successfully',
         data: omit(businessDataForCache, ['uId', 'verifyData']), // Exclude sensitive fields
         token: userJwt,
@@ -256,7 +257,7 @@ class Register {
         },
       ],
       businessLogo: '',
-      uId: uIds.businessUId,
+      uId: uIds?.businessUId?? '',
       businessCategory,
       businessAddress,
       businessType,
@@ -294,12 +295,12 @@ class Register {
    * @returns User document conforming to IuserDocument interface
    */
   private UserData(data: IAuthDocument, userObjectId: ObjectId, businessObjectId: ObjectId): IuserDocument {
-    const { username, businessName, adminFullName, uIds, email, _id, } = data
+    const { username, adminFullName, uIds, email, _id, } = data
 
     return {
       _id: userObjectId,
       name: adminFullName,
-      uId: uIds.userUId,
+      uId: uIds?.userUId ?? '',
       authId: _id,
       email,
       mobileNumber: null,
@@ -309,13 +310,6 @@ class Register {
       nin: '',
       username,
       associatedBusinessesId: businessObjectId,
-      associatedBusinesses: [
-        {
-          businessId: businessObjectId,
-          businessName,
-          role: 'Owner',
-        },
-      ],
       emergencyContact: {
         name: '',
         relationship: '',

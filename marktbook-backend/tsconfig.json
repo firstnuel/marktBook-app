@@ -28,7 +28,11 @@
       ],
       "paths": {
         "@auth/*": ["src/features/auth/*"],
-        "@user/*": ["src/features/user/*"],
+        "@inventory/*": ["src/features/inventory/*"],
+        "@customers/*": ["src/features/customers/*"],
+        "@transactions/*": ["src/features/transactions/*"],
+        "@suppliers/*": ["src/features/suppliers/*"],
+        "@users/*": ["src/features/users/*"],
         "@business/*": ["src/features/business/*"],
         "@global/*": ["src/shared/globals/*"],
         "@service/*": ["src/shared/services/*"],
