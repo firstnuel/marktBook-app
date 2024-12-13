@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { BusinessType, BusinessCategory } from '@auth/interfaces/auth.interface'
 
-const password = z
+export const password = z
   .string({
     required_error: 'Password is required',
     invalid_type_error: 'Password must be a string',
@@ -10,14 +10,14 @@ const password = z
   .max(20, { message: 'Invalid password' })
 
 
-const email = z
+export const email = z
   .string({
     required_error: 'email is required',
     invalid_type_error: 'email must be a string',
   })
   .email({ message: 'Field must be valid' })
 
-const username = z
+export const username = z
   .string({
     required_error: 'Username is required',
     invalid_type_error: 'Username must be a string',

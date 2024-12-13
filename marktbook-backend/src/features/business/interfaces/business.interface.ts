@@ -54,16 +54,23 @@ export interface ISocialLinks {
   website?: string;
 }
 
+export enum BusinessRole {
+  Owner = 'Owner',
+  Manager = 'Manager',
+  Staff = 'Staff'
+}
+
+
 export interface IBusinessAdmin {
   userId: string | ObjectId; 
   username: string;
   name: string;
   role: BusinessRole; 
-  addedAt: Date; 
+  addedAt?: Date; 
   status: 'active' | 'inactive'; 
 }
 
-export type BusinessRole = 'Owner' | 'Manager' | 'Staff'
+
 export interface IBusinessJob {
-  value?: string | IBusinessDocument;
+  value?: string | IBusinessDocument | { admin: IBusinessAdmin, id: string | ObjectId };
 }

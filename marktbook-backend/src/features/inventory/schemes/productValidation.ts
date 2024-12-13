@@ -35,7 +35,7 @@ export const productSchema = z.object({
     salePrice: z.number().optional(),
     unit: z.nativeEnum(Unit),
     discount: z.number().default(0),
-    productImages: z.array(ProductImage).min(1, {message: 'At least one product image is required'}),
+    productImages: z.array(ProductImage).optional(), //.min(1, {message: 'At least one product image is required'}),
     tags: z.array(z.string()).optional(),
     supplierId: z.string().optional(),
     isActive: z.boolean().default(false),

@@ -24,6 +24,22 @@ class BusinessWorker {
 
       }
     }
+
+
+    async updateBusisnessJob(job: Job, done: DoneCallback): Promise<void> {
+
+      try {
+        const { admin, id } = job.data.value
+        await businessService.addBusinessAdmin(admin, id)
+        job.progress(100)
+        done(null, job.data)
+
+      } catch(error) {
+        log.error(error)
+        done(error as Error)
+
+      }
+    }
 }
 
 export const businessWorker: BusinessWorker = new BusinessWorker()

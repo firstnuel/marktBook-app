@@ -14,6 +14,7 @@ import { userService } from '@service/db/user.service'
 import { businessService } from '@service/db/business.service'
 import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 import { IBusinessDocument } from '@business/interfaces/business.interface'
+import { productService } from '@service/db/productService'
 
 
 const log  = config.createLogger('productsController')
@@ -45,7 +46,7 @@ class Product {
         // validate user
         const cachedUser = await userCache.getUserfromCache(`${req.currentUser?.userId}`) as IuserDocument
         const existingUser = cachedUser? cachedUser 
-        : await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
+            : await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
 
         if(existingUser?.status !== 'active') {
             return next(new NotAuthorizedError('Invalid User') )
@@ -53,6 +54,14 @@ class Product {
         }
        // sanitize input
        const body = Utils.sanitizeInput(req.body) as IProductData
+
+      // Check for existing product
+      const checkIfProductExist: IProductDocument | null  = await productService.getBySku(body.sku)
+      if (checkIfProductExist) {
+          log.warn(`Product creation failed: Product with unique sku "${body.sku}" already exists.`)
+          return next(new BadRequestError('Product with unique sku already exists.'))
+        }
+        
 
        // validate business
        const cachedBusiness = await businessCache.getBusinessFromCache(`${body.businessId}`) as IBusinessDocument
@@ -140,7 +149,7 @@ class Product {
         stockId: null,
         sku,
         currency,
-        productName,
+        productName: Utils.firstLetterToUpperCase(productName),
         businessId: new ObjectId(businessId),
         longDescription: longDescription || null,
         shortDescription: shortDescription || null,

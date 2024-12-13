@@ -3,6 +3,7 @@ import { currentUserRoutes } from '@auth/routes/currentUserRoutes'
 import { productRoutes } from '@inventory/routes/productRoutes'
 import { serverAdapter } from '@service/queues/base.queue'
 import { Application } from 'express'
+import { usersRoutes } from '@users/routes/userRoutes'
 import swaggerUi from 'swagger-ui-express'
 import YAML from 'yamljs'
 import path from 'path'
@@ -21,6 +22,7 @@ export default (app: Application) => {
 
     app.use(BASE_PATH, authMiddleware.verifyUser, currentUserRoutes.currentUserRoute())
     app.use(BASE_PATH, authMiddleware.verifyUser, productRoutes.productRoutes())
+    app.use(BASE_PATH, authMiddleware.verifyUser, usersRoutes.UsersRoutes())
   }
 
   routes()

@@ -59,25 +59,6 @@ const userSchema: Schema = new Schema(
         ref: 'Business', 
         required: true 
       },
-      associatedBusinesses: [
-        {
-          businessId: { 
-            type: Schema.Types.ObjectId, 
-            ref: 'Business', 
-            required: true 
-          },
-          businessName: { 
-            type: String, 
-            required: true, 
-            trim: true 
-          },
-          role: { 
-            type: String, 
-            enum: ['Owner', 'Manager', 'Staff'], 
-            required: true 
-          },
-        }
-      ],
       
       // Emergency Contact (Optional)
       emergencyContact: {

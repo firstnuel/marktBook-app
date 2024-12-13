@@ -8,6 +8,11 @@ class ProductService {
         await ProductModel.create(data)
     }
 
+    public async getBySku(sku: string): Promise<IProductDocument | null> {
+        const result = await ProductModel.findOne({ sku }).exec() as IProductDocument
+        return result || null
+    }
+
 
 }
 

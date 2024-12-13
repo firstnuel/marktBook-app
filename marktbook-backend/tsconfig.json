@@ -32,7 +32,7 @@
         "@customers/*": ["src/features/customers/*"],
         "@transactions/*": ["src/features/transactions/*"],
         "@suppliers/*": ["src/features/suppliers/*"],
-        "@user/*": ["src/features/user/*"],
+        "@users/*": ["src/features/users/*"],
         "@business/*": ["src/features/business/*"],
         "@global/*": ["src/shared/globals/*"],
         "@service/*": ["src/shared/services/*"],
