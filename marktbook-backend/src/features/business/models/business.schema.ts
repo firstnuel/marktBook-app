@@ -20,8 +20,8 @@ const businessSchema: Schema = new Schema(
         username: { type: String, required: true },
         name: { type: String, required: true },
         role: { type: String,
-           enum: Object.values(BusinessRole), 
-           required: true },
+          enum: Object.values(BusinessRole), 
+          required: true },
         addedAt: { type: Date, default: Date.now },
         status: { type: String, enum: ['active', 'inactive'], default: 'active' }
       }

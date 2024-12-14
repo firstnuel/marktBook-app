@@ -6,20 +6,20 @@ const log = config.createLogger('authWorker')
 
 
 class AuthWorker {
-    async addAuthUserJob(job: Job, done: DoneCallback): Promise<void> {
+  async addAuthUserJob(job: Job, done: DoneCallback): Promise<void> {
 
-      try {
-        const { value } = job.data
-        await authService.createAuthUser(value)
-        job.progress(100)
-        done(null, job.data)
+    try {
+      const { value } = job.data
+      await authService.createAuthUser(value)
+      job.progress(100)
+      done(null, job.data)
 
-      } catch(error) {
-        log.error(error)
-        done(error as Error)
+    } catch(error) {
+      log.error(error)
+      done(error as Error)
 
-      }
     }
+  }
 }
 
 export const authWorker: AuthWorker = new AuthWorker()

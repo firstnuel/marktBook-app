@@ -5,14 +5,14 @@ import { productWorker } from '@worker/product.worker'
 
 
 class ProductQueue extends BaseQueue {
-    constructor() {
-        super('product')
-        this.processJob('addProductToDb', 5, productWorker.addProductJob)
-    }
+  constructor() {
+    super('product')
+    this.processJob('addProductToDb', 5, productWorker.addProductJob)
+  }
 
-    public addProductJob(name: string, data: IProductJob): void {
-        this.addJob(name, data)
-    }
+  public addProductJob(name: string, data: IProductJob): void {
+    this.addJob(name, data)
+  }
 }
 
 

@@ -4,17 +4,17 @@ import { currentUser } from '@auth/controllers/current-user'
 
 
 class CurrentUserRoutes {
-    private router: Router
+  private router: Router
   
-    constructor() {
-      this.router = express.Router()
-    }
+  constructor() {
+    this.router = express.Router()
+  }
 
-    public currentUserRoute(): Router {
-        this.router.get('/currentuser', authMiddleware.checkAuthentication, currentUser.read)
+  public currentUserRoute(): Router {
+    this.router.get('/currentuser', authMiddleware.checkAuthentication, currentUser.read)
     
-        return this.router
-      }
+    return this.router
+  }
 
 }
 

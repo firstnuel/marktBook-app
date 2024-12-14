@@ -32,11 +32,11 @@ export interface IuserDocument extends Document {
     profilePicture?: string;
     }
     
-  export interface IUserJob {
+export interface IUserJob {
     value?: string | IuserDocument;
   }
 
-  export interface IEmailJob {
+export interface IEmailJob {
     receiveEmail: string;
     template: string;
     subject: string;

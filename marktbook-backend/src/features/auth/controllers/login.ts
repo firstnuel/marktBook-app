@@ -16,63 +16,63 @@ const logger: Logger = config.createLogger('signinController')
 
 
 class Login {
-    constructor( ) {
-        this.read = this.read.bind(this)
-      }
+  constructor( ) {
+    this.read = this.read.bind(this)
+  }
     
-      /**
+  /**
        * Handles singing in an existing user.
        * @param req Express Request object
        * @param res Express Response object
        * @param next Express NextFunction for error handling
        */
 
-    public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
-        // parse data
-        const parsedDataOrError = Utils.schemaParser(loginSchema, req.body)
-        if (parsedDataOrError !== true) {
-            logger.warn('Validation failed:', parsedDataOrError.toString())
-            return next(new ZodValidationError(parsedDataOrError.toString()))
-        }
-        // sanitize input
-        const body = Utils.sanitizeInput(req.body)
-        const { username, email, password } = body
-
-        const existingUser: IAuthDocument | null = await authService.getUserByEmailAndUsername(email, username)
-        if(!existingUser) {
-            logger.warn('user not found')
-            return next(new BadRequestError('invalid credentials, user not found'))
-        }
-
-        const authUser: IuserDocument| null = await authService.getAuthUser(existingUser, password)
-        if(!authUser) {
-            logger.warn('incorrect password')
-            return next(new BadRequestError('invalid credentials, password not correct'))
-        }
-        // Update last login 
-        await userService.updateUserLogin(authUser._id)
-
-        // Generate JWT token
-        const userToken: string = JWT.sign(
-          {
-            userId: authUser._id,
-            username: authUser.username,
-            businessId: authUser.associatedBusinessesId,
-            email: authUser.email,
-          },
-          config.JWT_SECRET!
-        )
-        req.session = { jwt: userToken }
-
-        const nonSensitiveData = omit(authUser.toObject(), ['authId', '__v', 'createdAt', 'updatedAt', 'lastLogin', 'emergencyContact', 'notificationPreferences'])
-
-        // Respond to client
-        res.status(HTTP_STATUS.OK).json({
-            message: 'user login successful',
-            data: nonSensitiveData,
-            token: userToken,
-          })
+  public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
+    // parse data
+    const parsedDataOrError = Utils.schemaParser(loginSchema, req.body)
+    if (parsedDataOrError !== true) {
+      logger.warn('Validation failed:', parsedDataOrError.toString())
+      return next(new ZodValidationError(parsedDataOrError.toString()))
     }
+    // sanitize input
+    const body = Utils.sanitizeInput(req.body)
+    const { username, email, password } = body
+
+    const existingUser: IAuthDocument | null = await authService.getUserByEmailAndUsername(email, username)
+    if(!existingUser) {
+      logger.warn('user not found')
+      return next(new BadRequestError('invalid credentials, user not found'))
+    }
+
+    const authUser: IuserDocument| null = await authService.getAuthUser(existingUser, password)
+    if(!authUser) {
+      logger.warn('incorrect password')
+      return next(new BadRequestError('invalid credentials, password not correct'))
+    }
+    // Update last login 
+    await userService.updateUserLogin(authUser._id)
+
+    // Generate JWT token
+    const userToken: string = JWT.sign(
+      {
+        userId: authUser._id,
+        username: authUser.username,
+        businessId: authUser.associatedBusinessesId,
+        email: authUser.email,
+      },
+          config.JWT_SECRET!
+    )
+    req.session = { jwt: userToken }
+
+    const nonSensitiveData = omit(authUser.toObject(), ['authId', '__v', 'createdAt', 'updatedAt', 'lastLogin', 'emergencyContact', 'notificationPreferences'])
+
+    // Respond to client
+    res.status(HTTP_STATUS.OK).json({
+      message: 'user login successful',
+      data: nonSensitiveData,
+      token: userToken,
+    })
+  }
     
        
 
