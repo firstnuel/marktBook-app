@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { businessCache } from '@service/redis/business.cache'
 import HTTP_STATUS from 'http-status-codes'
 import { ObjectId } from 'mongodb'
@@ -15,14 +16,17 @@ import { config } from '@root/config'
 import { userQueue } from '@service/queues/user.queue'
 import { authQueue } from '@service/queues/auth.queue'
 import { businessQueue } from '@service/queues/business.queue'
+import { Schema } from 'zod'
+import { authService } from '@service/db/auth.service'
 
 
 const log  = config.createLogger('userController')
 
 
-class Users {
+export class Users {
   constructor(){
     this.UserData = this.UserData.bind(this)
+    this.validateUser = this.validateUser.bind(this)
   }
 
   /**
@@ -36,12 +40,9 @@ class Users {
     try {
       log.info('User creation attempt implemented')
 
-      // validate incoming data
-      const parsedDataOrError = Utils.schemaParser(userSchema, req.body)
-      if (parsedDataOrError !== true) {
-        log.warn('Validation failed:', parsedDataOrError.toString())
-        return next(new ZodValidationError(parsedDataOrError.toString()))
-      }
+      // validate input
+      this.validateInput(userSchema, req.body)
+
       // validate user
       const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
 
@@ -51,9 +52,10 @@ class Users {
 
       // Check if user account already exist
       const checkExistingAccount: IuserDocument | null = await userService.getUserByUsernameAndEmail(username, email)
-      if (checkExistingAccount) {
+      const checkExistingAuthAccount: IAuthDocument | null =  await authService.getUserByEmailOrUsername(email, username)
+      if (checkExistingAccount || checkExistingAuthAccount) {
         log.warn(`User registration failed: Account with username "${username}" and email "${email}" already exists.`)
-        return next(new BadRequestError('User account with this name or email already exists.'))
+        return next(new BadRequestError('User account with this username or email already exists.'))
       }
 
       // validate business
@@ -105,12 +107,26 @@ class Users {
         message: `User '${name} account created successfully`,
         data: userData
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       log.error(`User registration failed: ${error.message}`)
       next(error)
     }
   
+  }
+
+  /**
+     * Protected method to validate input
+     * @param userId string
+     * @returns IuserDocument
+     */
+
+  protected validateInput(schema: Schema, data: any): boolean  {
+    const parsedDataOrError = Utils.schemaParser(schema, data)
+    if (parsedDataOrError !== true) {
+      log.warn('Validation failed:', parsedDataOrError.toString())
+      throw new ZodValidationError(parsedDataOrError.toString())
+    }
+    return parsedDataOrError
   }
 
   /**
@@ -204,7 +220,6 @@ class Users {
     } as unknown as IuserDocument
   }
 
-
   /**
      * Handles returning all users 
      * @param req Express Request object
@@ -212,26 +227,25 @@ class Users {
      * @param next Express NextFunction for error handling
      */
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    try{
+      // validate user
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+  
+      let users = await userService.getAllUsers(existingUser.associatedBusinessesId)
+      users = users?.filter(user => user._id !== existingUser._id)
+  
+      res.status(HTTP_STATUS.OK).json({data: users})
+
+    } catch (error: any) {
+      // Log and forward the error to a centralized error handler
+      log.error('Error fetching uses')
+      next(error)
+    }
         
-    // validate user
-    const cachedUser = await userCache.getUserfromCache(`${req.currentUser?.userId}`) as IuserDocument
-    const existingUser = cachedUser? cachedUser 
-      : await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
- 
-    if(existingUser?.status !== 'active' || !( existingUser?.role === 'Owner' || existingUser?.role === 'Manager')) {
-      return next(new NotAuthorizedError('Invalid User') )
-    }
-
-    let users = await userService.getAllUsers(existingUser.associatedBusinessesId)
-    if (users) {
-      users = users.filter(user => user._id !== existingUser._id)
-    }
-
-    res.status(HTTP_STATUS.OK).json({data: users})
 
   }
 
 }
-
 
 export const users: Users = new Users()

@@ -37,6 +37,17 @@ class AuthService {
     return authUser || null
   }
 
+  public async getUserByEmailOrUsername(businessEmail: string, username: string): Promise<IAuthDocument | null> {
+    const query = {
+      $or: [
+        { email: Utils.lowerCase(businessEmail) },
+        { username: Utils.firstLetterToUpperCase(username) }
+      ]
+    }
+    const authUser = await AuthModel.findOne(query).exec() as IAuthDocument
+    return authUser || null
+  }
+
   public async getAuthUser(authUser: IAuthDocument, password: string): Promise<IuserDocument | null> {
 
     const passwordMatch = await authUser.comparePassword(password)

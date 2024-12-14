@@ -1,4 +1,4 @@
-import { IuserDocument } from '@root/features/users/interfaces/user.interface'
+import {  IuserDocument } from '@root/features/users/interfaces/user.interface'
 import { UserModel } from '@root/features/users/models/user.schema'
 import { ObjectId } from 'mongodb'
 
@@ -30,6 +30,16 @@ class UserService {
       
     return result
   }
+
+  public async editUser(userId: string, data: Partial<IuserDocument>): Promise<IuserDocument | null> {
+    return UserModel.findByIdAndUpdate(userId, data, { new: true }).exec()
+  }
+
+  public async deleteUserById(userId: string): Promise<void> {
+    await UserModel.findByIdAndDelete(userId).exec()
+  }
+  
+  
 
 }
 
