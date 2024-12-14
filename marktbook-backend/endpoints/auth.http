@@ -51,7 +51,7 @@ withCredentials: true
 {
     "sku": "PRD12345",
     "productName": "Wireless Earbuds",
-    "businessId": "675da5a7363965202058858d",
+    "businessId": "675df7831e2e82150bc6c012",
     "longDescription": "High-quality wireless earbuds with noise cancellation and 20-hour battery life.",
     "shortDescription": "Wireless earbuds with long battery life.",
     "currency": "USD",
@@ -85,7 +85,7 @@ withCredentials: true
   "status": "active",
   "address": "123 Main Street, Springfield",
   "nin": "A24538394",
-  "businessId": "675da5a7363965202058858d"
+  "businessId": "675df7831e2e82150bc6c012"
 }
 
 ###
@@ -95,7 +95,7 @@ Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlpath}}/users/675da60336396520205885a5
+GET {{baseUrl}}/{{urlpath}}/users/675df81e1e2e82150bc6c02d
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

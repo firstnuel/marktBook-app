@@ -233,61 +233,61 @@ const log = <span class="cstat-no" title="statement not covered" >config.createL
 &nbsp;
 class MailTransport {
 &nbsp;
-    public async <span class="fstat-no" title="function not covered" >sendEmail(</span>receiverEmail: string, subject: string, body: string): Promise&lt;void&gt; {
-<span class="cstat-no" title="statement not covered" >        if (config.NODE_ENV === 'test' || config.NODE_ENV === 'development') {</span>
-<span class="cstat-no" title="statement not covered" >            this.developmentEmailSender(receiverEmail, subject, body)</span>
-        } else {
-<span class="cstat-no" title="statement not covered" >            this.productionEmailSender(receiverEmail, subject, body)</span>
-        }
+  public async <span class="fstat-no" title="function not covered" >sendEmail(</span>receiverEmail: string, subject: string, body: string): Promise&lt;void&gt; {
+<span class="cstat-no" title="statement not covered" >    if (config.NODE_ENV === 'test' || config.NODE_ENV === 'development') {</span>
+<span class="cstat-no" title="statement not covered" >      this.developmentEmailSender(receiverEmail, subject, body)</span>
+    } else {
+<span class="cstat-no" title="statement not covered" >      this.productionEmailSender(receiverEmail, subject, body)</span>
+    }
+  }
+&nbsp;
+&nbsp;
+  private async <span class="fstat-no" title="function not covered" >developmentEmailSender(</span>receiverEmail: string, subject: string, body: string): Promise&lt;void&gt; {
+    const transporter: Mail = <span class="cstat-no" title="statement not covered" >nodemailer.createTransport({</span>
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false, // true for port 465, false for other ports
+      auth: {
+        user: config.SENDER_EMAIL,
+        pass: config.SENDER_EMAIL_PASSWORD
+      },
+    })
+&nbsp;
+    const mailOptions: IMailOptions = <span class="cstat-no" title="statement not covered" >{</span>
+      from: `marktBook &lt;${config.SENDER_EMAIL}&gt;`,
+      to: receiverEmail,
+      subject,
+      html: body
     }
 &nbsp;
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      await transporter.sendMail(mailOptions)</span>
+<span class="cstat-no" title="statement not covered" >      log.info('Development email sent successfully')</span>
 &nbsp;
-    private async <span class="fstat-no" title="function not covered" >developmentEmailSender(</span>receiverEmail: string, subject: string, body: string): Promise&lt;void&gt; {
-        const transporter: Mail = <span class="cstat-no" title="statement not covered" >nodemailer.createTransport({</span>
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false, // true for port 465, false for other ports
-            auth: {
-              user: config.SENDER_EMAIL,
-              pass: config.SENDER_EMAIL_PASSWORD
-            },
-        })
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      log.error('Error sending email', error)</span>
+<span class="cstat-no" title="statement not covered" >      throw new BadRequestError('Error sending email')</span>
+    }      
+  }
 &nbsp;
-        const mailOptions: IMailOptions = <span class="cstat-no" title="statement not covered" >{</span>
-            from: `marktBook &lt;${config.SENDER_EMAIL}&gt;`,
-            to: receiverEmail,
-            subject,
-            html: body
-        }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            await transporter.sendMail(mailOptions)</span>
-<span class="cstat-no" title="statement not covered" >            log.info('Development email sent successfully')</span>
+  private async <span class="fstat-no" title="function not covered" >productionEmailSender(</span>receiverEmail: string, subject: string, body: string): Promise&lt;void&gt; {
 &nbsp;
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            log.error('Error sending email', error)</span>
-<span class="cstat-no" title="statement not covered" >            throw new BadRequestError('Error sending email')</span>
-        }      
+    const mailOptions: IMailOptions = <span class="cstat-no" title="statement not covered" >{</span>
+      from: `marktBook &lt;${config.SENDER_EMAIL}&gt;`,
+      to: receiverEmail,
+      subject,
+      html: body
     }
 &nbsp;
-&nbsp;
-    private async <span class="fstat-no" title="function not covered" >productionEmailSender(</span>receiverEmail: string, subject: string, body: string): Promise&lt;void&gt; {
-&nbsp;
-        const mailOptions: IMailOptions = <span class="cstat-no" title="statement not covered" >{</span>
-            from: `marktBook &lt;${config.SENDER_EMAIL}&gt;`,
-            to: receiverEmail,
-            subject,
-            html: body
-        }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            await sendGridMail.send(mailOptions)</span>
-<span class="cstat-no" title="statement not covered" >            log.info('Production email sent successfully')</span>
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            log.error('Error sending email', error)</span>
-<span class="cstat-no" title="statement not covered" >            throw new BadRequestError('Error sending email')</span>
-        }      
-    }
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      await sendGridMail.send(mailOptions)</span>
+<span class="cstat-no" title="statement not covered" >      log.info('Production email sent successfully')</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      log.error('Error sending email', error)</span>
+<span class="cstat-no" title="statement not covered" >      throw new BadRequestError('Error sending email')</span>
+    }      
+  }
 }
 &nbsp;
 &nbsp;
@@ -298,7 +298,7 @@ export const <span class="cstat-no" title="statement not covered" >mailTransport
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-14T02:52:07.422Z
+                at 2024-12-14T23:27:51.480Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

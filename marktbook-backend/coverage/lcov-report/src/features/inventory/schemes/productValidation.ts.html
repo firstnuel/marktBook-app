@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -108,20 +108,17 @@
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -130,10 +127,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,47 +150,50 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { z } from  'zod'</span>
-<span class="cstat-no" title="statement not covered" >import { ProductType, ProductCategory, Unit, Currency } from '@inventory/interfaces/products.interface'</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { z } from  'zod'
+import { ProductType, ProductCategory, Unit, Currency } from '@inventory/interfaces/products.interface'
 &nbsp;
 &nbsp;
-const ProductImage = <span class="cstat-no" title="statement not covered" >z.object({</span>
-    url: z.string(),
-    isPrimary: z.boolean()
+const ProductImage = z.object({
+  url: z.string(),
+  isPrimary: z.boolean()
 })
 &nbsp;
 &nbsp;
-const ProductVariant = <span class="cstat-no" title="statement not covered" >z.object({</span>
-    productId: z.string(),
-    variantName:z.string(),
-    sku: z.string(),
-    barcode: z.string(),
-    priceAdjustment: z.number().min(0, {message: 'Price adjustment must be non-negative'}),
-    attributes: z.array(z.object({ name: z.string(), value: z.string() })),
-    images: z.array(ProductImage).min(1, {message: 'At least one product image is required'}),
-    stockId: z.string()
+const ProductVariant = z.object({
+  productId: z.string(),
+  variantName:z.string(),
+  sku: z.string(),
+  barcode: z.string(),
+  priceAdjustment: z.number().min(0, {message: 'Price adjustment must be non-negative'}),
+  attributes: z.array(z.object({ name: z.string(), value: z.string() })),
+  images: z.array(ProductImage).min(1, {message: 'At least one product image is required'}),
+  stockId: z.string()
 })
 &nbsp;
 &nbsp;
-export const <span class="cstat-no" title="statement not covered" >productSchema = z.object({</span>
-    sku: z.string(),
-    currency: z.nativeEnum(Currency),
-    productName: z.string({required_error: 'product name is required'}),
-    businessId: z.string({required_error: 'business Id is required'}),
-    longDescription: z.string().optional(),
-    shortDescription: z.string().optional(),
-    productCategory: z.nativeEnum(ProductCategory),
-    productType: z.nativeEnum(ProductType),
-    barcode: z.string().optional(),
-    productVariants: z.array(ProductVariant).optional(),
-    basePrice: z.number({required_error: 'Base price is required'}).min(0),
-    salePrice: z.number().optional(),
-    unit: z.nativeEnum(Unit),
-    discount: z.number().default(0),
-    productImages: z.array(ProductImage).optional(), //.min(1, {message: 'At least one product image is required'}),
-    tags: z.array(z.string()).optional(),
-    supplierId: z.string().optional(),
-    isActive: z.boolean().default(false),
+export const productSchema = z.object({
+  sku: z.string(),
+  currency: z.nativeEnum(Currency),
+  productName: z.string({required_error: 'product name is required'}),
+  businessId: z.string({required_error: 'business Id is required'}),
+  longDescription: z.string().optional(),
+  shortDescription: z.string().optional(),
+  productCategory: z.nativeEnum(ProductCategory),
+  productType: z.nativeEnum(ProductType),
+  barcode: z.string().optional(),
+  productVariants: z.array(ProductVariant).optional(),
+  basePrice: z.number({required_error: 'Base price is required'}).min(0),
+  salePrice: z.number().optional(),
+  unit: z.nativeEnum(Unit),
+  discount: z.number().default(0),
+  productImages: z.array(ProductImage).optional(), //.min(1, {message: 'At least one product image is required'}),
+  tags: z.array(z.string()).optional(),
+  supplierId: z.string().optional(),
+  isActive: z.boolean().default(false),
 })
 &nbsp;
 &nbsp;
@@ -205,7 +205,7 @@ export const <span class="cstat-no" title="statement not covered" >productSchema
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-14T02:52:07.422Z
+                at 2024-12-14T23:27:51.480Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

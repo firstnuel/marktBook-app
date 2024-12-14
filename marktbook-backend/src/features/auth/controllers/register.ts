@@ -228,7 +228,6 @@ export class Register {
       businessName,
       email,
       username,
-      adminFullName,
       uIds,
       businessAddress,
       businessType,
@@ -250,11 +249,7 @@ export class Register {
         {
           userId: ownerId,
           username,
-          name: adminFullName,
-          role: 'Owner',
-          addedAt: new Date(),
-          status: 'active',
-        },
+        }
       ],
       businessLogo: '',
       uId: uIds?.businessUId?? '',

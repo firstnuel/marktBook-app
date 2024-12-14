@@ -22,7 +22,7 @@ class CurrentUser{
     const existingUser: IuserDocument = cachedUser? cachedUser 
       : await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
 
-    if (Object.keys(existingUser).length) {
+    if (existingUser && Object.keys(existingUser).length) {
       isUser = true
       token = req.session?.jwt
       user = omit(existingUser, [

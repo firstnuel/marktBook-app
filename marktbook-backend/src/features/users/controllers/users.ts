@@ -84,9 +84,6 @@ export class Users {
       const adminData = {
         userId: newUserId,
         username,
-        name,
-        role,
-        status
       } as IBusinessAdmin
       
       // Add jobs to queues
@@ -233,7 +230,7 @@ export class Users {
       const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
   
       let users = await userService.getAllUsers(existingUser.associatedBusinessesId)
-      users = users?.filter(user => user._id !== existingUser._id)
+      users = users?.filter(user => user._id.toString() !== existingUser._id.toString())
   
       res.status(HTTP_STATUS.OK).json({data: users})
 

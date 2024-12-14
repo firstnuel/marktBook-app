@@ -64,10 +64,6 @@ export enum BusinessRole {
 export interface IBusinessAdmin {
   userId: string | ObjectId; 
   username: string;
-  name: string;
-  role: BusinessRole; 
-  addedAt?: Date; 
-  status: 'active' | 'inactive'; 
 }
 
 

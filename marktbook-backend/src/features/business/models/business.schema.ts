@@ -1,4 +1,4 @@
-import { BusinessRole, IBusinessDocument } from '@business/interfaces/business.interface'
+import { IBusinessDocument } from '@business/interfaces/business.interface'
 import { model, Model, Schema } from 'mongoose'
 import { BusinessCategory, BusinessType } from '@auth/interfaces/auth.interface'
 
@@ -17,13 +17,7 @@ const businessSchema: Schema = new Schema(
     admins: [
       {
         userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        username: { type: String, required: true },
-        name: { type: String, required: true },
-        role: { type: String,
-          enum: Object.values(BusinessRole), 
-          required: true },
-        addedAt: { type: Date, default: Date.now },
-        status: { type: String, enum: ['active', 'inactive'], default: 'active' }
+        username: { type: String, required: true }
       }
     ],
     

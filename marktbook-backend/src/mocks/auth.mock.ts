@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { AuthPayload, BusinessCategory, BusinessType, IAuthDocument } from '@auth/interfaces/auth.interface'
+import { AuthPayload, BusinessCategory, BusinessType } from '@auth/interfaces/auth.interface'
 import { ObjectId } from 'mongodb'
 
 
@@ -22,8 +22,23 @@ export interface IJWT {
     jwt?: string;
 }
 
+export type IAuthMock = 
+ | IRegisterMock 
+ | ILoginMock 
+ | ICurrentUserMock
+ | IPasswordMock
 
-export interface IAuthMock {
+export interface ICurrentUserMock {
+  id?: object    
+}
+
+export interface IPasswordMock {
+  email: string;
+  password: string; 
+}
+
+
+export interface IRegisterMock {
     _id: ObjectId | string;
     uIds: {userUId: string, businessUId: string}; 
     email: string; 
@@ -37,30 +52,15 @@ export interface IAuthMock {
     businessCategory: BusinessCategory; 
     businessLogo?: string;
 }
+
+export interface ILoginMock {
+  email: string; 
+  username: string;
+  password: string; 
+}
   
 
-export const authUserPayload: AuthPayload = {
-  userId: '60263f14648fed5246e322d9',
-  businessId: '60265f14648fed5246e322da',
-  uId: {userUId: '1621613119252066', businessUId: '1621614119252766'},
-  username: 'Manny',
-  email: 'manny@me.com',
-  iat: 12345
-}
 
-export const authMock = {
-  _id: '60263f14648fed5246e322d3',
-  uIds: {userUId: '1621613119252066', businessUId: '1621614119252766'},
-  username: 'Manny',
-  adminFullName: 'Manny David',
-  businessName: 'Tech Innovations LLC',
-  email: 'manny@me.com',
-  createdAt: '2022-08-31T07:42:24.451Z',
-  businessType: 'Retail',
-  businessCategory: 'Technology',
-  save: () => {},
-  comparePassword: () => false
-} as unknown as IAuthDocument
 
 
 
