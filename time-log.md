@@ -23,7 +23,8 @@
 |             | 4 | Implemented User controller for creating and fetching users, refactored API route and file structure|
 | **14.12.**  | 2  | Extended User controller to edit and delete users, added user edit and delete router |
 |             | 1 | Refactored product and user controller, changed lint indent rules |
-| **Total**  | **48** | |
+| **15.12.** | 2 | Added unit tests for all implemented controllers |
+| **Total**  | **50** | |
 
 
 
