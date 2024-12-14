@@ -21,7 +21,9 @@
 |            | 3 | Developed product controller for product creation, added queue, workers, and endpoint |
 |             | 1 | Updated Api documentation to include new product endpoint |
 |             | 4 | Implemented User controller for creating and fetching users, refactored API route and file structure|
-| **Total**  | **45** | |
+| **14.12.**  | 2  | Extended User controller to edit and delete users, added user edit and delete router |
+|             | 1 | Refactored product and user controller, changed lint indent rules |
+| **Total**  | **48** | |
 
 
 
