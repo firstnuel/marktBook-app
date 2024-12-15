@@ -36,7 +36,7 @@ jobs:
 
             - name: Run backend style check
               working-directory: marktbook-backend
-              run: npm run eslint
+              run: npm run lint
 
             - name: Run backend tests
               working-directory: marktbook-backend
