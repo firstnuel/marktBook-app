@@ -51,7 +51,7 @@ withCredentials: true
 {
     "sku": "PRD12345",
     "productName": "Wireless Earbuds",
-    "businessId": "675c8260292e852649a22a97",
+    "businessId": "675df7831e2e82150bc6c012",
     "longDescription": "High-quality wireless earbuds with noise cancellation and 20-hour battery life.",
     "shortDescription": "Wireless earbuds with long battery life.",
     "currency": "USD",
@@ -77,19 +77,53 @@ Accept: application/json
 withCredentials: true
 
 {
-  "email": "janedoe@example.com",
+  "email": "jammesdoe@example.com",
   "username": "janedoe123",
   "mobileNumber": "1234567890",
-  "name": "Jane Doe",
+  "name": "James Dorren",
   "role": "Manager",
   "status": "active",
   "address": "123 Main Street, Springfield",
-  "nin": "A123456789",
-  "businessId": "675c8260292e852649a22a97"
+  "nin": "A24538394",
+  "businessId": "675df7831e2e82150bc6c012"
 }
 
 ###
 GET  {{baseUrl}}/{{urlpath}}/users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+GET {{baseUrl}}/{{urlpath}}/users/675df81e1e2e82150bc6c02d
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+PATCH {{baseUrl}}/{{urlpath}}/users/675da5a7363965202058858c
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "name": "Jane Doe",
+  "mobileNumber": "+1234567890",
+  "status": "active",
+  "languagePreference": "english",
+  "emergencyContact": {
+    "name": "Alice Doe",
+    "relationship": "Sister",
+    "contactNumber": "+9876543210"
+  },
+  "notificationPreferences": {
+    "emailNotifications": false,
+    "smsNotifications": true
+  }
+}
+
+###
+DELETE {{baseUrl}}/{{urlpath}}/users/675da60336396520205885a5
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

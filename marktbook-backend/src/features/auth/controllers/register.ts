@@ -22,7 +22,7 @@ import Logger from 'bunyan'
 
 const logger: Logger = config.createLogger('registerController')
 
-class Register {
+export class Register {
 
   constructor( ) {
     this.create = this.create.bind(this)
@@ -152,7 +152,7 @@ class Register {
         data: omit(businessDataForCache, ['uId', 'verifyData']), // Exclude sensitive fields
         token: userJwt,
       })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       logger.error(`Registration failed: ${error.message}`)
       next(error)
@@ -228,7 +228,6 @@ class Register {
       businessName,
       email,
       username,
-      adminFullName,
       uIds,
       businessAddress,
       businessType,
@@ -250,11 +249,7 @@ class Register {
         {
           userId: ownerId,
           username,
-          name: adminFullName,
-          role: 'Owner',
-          addedAt: new Date(),
-          status: 'active',
-        },
+        }
       ],
       businessLogo: '',
       uId: uIds?.businessUId?? '',

@@ -7,43 +7,43 @@ import { omit } from 'lodash'
 
 class CurrentUser{
 
-    /**
+  /**
      * Handles reurning current authenticated user
      * @param req Express Request object
      * @param res Express Response object
      */
-    public async read(req: Request, res: Response): Promise<void> {
-        let isUser = false
-        let token = null 
-        let user = null 
+  public async read(req: Request, res: Response): Promise<void> {
+    let isUser = false
+    let token = null 
+    let user = null 
 
-        const cachedUser: IuserDocument = await userCache.getUserfromCache(`${req.currentUser?.userId}`) as IuserDocument
+    const cachedUser: IuserDocument = await userCache.getUserfromCache(`${req.currentUser?.userId}`) as IuserDocument
 
-        const existingUser: IuserDocument = cachedUser? cachedUser 
-            : await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
+    const existingUser: IuserDocument = cachedUser? cachedUser 
+      : await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
 
-        if (Object.keys(existingUser).length) {
-            isUser = true
-            token = req.session?.jwt
-            user = omit(existingUser, [
-                'authId',
-                '__v',
-                'createdAt',
-                'updatedAt',
-                'emergencyContact',
-                'notificationPreferences',
-                'address',
-                'mobileNumber',
-                'profilePicture',
-                'status',
-                'associatedBusinessesId',
-                'isVerified'
-            ])
-        }
-
-
-        res.status(HTTP_STATUS.OK).json({isUser, token, user })
+    if (existingUser && Object.keys(existingUser).length) {
+      isUser = true
+      token = req.session?.jwt
+      user = omit(existingUser, [
+        'authId',
+        '__v',
+        'createdAt',
+        'updatedAt',
+        'emergencyContact',
+        'notificationPreferences',
+        'address',
+        'mobileNumber',
+        'profilePicture',
+        'status',
+        'associatedBusinessesId',
+        'isVerified'
+      ])
     }
+
+
+    res.status(HTTP_STATUS.OK).json({isUser, token, user })
+  }
 }
 
 

@@ -30,7 +30,7 @@ export const uploads = (
             name: 'UploadApiErrorResponse',
             http_code: 500
           }
-           resolve(resultError)
+          resolve(resultError)
         }
         resolve(result)
       }

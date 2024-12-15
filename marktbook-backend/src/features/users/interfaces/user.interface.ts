@@ -32,11 +32,11 @@ export interface IuserDocument extends Document {
     profilePicture?: string;
     }
     
-  export interface IUserJob {
+export interface IUserJob {
     value?: string | IuserDocument;
   }
 
-  export interface IEmailJob {
+export interface IEmailJob {
     receiveEmail: string;
     template: string;
     subject: string;
@@ -53,4 +53,27 @@ export interface IuserData {
   nin?: string;
   username: string;
   businessId: string | ObjectId;
+}
+
+export const ALLOWED_UPDATE_FIELDS: (keyof IuserDocument)[] = [
+  'name',
+  'mobileNumber',
+  'role',
+  'status',
+  'address',
+  'nin',
+  'emergencyContact',
+  'notificationPreferences',
+  'languagePreference',
+  'isVerified',
+  'profilePicture',
+]
+
+export function filterAllowedFields(data: Partial<IuserDocument>): Partial<IuserDocument> {
+  return Object.keys(data)
+    .filter(key => ALLOWED_UPDATE_FIELDS.includes(key as keyof IuserDocument))
+    .reduce((obj, key) => {
+      obj[key as keyof IuserDocument] = data[key as keyof IuserDocument]
+      return obj
+    }, {} as Partial<IuserDocument>)
 }
