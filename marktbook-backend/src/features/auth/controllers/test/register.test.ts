@@ -127,7 +127,7 @@ describe('Register Controller', () => {
       (authService.getBusinessByNameAndEmail as jest.Mock).mockResolvedValue(null);
       
       // Ensure uploads is mocked with the correct parameters and return value
-      (uploads as jest.Mock).mockImplementation((logo, id, resize, crop) => ({
+      (uploads as jest.Mock).mockImplementation(() => ({
         public_id: 'test-logo-id',
         url: 'https://cloudinary.com/test-logo'
       }));
