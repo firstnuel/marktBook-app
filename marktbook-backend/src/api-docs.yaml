@@ -1,0 +1,841 @@
+openapi: 3.0.0
+info:
+  title: marktBook API
+  version: 1.0.0
+servers:
+  - url: http://localhost:5001/api/v1
+paths:
+  /register:
+    post:
+      summary: Register a new business and owner
+      description: Endpoint for business and owner registration with comprehensive details
+      tags:
+        - Authentication
+      requestBody:
+        description: Business and owner registration details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - businessName
+                - username
+                - businessLogo
+                - adminFullName
+                - businessAddress
+                - businessType
+                - businessCategory
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: business@example.com
+                password:
+                  type: string
+                  format: password
+                  example: secure_password_123
+                businessName:
+                  type: string
+                  example: My Awesome Business
+                username:
+                  type: string
+                  example: new_admin
+                businessLogo:
+                  type: string
+                  format: binary
+                  description: Base64 encoded image or file upload
+                  example: base64-encoded-image or remove this field!
+                adminFullName:
+                  type: string
+                  example: John Doe
+                businessAddress:
+                  type: string
+                  example: 123 Business Street, City, Country
+                businessType:
+                  type: string
+                  example: Retail
+                businessCategory:
+                  type: string
+                  example: Electronics
+      responses:
+        '201':
+          description: Business and user account created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Business account and user created successfully
+                  data:
+                    type: object
+                    properties:
+                      businessName:
+                        type: string
+                      businessType:
+                        type: string
+                      businessCategory:
+                        type: string
+                      businessAddress:
+                        type: string
+                  token:
+                    type: string
+                    description: JWT authentication token
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - Business with this name or email already exists
+                      - Invalid business logo
+                      - Validation failed
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to process registration. Please try again.
+  /forgot-password:
+    post:
+      summary: Forgot Password
+      description: Generate a password reset token and send a reset link to the user's email.
+      tags:
+        - Authentication
+      requestBody:
+        description: Email address to generate password reset link.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address.
+                  example: user@example.com
+      responses:
+        '200':
+          description: Password reset email sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password reset email sent.
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - Invalid email address
+                      - User not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /reset-password/{token}:
+    post:
+      summary: Reset Password
+      description: Update the user's password using a valid reset token.
+      tags:
+        - Authentication
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Password reset token.
+      requestBody:
+        description: New password details.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+                - confirmPassword
+              properties:
+                password:
+                  type: string
+                  format: password
+                  description: New password for the account.
+                  example: new_secure_password_123
+                confirmPassword:
+                  type: string
+                  format: password
+                  description: Confirmation of the new password.
+                  example: new_secure_password_123
+      responses:
+        '200':
+          description: Password updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password updated successfully.
+        '400':
+          description: Bad Request - Validation Error or Invalid Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - Validation failed
+                      - Reset token is expired or invalid
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /login:
+    post:
+      summary: User Login
+      description: Authenticate user with business email, username and password
+      tags:
+        - Authentication
+      requestBody:
+        description: User login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address (optional if username provided)
+                  example: user@example.com
+                username:
+                  type: string
+                  description: Username (optional if email provided)
+                  example: johndoe
+                password:
+                  type: string
+                  format: password
+                  example: secure_password_123
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: user login successful
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: User's unique identifier
+                      name:
+                        type: string
+                        description: User's full name
+                      email:
+                        type: string
+                        description: User's email address
+                      username:
+                        type: string
+                        description: User's username
+                      role:
+                        type: string
+                        description: User's role in the system
+                      status:
+                        type: string
+                        description: User's account status
+                      associatedBusinesses:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            businessId:
+                              type: string
+                            businessName:
+                              type: string
+                            role:
+                              type: string
+                  token:
+                    type: string
+                    description: JWT authentication token
+        '400':
+          description: Authentication Failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - invalid credentials, user not found
+                      - invalid credentials, password not correct
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /currentuser:
+    get:
+      summary: Get Current User
+      description: Retrieve details of the currently authenticated user
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved user details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isUser:
+                    type: boolean
+                    description: Whether a valid user is authenticated
+                    example: true
+                  token:
+                    type: string
+                    description: JWT token of the authenticated user
+                    example: "some_jwt_token"
+                  user:
+                    type: object
+                    description: User details excluding sensitive fields
+                    properties:
+                      _id:
+                        type: string
+                        description: User's unique identifier
+                      uId:
+                        type: string
+                        description: User's cache unique identifier
+                      name:
+                        type: string
+                        description: User's full name
+                      email:
+                        type: string
+                        description: User's email address
+                      username:
+                        type: string
+                        description: User's username
+                      role:
+                        type: string
+                        description: User's role in the system
+                      nin:
+                        type: string
+                        description: User's National Identification Number
+                      associatedBusinesses:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            businessId:
+                              type: string
+                            businessName:
+                              type: string
+                            role:
+                              type: string
+        '401':
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Token not available, please login"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to retrieve user details due to server error
+  /logout:
+    get:
+      summary: User Logout
+      description: Invalidate the user's authentication token
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User logged out successfully
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to logout user due to server error
+  /products:
+    post:
+      summary: Create a new product
+      description: Endpoint to create a new product under a business.
+      tags:
+        - Inventory
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Details of the product to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sku
+                - productName
+                - currency
+                - businessId
+                - basePrice
+              properties:
+                sku:
+                  type: string
+                  example: PRD18347
+                productName:
+                  type: string
+                  example: Bluetooth Speaker
+                currency:
+                  type: string
+                  description: Currency of the product's price.
+                  example: NGN
+                businessId:
+                  type: string
+                  description: The ID of the business to associate the product with.
+                  example: 67597971222a047c50cb8e75
+                longDescription:
+                  type: string
+                  description: Detailed description of the product.
+                  example: Portable Bluetooth speaker with deep bass and 10-hour battery life.
+                shortDescription:
+                  type: string
+                  description: Brief description of the product.
+                  example: Compact Bluetooth speaker with powerful sound.
+                productCategory:
+                  type: string
+                  description: The category of the product.
+                  example: Electronics
+                productType:
+                  type: string
+                  description: The type of the product (e.g., Physical or Digital).
+                  example: Physical
+                barcode:
+                  type: string
+                  description: Barcode of the product.
+                  example: 9876543210987
+                productVariants:
+                  type: array
+                  items:
+                    type: object
+                  description: Variants of the product (e.g., color, size).
+                basePrice:
+                  type: number
+                  description: Base price of the product.
+                  example: 75.0
+                salePrice:
+                  type: number
+                  description: Sale price of the product (optional).
+                  example: 60.0
+                discount:
+                  type: number
+                  description: Discount percentage applied to the product (optional).
+                  example: 15.0
+                unit:
+                  type: string
+                  description: Unit of measurement for the product.
+                  example: piece
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: Tags associated with the product.
+                  example: ["bluetooth", "audio", "speaker"]
+                supplierId:
+                  type: string
+                  description: ID of the supplier (optional).
+                  example: null
+                productImages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        description: URL of the product image.
+                        example:  base64-encoded-image or remove productImages field!
+                      isPrimary:
+                        type: boolean
+                        description: Indicates if the image is the primary one.
+                        example: true
+                isActive:
+                  type: boolean
+                  description: Indicates if the product is active (optional).
+                  example: true
+      responses:
+        '201':
+          description: Product created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Product 'Bluetooth Speaker' created successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      stockId:
+                        type: string
+                        nullable: true
+                      sku:
+                        type: string
+                      currency:
+                        type: string
+                      productName:
+                        type: string
+                      businessId:
+                        type: string
+                      longDescription:
+                        type: string
+                        nullable: true
+                      shortDescription:
+                        type: string
+                        nullable: true
+                      productCategory:
+                        type: string
+                      productImages:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                            isPrimary:
+                              type: boolean
+                      productType:
+                        type: string
+                      barcode:
+                        type: string
+                        nullable: true
+                      productVariants:
+                        type: array
+                        items:
+                          type: object
+                      basePrice:
+                        type: number
+                      salePrice:
+                        type: number
+                      unit:
+                        type: string
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                      discount:
+                        type: number
+                      isActive:
+                        type: boolean
+                      supplierId:
+                        type: string
+                        nullable: true
+                      createdBy:
+                        type: string
+                      updatedBy:
+                        type: string
+                  status:
+                    type: string
+                    example: success
+        '400':
+          description: Validation Error or Bad Request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - Validation failed
+                      - Invalid Business: business not found
+        '401':
+          description: Unauthorized - User not authenticated or not authorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to process product creation. Please try again.
+  paths:
+  /users:
+    post:
+      summary: Create a new user
+      description: Endpoint to create a new user under a business.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Details of the user to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - username
+                - mobileNumber
+                - name
+                - role
+                - status
+                - businessId
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                username:
+                  type: string
+                  example: johndoe
+                mobileNumber:
+                  type: string
+                  example: 1234567890
+                name:
+                  type: string
+                  example: John Doe
+                role:
+                  type: string
+                  example: Manager
+                status:
+                  type: string
+                  enum:
+                    - active
+                    - inactive
+                  example: active
+                address:
+                  type: string
+                  description: Address of the user (optional).
+                  example: 123 Street, City
+                nin:
+                  type: string
+                  description: National Identification Number (optional).
+                  example: A123456789
+                businessId:
+                  type: string
+                  example: 64a7fda17f35c302d91e3e4b
+      responses:
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User 'John Doe' account created successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 64a7fda17f35c302d91e3e4b
+                      email:
+                        type: string
+                        example: user@example.com
+                      username:
+                        type: string
+                        example: johndoe
+                      name:
+                        type: string
+                        example: John Doe
+                      role:
+                        type: string
+                        example: Manager
+                      status:
+                        type: string
+                        example: active
+                      associatedBusinessesId:
+                        type: string
+                        example: 64a7fda17f35c302d91e3e4b
+                      mobileNumber:
+                        type: string
+                        example: 1234567890
+        '400':
+          description: Bad Request - Validation Error or Duplicate Account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - User account with this name or email already exists
+                      - Validation failed
+        '401':
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to process registration. Please try again.
+    get:
+      summary: Retrieve all users associated with a business
+      description: Endpoint to fetch all users associated with the authenticated user's business, excluding the current user.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved users.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 64a7fda17f35c302d91e3e4b
+                        email:
+                          type: string
+                          example: user@example.com
+                        username:
+                          type: string
+                          example: johndoe
+                        name:
+                          type: string
+                          example: John Doe
+                        role:
+                          type: string
+                          example: Manager
+                        status:
+                          type: string
+                          example: active
+                        associatedBusinessesId:
+                          type: string
+                          example: 64a7fda17f35c302d91e3e4b
+                        mobileNumber:
+                          type: string
+                          example: 1234567890
+        '401':
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to retrieve users. Please try again.
+

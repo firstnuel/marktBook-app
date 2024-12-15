@@ -1,0 +1,214 @@
+paths:
+  /products:
+    post:
+      summary: Create a new product
+      description: Endpoint to create a new product under a business.
+      tags:
+        - Inventory
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Details of the product to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sku
+                - productName
+                - currency
+                - businessId
+                - basePrice
+              properties:
+                sku:
+                  type: string
+                  example: PRD18347
+                productName:
+                  type: string
+                  example: Bluetooth Speaker
+                currency:
+                  type: string
+                  description: Currency of the product's price.
+                  example: NGN
+                businessId:
+                  type: string
+                  description: The ID of the business to associate the product with.
+                  example: 67597971222a047c50cb8e75
+                longDescription:
+                  type: string
+                  description: Detailed description of the product.
+                  example: Portable Bluetooth speaker with deep bass and 10-hour battery life.
+                shortDescription:
+                  type: string
+                  description: Brief description of the product.
+                  example: Compact Bluetooth speaker with powerful sound.
+                productCategory:
+                  type: string
+                  description: The category of the product.
+                  example: Electronics
+                productType:
+                  type: string
+                  description: The type of the product (e.g., Physical or Digital).
+                  example: Physical
+                barcode:
+                  type: string
+                  description: Barcode of the product.
+                  example: 9876543210987
+                productVariants:
+                  type: array
+                  items:
+                    type: object
+                  description: Variants of the product (e.g., color, size).
+                basePrice:
+                  type: number
+                  description: Base price of the product.
+                  example: 75.0
+                salePrice:
+                  type: number
+                  description: Sale price of the product (optional).
+                  example: 60.0
+                discount:
+                  type: number
+                  description: Discount percentage applied to the product (optional).
+                  example: 15.0
+                unit:
+                  type: string
+                  description: Unit of measurement for the product.
+                  example: piece
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: Tags associated with the product.
+                  example: ["bluetooth", "audio", "speaker"]
+                supplierId:
+                  type: string
+                  description: ID of the supplier (optional).
+                  example: null
+                productImages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        description: URL of the product image.
+                        example: base64-encoded-image or remove productImages field!
+                      isPrimary:
+                        type: boolean
+                        description: Indicates if the image is the primary one.
+                        example: true
+                isActive:
+                  type: boolean
+                  description: Indicates if the product is active (optional).
+                  example: true
+      responses:
+        '201':
+          description: Product created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Product 'Bluetooth Speaker' created successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      stockId:
+                        type: string
+                        nullable: true
+                      sku:
+                        type: string
+                      currency:
+                        type: string
+                      productName:
+                        type: string
+                      businessId:
+                        type: string
+                      longDescription:
+                        type: string
+                        nullable: true
+                      shortDescription:
+                        type: string
+                        nullable: true
+                      productCategory:
+                        type: string
+                      productImages:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                            isPrimary:
+                              type: boolean
+                      productType:
+                        type: string
+                      barcode:
+                        type: string
+                        nullable: true
+                      productVariants:
+                        type: array
+                        items:
+                          type: object
+                      basePrice:
+                        type: number
+                      salePrice:
+                        type: number
+                      unit:
+                        type: string
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                      discount:
+                        type: number
+                      isActive:
+                        type: boolean
+                      supplierId:
+                        type: string
+                        nullable: true
+                      createdBy:
+                        type: string
+                      updatedBy:
+                        type: string
+                  status:
+                    type: string
+                    example: success
+        '400':
+          description: Validation Error or Bad Request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - Validation failed
+                      - Invalid Business: business not found
+        '401':
+          description: Unauthorized - User not authenticated or not authorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to process product creation. Please try again.
