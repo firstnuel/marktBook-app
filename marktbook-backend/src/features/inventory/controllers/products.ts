@@ -3,8 +3,8 @@ import HTTP_STATUS from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { Request, Response, NextFunction } from 'express'
 import { ZodValidationError, BadRequestError, NotFoundError, NotAuthorizedError, ServerError } from '@root/shared/globals/helpers/error-handlers'
-import { productSchema } from '@inventory/schemes/productValidation'
-import { IProductDocument, IProductData } from '@inventory/interfaces/products.interface'
+import { productSchema, categorySchema, searchSchema } from '@inventory/schemes/productValidation'
+import { IProductDocument, IProductData, IFilterData } from '@inventory/interfaces/products.interface'
 import { uploadProductImages } from '@root/shared/globals/helpers/cloudinary-upload'
 import { productQueue } from '@service/queues/product.queue'
 import { config } from '@root/config'
@@ -18,7 +18,7 @@ import { productService } from '@service/db/productService'
 
 const log = config.createLogger('productsController')
 
-class Product {
+export class Product {
   constructor() {
     this.create = this.create.bind(this)
   }
@@ -190,6 +190,86 @@ class Product {
       createdBy: new ObjectId(userId),
       updatedBy: new ObjectId(userId),
     } as unknown as IProductDocument
+  }
+
+  public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      // validate user 
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+
+      // fetch products
+      const products = await productService.fetchAll(`${existingUser.associatedBusinessesId}`)
+
+      const message = products.length? 'Products data fetched successfully' : 'No product found'
+      res.status(HTTP_STATUS.OK).json({ message, data: products })
+
+    } catch(error) {
+      // Log and forward the error to a centralized error handler
+      log.error('Error fetching uses')
+      next(error)
+    }
+  }
+
+  public async categories(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // validate user
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+
+      // validate params
+      const parsedDataOrError = Utils.schemaParser(categorySchema, req.params) 
+      if (parsedDataOrError !== true) {
+        log.warn('Validation failed:', parsedDataOrError.toString())
+        return next(new ZodValidationError(parsedDataOrError.toString()))
+      }
+
+      const reqQuery = Utils.sanitizeInput(req.params)
+      const { category }  = reqQuery
+
+      // fetch products
+      const products = await productService.fetchCategories(`${existingUser.associatedBusinessesId}`, category)
+      const message = products.length? 'Products data fetched successfully' : 'No product found'
+      res.status(HTTP_STATUS.OK).json({ message, data: products })
+
+    } catch(error) {
+      // Log and forward the error to a centralized error handler
+      log.error('Error fetching uses')
+      next(error)
+    }
+  }
+
+  public async search(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // validate user
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+
+      // validate params
+      const parsedDataOrError = Utils.schemaParser(searchSchema, req.params) 
+      if (parsedDataOrError !== true) {
+        log.warn('Validation failed:', parsedDataOrError.toString())
+        return next(new ZodValidationError(parsedDataOrError.toString()))
+      }
+  
+      const query = Utils.sanitizeInput(req.query)
+      const { name, sku, barcode, tags } =  query
+
+      const filter: IFilterData = {
+        businessId: `${existingUser.associatedBusinessesId}`,
+      }
+      if (name) filter.name = { $regex: name, $options: 'i'}
+      if (sku) filter.sku = sku
+      if (barcode) filter.barcode = barcode
+      if (tags) filter.tags = { $in: tags.split() }
+
+      // fetch data
+      const products = await productService.fetchbyFilter(filter)
+      const message = products.length? 'Products data fetched successfully' : 'No product found'
+      res.status(HTTP_STATUS.OK).json({ message, data: products })
+
+    } catch(error) {
+      // Log and forward the error to a centralized error handler
+      log.error('Error fetching uses')
+      next(error)
+    }
   }
 
 }

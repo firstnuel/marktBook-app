@@ -41,5 +41,15 @@ export const productSchema = z.object({
   isActive: z.boolean().default(false),
 })
 
+export const categorySchema = z.object({
+  category: z.nativeEnum(ProductCategory)
+})
+
+export const searchSchema = z.object({
+  name: z.string().optional(),
+  sku: z.string().optional(),
+  barcode: z.string().optional(),
+  tags: z.array(z.string()).optional()
+})
 
 

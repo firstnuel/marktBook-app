@@ -140,3 +140,11 @@ export interface IProductData {
 export interface IProductJob {
     value?: string | IProductDocument;
   }
+
+export interface IFilterData {
+    businessId: string | ObjectId;
+    name?: string | { $regex: string; $options: string };
+    sku?: string;
+    barcode?: string;
+    tags?: { $in: string[] };
+}

@@ -7,7 +7,8 @@
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "test:ci": "jest --forceExit --detectOpenHandles --maxWorkers=50%",
     "lint": "eslint 'src/**/*.ts' --fix",
-    "lint:check": "eslint 'src/**/*.ts'"
+    "lint:check": "eslint 'src/**/*.ts'",
+    "seeds": "npx ts-node src/seeds.ts"
   },
   "keywords": [],
   "author": "Emmanuel Ikwunna",
@@ -16,9 +17,11 @@
   "dependencies": {
     "@bull-board/express": "^6.5.3",
     "@bull-board/ui": "^6.5.3",
+    "@faker-js/faker": "^9.3.0",
     "@sendgrid/mail": "^8.1.4",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.7",
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "bull": "^4.16.4",
     "bunyan": "^1.8.15",
