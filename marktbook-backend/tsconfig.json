@@ -3,6 +3,7 @@
       "target": "es2015",
       "module": "commonjs",
       "lib": ["DOM", "ES2015"],
+      "types": ["node", "jest"],
       "baseUrl": ".",
       "outDir": "./build",
       "rootDir": "src",
@@ -26,6 +27,17 @@
         { "transform": "typescript-transform-paths" , "afterDeclarations": true }
       ],
       "paths": {
+        "@auth/*": ["src/features/auth/*"],
+        "@inventory/*": ["src/features/inventory/*"],
+        "@customers/*": ["src/features/customers/*"],
+        "@transactions/*": ["src/features/transactions/*"],
+        "@suppliers/*": ["src/features/suppliers/*"],
+        "@users/*": ["src/features/users/*"],
+        "@business/*": ["src/features/business/*"],
+        "@global/*": ["src/shared/globals/*"],
+        "@service/*": ["src/shared/services/*"],
+        "@socket/*": ["src/shared/sockets/*"],
+        "@worker/*": ["src/shared/workers/*"],
         "@root/*": ["src/*"]
       },
     },

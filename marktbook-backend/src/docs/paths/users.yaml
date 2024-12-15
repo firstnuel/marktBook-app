@@ -1,0 +1,393 @@
+paths:
+  /users:
+    post:
+      summary: Create a new user
+      description: Endpoint to create a new user under a business.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Details of the user to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - username
+                - mobileNumber
+                - name
+                - role
+                - status
+                - businessId
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                username:
+                  type: string
+                  example: johndoe
+                mobileNumber:
+                  type: string
+                  example: 1234567890
+                name:
+                  type: string
+                  example: John Doe
+                role:
+                  type: string
+                  example: Manager
+                status:
+                  type: string
+                  enum:
+                    - active
+                    - inactive
+                  example: active
+                address:
+                  type: string
+                  description: Address of the user (optional).
+                  example: 123 Street, City
+                nin:
+                  type: string
+                  description: National Identification Number (optional).
+                  example: A123456789
+                businessId:
+                  type: string
+                  example: 64a7fda17f35c302d91e3e4b
+      responses:
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User 'John Doe' account created successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 64a7fda17f35c302d91e3e4b
+                      email:
+                        type: string
+                        example: user@example.com
+                      username:
+                        type: string
+                        example: johndoe
+                      name:
+                        type: string
+                        example: John Doe
+                      role:
+                        type: string
+                        example: Manager
+                      status:
+                        type: string
+                        example: active
+                      associatedBusinessesId:
+                        type: string
+                        example: 64a7fda17f35c302d91e3e4b
+                      mobileNumber:
+                        type: string
+                        example: 1234567890
+        '400':
+          description: Bad Request - Validation Error or Duplicate Account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - User account with this name or email already exists
+                      - Validation failed
+        '401':
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to process registration. Please try again.
+    get:
+      summary: Retrieve all users associated with a business
+      description: Endpoint to fetch all users associated with the authenticated user's business, excluding the current user.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved users.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 64a7fda17f35c302d91e3e4b
+                        email:
+                          type: string
+                          example: user@example.com
+                        username:
+                          type: string
+                          example: johndoe
+                        name:
+                          type: string
+                          example: John Doe
+                        role:
+                          type: string
+                          example: Manager
+                        status:
+                          type: string
+                          example: active
+                        associatedBusinessesId:
+                          type: string
+                          example: 64a7fda17f35c302d91e3e4b
+                        mobileNumber:
+                          type: string
+                          example: 1234567890
+        '401':
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to retrieve users. Please try again.
+
+  paths:
+  /users/{id}:
+    get:
+      summary: Fetch a user by ID
+      description: Retrieve a user's details by their unique identifier.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique ID of the user.
+      responses:
+        '200':
+          description: User fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: User fetched successfully
+                  data:
+                    type: object
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: User not found
+        '401':
+          description: Unauthorized - User not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to fetch user. Please try again.
+    patch:
+      summary: Edit user details
+      description: Update a user's status or role using their unique ID.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique ID of the user.
+      requestBody:
+        description: Fields to update in the user record.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  example: Manager
+                status:
+                  type: string
+                  enum:
+                    - active
+                    - inactive
+                  example: active
+      responses:
+        '200':
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: User updated successfully
+                  data:
+                    type: object
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '401':
+          description: Unauthorized - User not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to update user. Please try again.
+    delete:
+      summary: Delete a user
+      description: Remove a user's account using their unique identifier.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique ID of the user.
+      responses:
+        '200':
+          description: User deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: User deleted successfully
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '401':
+          description: Unauthorized - User not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid User
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to delete user. Please try again.
