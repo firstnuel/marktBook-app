@@ -43,4 +43,4 @@ jobs:
         working-directory: marktbook-backend
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: npm run test -- --detectOpenHandles
+        run: npm run test:ci
