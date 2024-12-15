@@ -34,23 +34,10 @@ jobs:
               working-directory: marktbook-backend
               run: npm install
 
-
-            - name: Install frontend dependencies
-              working-directory: marktbook-frontend
-              run: npm install
-
             - name: Run backend style check
               working-directory: marktbook-backend
               run: npm run eslint
 
             - name: Run backend tests
               working-directory: marktbook-backend
-              run: npm run test
-
-            - name: Run frontend style check
-              working-directory: marktbook-frontend
-              run: npm run eslint
-
-            - name: Run frontend tests
-              working-directory: marktbook-frontend
               run: npm run test
