@@ -1,43 +1,46 @@
 name: CI test Pipeline
 
 on:
-    push:
-      branches:
-        - main
-        - develop
-        - staging
-    pull_request:
-      branches: [main, develop, staging]
-      types: [opened, synchronize]
+  push:
+    branches:
+      - main
+      - develop
+      - staging
+  pull_request:
+    branches: [main, develop, staging]
+    types: [opened, synchronize]
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+  test:
+    runs-on: ubuntu-latest
+    environment: env 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-            - name: Set up node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '20'
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-            - name: Cache dependencies for backend
-              uses: actions/cache@v3
-              with:
-                  path: marktbook-backend/node_modules
-                  key: ${{ runner.os }}-node-backend-${{ hashFiles('marktbook-backend/package-lock.json') }}
-                  restore-keys: |
-                    ${{ runner.os }}-node-backend-
+      - name: Cache dependencies for backend
+        uses: actions/cache@v3
+        with:
+          path: marktbook-backend/node_modules
+          key: ${{ runner.os }}-node-backend-${{ hashFiles('marktbook-backend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-backend-
 
-            - name: Install backend dependencies
-              working-directory: marktbook-backend
-              run: npm install
+      - name: Install backend dependencies
+        working-directory: marktbook-backend
+        run: npm install
 
-            - name: Run backend style check
-              working-directory: marktbook-backend
-              run: npm run lint
+      - name: Run backend style check
+        working-directory: marktbook-backend
+        run: npm run lint
 
-            - name: Run backend tests
-              working-directory: marktbook-backend
-              run: npm run test
+      - name: Run backend tests
+        working-directory: marktbook-backend
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: npm run test -- --detectOpenHandles

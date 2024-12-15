@@ -125,11 +125,15 @@ describe('Register Controller', () => {
     it('should successfully register a new business', async () => {
       // Mock dependencies to simulate successful registration
       (authService.getBusinessByNameAndEmail as jest.Mock).mockResolvedValue(null);
-      (uploads as jest.Mock).mockResolvedValue({
+      
+      // Ensure uploads is mocked with the correct parameters and return value
+      (uploads as jest.Mock).mockImplementation((logo, id, resize, crop) => ({
         public_id: 'test-logo-id',
         url: 'https://cloudinary.com/test-logo'
-      });
+      }));
+    
       (constructCloudinaryURL as jest.Mock).mockReturnValue('https://cloudinary.com/test-logo');
+      
       (userCache.saveUserToCache as jest.Mock).mockResolvedValue(true);
       (businessCache.saveBusinessToCache as jest.Mock).mockResolvedValue(true);
       (authQueue.addAuthUserJob as jest.Mock).mockResolvedValue(true);
