@@ -25,7 +25,6 @@
 |             | 1 | Refactored product and user controller, changed lint indent rules |
 | **15.12.** | 2 | Added unit tests for all implemented controllers |
 |             | 3 | Extended products controller to include search by ID, queries and extended api docs |
-
 | **Total**  | **53** | |
 
 
