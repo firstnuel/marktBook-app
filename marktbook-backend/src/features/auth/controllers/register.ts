@@ -22,7 +22,7 @@ import Logger from 'bunyan'
 
 const logger: Logger = config.createLogger('registerController')
 
-class Register {
+export class Register {
 
   constructor( ) {
     this.create = this.create.bind(this)
@@ -60,7 +60,7 @@ class Register {
       } = body
 
       // Check for existing business
-      const checkIfBusinessExist: IAuthDocument = await authService.getBusinessByNameAndEmail(businessName, email)
+      const checkIfBusinessExist: IAuthDocument | null  = await authService.getBusinessByNameAndEmail(businessName, email)
       if (checkIfBusinessExist) {
         logger.warn(`Business registration failed: Business with name "${businessName}" or email "${email}" already exists.`)
         return next(new BadRequestError('Business with this name or email already exists.'))
@@ -89,28 +89,31 @@ class Register {
       })
 
       // Validate businessLogo before uploading
-      if (!businessLogo || !Utils.isValidImage(businessLogo)) {
+      if (businessLogo && !Utils.isValidImage(businessLogo)) {
         logger.warn('Invalid business logo provided.')
         return next(new BadRequestError('Invalid business logo. Please upload a valid image file.'))
       }
 
       // Perform file upload and data preparation in parallel
-      const [uploadResult, userDataForCache, businessDataForCache] = await Promise.all([
-        uploads(businessLogo, `${businessObjectId}`, true, true),
+      const [ userDataForCache, businessDataForCache] = await Promise.all([
+        // uploads(businessLogo, `${businessObjectId}`, true, true),
         this.UserData(authData, ownerId, businessObjectId),
         this.BusinessData(authData, businessObjectId, ownerId),
       ])
 
-      // Check upload result
-      if (!uploadResult?.public_id) {
-        logger.error('Business logo upload failed.')
-        return next(new BadRequestError('File Error: Failed to upload business logo. Please try again.'))
+      if (businessLogo && Utils.isValidImage(businessLogo)) {
+        const uploadResult = await  uploads(businessLogo, `${businessObjectId}`, true, true)
+        // Check upload result
+        if (!uploadResult?.public_id) {
+          logger.error('Business logo upload failed.')
+          return next(new BadRequestError('File Error: Failed to upload business logo. Please try again.'))
+        }
+  
+        logger.info(`Business logo uploaded successfully: ${uploadResult.public_id}`)
+  
+        // Update business logo URL
+        businessDataForCache.businessLogo = constructCloudinaryURL(uploadResult)
       }
-
-      logger.info(`Business logo uploaded successfully: ${uploadResult.public_id}`)
-
-      // Update business logo URL
-      businessDataForCache.businessLogo = constructCloudinaryURL(uploadResult)
 
       // Save data to cache
       await Promise.all([
@@ -144,11 +147,12 @@ class Register {
 
       // Respond to client
       res.status(HTTP_STATUS.CREATED).json({
+        status: 'success',
         message: 'Business account and user created successfully',
         data: omit(businessDataForCache, ['uId', 'verifyData']), // Exclude sensitive fields
         token: userJwt,
       })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       logger.error(`Registration failed: ${error.message}`)
       next(error)
@@ -224,7 +228,6 @@ class Register {
       businessName,
       email,
       username,
-      adminFullName,
       uIds,
       businessAddress,
       businessType,
@@ -246,14 +249,10 @@ class Register {
         {
           userId: ownerId,
           username,
-          name: adminFullName,
-          role: 'Owner',
-          addedAt: new Date(),
-          status: 'active',
-        },
+        }
       ],
       businessLogo: '',
-      uId: uIds.businessUId,
+      uId: uIds?.businessUId?? '',
       businessCategory,
       businessAddress,
       businessType,
@@ -291,12 +290,12 @@ class Register {
    * @returns User document conforming to IuserDocument interface
    */
   private UserData(data: IAuthDocument, userObjectId: ObjectId, businessObjectId: ObjectId): IuserDocument {
-    const { username, businessName, adminFullName, uIds, email, _id, } = data
+    const { username, adminFullName, uIds, email, _id, } = data
 
     return {
       _id: userObjectId,
       name: adminFullName,
-      uId: uIds.userUId,
+      uId: uIds?.userUId ?? '',
       authId: _id,
       email,
       mobileNumber: null,
@@ -306,13 +305,6 @@ class Register {
       nin: '',
       username,
       associatedBusinessesId: businessObjectId,
-      associatedBusinesses: [
-        {
-          businessId: businessObjectId,
-          businessName,
-          role: 'Owner',
-        },
-      ],
       emergencyContact: {
         name: '',
         relationship: '',

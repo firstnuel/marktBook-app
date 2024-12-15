@@ -15,28 +15,65 @@ export interface IuserDocument extends Document {
     nin: string;
     username: string;
     associatedBusinessesId: string | ObjectId;
-    associatedBusinesses?: Array<{
-        businessId: string | ObjectId;
-        businessName: string;
-        role: BusinessRole;
-      }>;
-      emergencyContact?: {
-        name: string;
-        relationship: string;
-        contactNumber: string;
-      };
-      createdAt?: Date;
-      updatedAt?: Date;
-      lastLogin?: Date;
-      notificationPreferences?: {
-        emailNotifications: boolean;
-        smsNotifications: boolean;
-      };
-      languagePreference?: string;
-      isVerified?: boolean;
-      profilePicture?: string;
+    emergencyContact?: {
+      name: string;
+      relationship: string;
+      contactNumber: string;
+    };
+    createdAt?: Date;
+    updatedAt?: Date;
+    lastLogin?: Date;
+    notificationPreferences?: {
+      emailNotifications: boolean;
+      smsNotifications: boolean;
+    };
+    languagePreference?: string;
+    isVerified?: boolean;
+    profilePicture?: string;
     }
     
-  export interface IUserJob {
+export interface IUserJob {
     value?: string | IuserDocument;
   }
+
+export interface IEmailJob {
+    receiveEmail: string;
+    template: string;
+    subject: string;
+  }
+
+
+export interface IuserData {
+  name: string;
+  email: string;
+  mobileNumber?: string;
+  role: BusinessRole;
+  status: 'active' | 'inactive'; 
+  address?: string;
+  nin?: string;
+  username: string;
+  businessId: string | ObjectId;
+}
+
+export const ALLOWED_UPDATE_FIELDS: (keyof IuserDocument)[] = [
+  'name',
+  'mobileNumber',
+  'role',
+  'status',
+  'address',
+  'nin',
+  'emergencyContact',
+  'notificationPreferences',
+  'languagePreference',
+  'isVerified',
+  'profilePicture',
+]
+
+export function filterAllowedFields(data: Partial<IuserDocument>): Partial<IuserDocument> {
+  return Object.keys(data)
+    .filter(key => ALLOWED_UPDATE_FIELDS.includes(key as keyof IuserDocument))
+    .reduce((obj, key) => {
+      obj[key as keyof IuserDocument] = data[key as keyof IuserDocument]
+      return obj
+    }, {} as Partial<IuserDocument>)
+}

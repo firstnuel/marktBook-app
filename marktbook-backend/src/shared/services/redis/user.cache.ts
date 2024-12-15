@@ -29,7 +29,6 @@ class UserCache extends Basecache {
       nin,
       username,
       associatedBusinessesId,
-      associatedBusinesses,
       emergencyContact,
       updatedAt,
       lastLogin,
@@ -56,7 +55,6 @@ class UserCache extends Basecache {
     ]
 
     const secondList: string[] = [
-      'associatedBusinesses', JSON.stringify(associatedBusinesses || []),
       'emergencyContact', JSON.stringify(emergencyContact || {}),
       'notificationPreferences', JSON.stringify(notificationPreferences || {}),
       'languagePreference', languagePreference || '',
@@ -112,7 +110,6 @@ class UserCache extends Basecache {
         nin: cacheData['nin'] || '',
         username: cacheData['username'] || '',
         associatedBusinessesId: cacheData['associatedBusinessesId'],
-        associatedBusinesses: JSON.parse(cacheData['associatedBusinesses'] || '[]'),
         emergencyContact: JSON.parse(cacheData['emergencyContact'] || '{}'),
         notificationPreferences: JSON.parse(cacheData['notificationPreferences'] || '{}'),
         languagePreference: cacheData['languagePreference'] || '',

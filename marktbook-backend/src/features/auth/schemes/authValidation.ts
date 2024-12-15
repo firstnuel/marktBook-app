@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { BusinessType, BusinessCategory } from '@auth/interfaces/auth.interface'
 
-const password = z
+export const password = z
   .string({
     required_error: 'Password is required',
     invalid_type_error: 'Password must be a string',
@@ -9,15 +9,21 @@ const password = z
   .min(4, { message: 'Invalid password' })
   .max(20, { message: 'Invalid password' })
 
-const email = z.string().email({ message: 'Field must be valid' })
 
-const username = z
+export const email = z
+  .string({
+    required_error: 'email is required',
+    invalid_type_error: 'email must be a string',
+  })
+  .email({ message: 'Field must be valid' })
+
+export const username = z
   .string({
     required_error: 'Username is required',
     invalid_type_error: 'Username must be a string',
   })
   .min(4, { message: 'Invalid username' })
-  .max(10, { message: 'Invalid username' })
+  .max(15, { message: 'Invalid username' })
 
 
 const loginSchema = z.object({
@@ -39,11 +45,8 @@ const registerSchema = z.object({
   businessLogo: z.string().trim().optional(),
 })
 
-
-
 const passwordSchema = z
   .object({
-    email,
     password,
     confirmPassword: password,
   })
@@ -57,7 +60,9 @@ const passwordSchema = z
     }
   })
 
-export { loginSchema, passwordSchema, registerSchema}
+const emailSchema = z.object({ email })
+
+export { loginSchema, passwordSchema, registerSchema, emailSchema}
 
 
 

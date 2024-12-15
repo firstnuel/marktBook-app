@@ -47,7 +47,7 @@ export interface AuthPayload {
 // Interface for authentication documents
 export interface IAuthDocument extends Document {
   _id: string | ObjectId; 
-  uIds: {userUId: string, businessUId: string}; 
+  uIds?: {userUId: string, businessUId: string}; 
   adminFullName: string; 
   businessName: string; 
   email: string; 
@@ -62,6 +62,7 @@ export interface IAuthDocument extends Document {
   passwordResetExpires?: number | string; 
   comparePassword(password: string): Promise<boolean>;
   hashPassword(password: string): Promise<string>; 
+  resetPassword(password: string): void; 
 }
 
 // Interface for registering business data

@@ -14,15 +14,10 @@ const businessSchema: Schema = new Schema(
     businessName: { type: String, required: true },
     email: { type: String, required: true },
     
-    // Updated admins field to accept subdocuments
     admins: [
       {
         userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        username: { type: String, required: true },
-        name: { type: String, required: true },
-        role: { type: String, enum: ['Owner', 'Manager', 'Staff'], required: true },
-        addedAt: { type: Date, default: Date.now },
-        status: { type: String, enum: ['active', 'inactive'], default: 'active' }
+        username: { type: String, required: true }
       }
     ],
     
