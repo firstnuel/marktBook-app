@@ -75,7 +75,7 @@ export enum ProductType {
     Service = 'Service',                
     Subscription = 'Subscription',         
     CustomOrder = 'Custom Order',          
-    Other = 'Other',                        // For categories not explicitly defined
+    Other = 'Other',      // For categories not explicitly defined
 }
 
 
@@ -147,4 +147,50 @@ export interface IFilterData {
     sku?: string;
     barcode?: string;
     tags?: { $in: string[] };
+}
+
+export const ALLOWED_ALL_FIELDS: (keyof IProductDocument)[] = [
+  'stockId',
+  'currency',
+  'sku',
+  'productName',
+  'longDescription',
+  'shortDescription',
+  'productCategory',
+  'productType',
+  'barcode',
+  'productVariants',
+  'basePrice',
+  'salePrice',
+  'unit',
+  'productImages',
+  'tags',
+  'supplierId',
+  'isActive',
+  'discount'
+]
+
+
+export const ALLOWED_STAFF_FIELDS: (keyof IProductDocument)[] = [
+  'longDescription',
+  'shortDescription',
+  'tags',
+  'productImages',
+]
+
+
+
+export function filterProductFields(
+  data: Partial<IProductDocument>,
+  filterKeys: (keyof IProductDocument)[]
+): Partial<IProductDocument> {
+  const filteredData: Partial<IProductDocument> = {}
+
+  for (const key in data) {
+    if (filterKeys.includes(key as keyof IProductDocument)) {
+      filteredData[key as keyof IProductDocument] = data[key as keyof IProductDocument]
+    }
+  }
+
+  return filteredData
 }

@@ -194,3 +194,73 @@ components:
           type: string
           description: URL or base64 string for the user's profile picture (optional)
 
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        stockId:
+          type: string
+          nullable: true
+        sku:
+          type: string
+        currency:
+          type: string
+        productName:
+          type: string
+        businessId:
+          type: string
+        longDescription:
+          type: string
+          nullable: true
+        shortDescription:
+          type: string
+          nullable: true
+        productCategory:
+          type: string
+        productImages:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              isPrimary:
+                type: boolean
+        productType:
+          type: string
+        barcode:
+          type: string
+          nullable: true
+        productVariants:
+          type: array
+          items:
+            type: object
+        basePrice:
+          type: number
+        salePrice:
+          type: number
+        unit:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        discount:
+          type: number
+        isActive:
+          type: boolean
+        supplierId:
+          type: string
+          nullable: true
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

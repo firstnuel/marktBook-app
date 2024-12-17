@@ -2,6 +2,7 @@
 import { z, ZodError } from 'zod'
 import sanitize from 'sanitize-html'
 
+
 export class Utils {
   static firstLetterToUpperCase(str: string): string {
     if (!str) return ''

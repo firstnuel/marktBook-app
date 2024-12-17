@@ -7,6 +7,7 @@ import { config } from '@root/config'
 import { Utils } from '@global/helpers/utils'
 import { editUserSchema } from '@users/schemes/userValidation'
 import { filterAllowedFields } from '@users/interfaces/user.interface'
+import { NotFoundError } from '@global/helpers/error-handlers'
 
 const log  = config.createLogger('userController')
 
@@ -47,7 +48,7 @@ class UserManagement extends Users {
   }
 
   /**
-   * Handles editing user status or role
+   * Handles editing user based on status and role
    * @param req Express Request object
    * @param res Express Response object
    * @param next Express NextFunction for error handling
@@ -74,7 +75,7 @@ class UserManagement extends Users {
       // Check if user exists
       const existingUser = await userService.getUserById(userId)
       if (!existingUser) {
-        res.status(HTTP_STATUS.NOT_FOUND).json({ message: 'User not found' })
+        return next(new NotFoundError('User not found'))
       }
   
       // Perform update
@@ -110,8 +111,7 @@ class UserManagement extends Users {
       // Check if user exists
       const existingUser = await userService.getUserById(userId)
       if (!existingUser) {
-        res.status(HTTP_STATUS.NOT_FOUND).json({ message: 'User not found' })
-        return
+        return next(new NotFoundError('User not found'))
       }
 
       // Perform deletion

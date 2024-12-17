@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { businessCache } from '@service/redis/business.cache'
 import HTTP_STATUS from 'http-status-codes'
 import { ObjectId } from 'mongodb'
@@ -15,6 +16,7 @@ import { businessService } from '@service/db/business.service'
 import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 import { IBusinessDocument } from '@business/interfaces/business.interface'
 import { productService } from '@service/db/productService'
+import { Schema } from 'zod'
 
 const log = config.createLogger('productsController')
 
@@ -34,11 +36,7 @@ export class Product {
       log.info('Product creation attempt implemented')
 
       // validate incoming data
-      const parsedDataOrError = Utils.schemaParser(productSchema, req.body)
-      if (parsedDataOrError !== true) {
-        log.warn('Validation failed:', parsedDataOrError.toString())
-        return next(new ZodValidationError(parsedDataOrError.toString()))
-      }
+      this.validateInput(productSchema, req.body)
 
       // Validate user
       const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
@@ -82,11 +80,25 @@ export class Product {
         status: 'success'
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     } catch (error: any) {
       log.error(`Product creation failed: ${error.message}`)
       next(error)
     }
+  }
+  /**
+       * Protected method to validate input
+       * @param userId string
+       * @returns IuserDocument
+       */
+  
+  protected validateInput(schema: Schema, data: any): boolean  {
+    const parsedDataOrError = Utils.schemaParser(schema, data)
+    if (parsedDataOrError !== true) {
+      log.warn('Validation failed:', parsedDataOrError.toString())
+      throw new ZodValidationError(parsedDataOrError.toString())
+    }
+    return parsedDataOrError
   }
 
   /**

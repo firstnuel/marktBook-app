@@ -117,31 +117,19 @@ Accept: application/json
 withCredentials: true
 
 ### fetch user by id
-GET {{baseUrl}}/{{urlpath}}/users/675df81e1e2e82150bc6c02d
+GET {{baseUrl}}/{{urlpath}}/users/675f0f643d2022961aea1479
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ### edit user by id
-PATCH {{baseUrl}}/{{urlpath}}/users/675da5a7363965202058858c
+PATCH {{baseUrl}}/{{urlpath}}/users/675ef731a57d646944022a91
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-  "name": "Jane Doe",
-  "mobileNumber": "+1234567890",
-  "status": "active",
-  "languagePreference": "english",
-  "emergencyContact": {
-    "name": "Alice Doe",
-    "relationship": "Sister",
-    "contactNumber": "+9876543210"
-  },
-  "notificationPreferences": {
-    "emailNotifications": false,
-    "smsNotifications": true
-  }
+    "role": "Owner"
 }
 
 ### Delete user by id
@@ -171,6 +159,36 @@ withCredentials: true
 
 ### fetch product by id
 GET {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1489
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+### edit product by id
+PATCH {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1489
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "stockId": null,
+    "sku": "PRD35890",
+    "productName": " Ear Phones",
+    "currency": "NGN",
+    "businessId": "675ef731a57d646944022a92",
+    "longDescription": "Noise cancelling earphones with microphone.",
+    "shortDescription": "Noise cancelling earphones",
+    "productCategory": "Electronics",
+    "productType": "Physical",
+    "barcode": "9876543234987",
+    "basePrice": 150,
+    "salePrice": 100,
+    "discount": 30,
+    "unit": "piece"
+  }
+
+### delete product by id
+DELETE  {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1487
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

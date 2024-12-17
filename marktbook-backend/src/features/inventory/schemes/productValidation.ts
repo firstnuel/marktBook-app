@@ -52,4 +52,37 @@ export const searchSchema = z.object({
   tags: z.array(z.string()).optional()
 })
 
+export const editProductSchema = z.object({
+  _id: z.union([z.string(), z.instanceof(Object)]).optional(),
+  stockId: z.union([z.string(), z.instanceof(Object)]).optional(),
+  currency: z.string().optional(),
+  sku: z.string().optional(),
+  productName: z.string().optional(),
+  businessId: z.union([z.string(), z.instanceof(Object)]).optional(),
+  longDescription: z.string().optional(),
+  shortDescription: z.string().optional(),
+  productCategory: z.string().optional(),
+  productType: z.string().optional(),
+  barcode: z.string().optional(),
+  productVariants: z.array(z.object({
+    variantName: z.string(),
+    price: z.number(),
+    stock: z.number(),
+  })).optional(),
+  basePrice: z.number().optional(),
+  salePrice: z.number().optional(),
+  unit: z.string().optional(),
+  productImages: z.array(z.object({
+    url: z.string(),
+    altText: z.string().optional(),
+  })).optional(),
+  tags: z.array(z.string()).optional(),
+  supplierId: z.union([z.string(), z.instanceof(Object)]).optional(),
+  isActive: z.boolean().optional(),
+  discount: z.number().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+  createdBy: z.union([z.string(), z.instanceof(Object)]).optional(),
+  updatedBy: z.union([z.string(), z.instanceof(Object)]).optional(),
+})
 

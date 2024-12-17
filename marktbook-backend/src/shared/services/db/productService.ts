@@ -34,6 +34,14 @@ class ProductService {
     return result || null
   }
 
+  public async editProduct(productId: string, data: Partial<IProductDocument>):  Promise<IProductDocument | null> {
+    return ProductModel.findByIdAndUpdate(new ObjectId(productId), data, { new: true }).exec()
+  }
+
+  public async deleteProductById(productId: string | ObjectId): Promise<void> {
+    await ProductModel.findByIdAndDelete(productId).exec()
+  }
+
 
 }
 

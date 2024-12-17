@@ -22,7 +22,13 @@ export interface IJWT {
     jwt?: string;
 }
 
-export type IProductMock =  | IProductData
+export type IProductMock =  
+| IProductData
+| EmptyData
+
+export interface EmptyData {
+  data?: string
+}
 
 
 
