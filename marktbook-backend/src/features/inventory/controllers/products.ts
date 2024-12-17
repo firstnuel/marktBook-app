@@ -15,10 +15,12 @@ import { userService } from '@service/db/user.service'
 import { businessService } from '@service/db/business.service'
 import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 import { IBusinessDocument } from '@business/interfaces/business.interface'
-import { productService } from '@service/db/productService'
+import { productService } from '@service/db/product.service'
 import { Schema } from 'zod'
+import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
+import { logService } from '@service/db/logs.service'
 
-const log = config.createLogger('productsController')
+export const log = config.createLogger('productsController')
 
 export class Product {
   constructor() {
@@ -74,8 +76,20 @@ export class Product {
         return next(new ServerError('Failed to process product creation. Please try again.'))
       }
 
+      // log update
+      const logData = createActivityLog (
+        existingUser._id, 
+        existingUser.username, 
+        existingUser.associatedBusinessesId, 
+        'CREATE' as ActionType, 
+        'PRODUCT' as EntityType,
+        `${productObjectId}`,
+        `Created product '${body.productName}'`)
+
+      await logService.createLog(logData)
+
       res.status(HTTP_STATUS.CREATED).json({
-        message: `Product '${productData.productName}' created successfully`,
+        message: `Product '${body.productName}' created successfully`,
         data: productData,
         status: 'success'
       })
@@ -102,10 +116,10 @@ export class Product {
   }
 
   /**
-     * Protected method to validate user status
-     * @param userId string
-     * @returns IuserDocument
-     */
+  * Protected method to validate user status
+  * @param userId string
+   * @returns IuserDocument
+    */
   protected async validateUser(userId: string): Promise<IuserDocument> {
     const cachedUser = await userCache.getUserfromCache(userId) as IuserDocument
     const existingUser = cachedUser ? cachedUser : await userService.getUserById(userId) as IuserDocument
@@ -152,7 +166,7 @@ export class Product {
   /**
      * Constructs the product document for a new product.
      * @param data product data
-     * @param productObjectId ObjectId of the product
+     * @param productId ObjectId of the product
      * @param userId ObjectId of the user
      * @returns product document conforming to IProductDocument interface
      */
@@ -249,6 +263,12 @@ export class Product {
     }
   }
 
+  /**
+   * Handles searching for a product using fields  name, sku, barcode, tags
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express NextFunction for error handling
+   */
   public async search(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // validate user

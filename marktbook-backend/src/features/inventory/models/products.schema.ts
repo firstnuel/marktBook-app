@@ -4,36 +4,36 @@ import { model, Model, Schema } from 'mongoose'
 const ProductSchema: Schema<IProductDocument> = new Schema(
   {
     stockId: { 
-      type: Schema.Types.Mixed, 
+      type: Schema.Types.ObjectId, 
+      ref: 'Stock'
+    },
+    businessId: { 
+      type: Schema.Types.ObjectId, 
+      ref: 'Business',
+      required: true 
+    },
+    supplierId: { 
+      type: Schema.Types.ObjectId,
+      ref: 'Supplier'
     },
     sku: { 
       type: String, 
-      unique: true, // Enforce uniqueness
-      required: [true, 'SKU is required'], // Ensure SKU is mandatory
-      trim: true // Sanitize input by trimming whitespace
+      unique: true, 
+      required: [true, 'SKU is required'],
+      trim: true
     },
     productName: { 
       type: String, 
       required: true, 
-      trim: true 
+      trim: true
     },
     currency: {
       type: String,
-      requird: true,
+      required: true,
       enum: Object.values(Currency)
     },
-    businessId: { 
-      type: Schema.Types.Mixed, 
-      required: true 
-    },
-    longDescription: { 
-      type: String, 
-      trim: true 
-    },
-    shortDescription: { 
-      type: String, 
-      trim: true 
-    },
+    longDescription: { type: String, trim: true },
+    shortDescription: { type: String, trim: true },
     productCategory: { 
       type: String, 
       enum: Object.values(ProductCategory), 
@@ -44,116 +44,62 @@ const ProductSchema: Schema<IProductDocument> = new Schema(
       enum: Object.values(ProductType), 
       required: true 
     },
-    barcode: { 
-      type: String, 
-      trim: true 
-    },
+    barcode: { type: String, trim: true },
     productVariants: [{
-      productId: { 
-        type: Schema.Types.Mixed 
-      },
-      variantName: { 
-        type: String 
-      },
-      sku: { 
-        type: String, 
-        unique: false, 
-        sparse: true, 
-        default: null 
-      },
-      barcode: String,
-      priceAdjustment: { 
-        type: Number, 
-        default: 0 
-      },
-      attributes: [{
-        name: String,
-        value: String
-      }],
+      productId: { type: Schema.Types.ObjectId, ref: 'Product' },
+      variantName: { type: String },
+      sku: { type: String, sparse: true, default: null },
+      barcode: { type: String },
+      priceAdjustment: { type: Number, default: 0 },
+      attributes: [{ name: String, value: String }],
       images: [{
-        url: { 
-          type: String 
-        },
-        isPrimary: { 
-          type: Boolean, 
-          default: false 
-        }
+        url: { type: String, match: /^https?:\/\// }, 
+        isPrimary: { type: Boolean, default: false }
       }],
-      stockId: { 
-        type: Schema.Types.Mixed 
-      }
+      stockId: { type: Schema.Types.ObjectId, ref: 'Stock' }
     }],
-    basePrice: { 
-      type: Number, 
-      required: true, 
-      min: 0 
-    },
-    salePrice: { 
-      type: Number, 
-      min: 0 
-    },
-    discount: { 
-      type: Number, 
-      min: 0  
-    },
-    unit: { 
-      type: String, 
-      enum: Object.values(Unit), 
-      required: true 
-    },
+    basePrice: { type: Number, required: true, min: 0 },
+    salePrice: { type: Number, min: 0 },
+    discount: { type: Number, min: 0 },
+    unit: { type: String, enum: Object.values(Unit), required: true },
     productImages: [{
-      url: { 
-        type: String, 
-      },
-      isPrimary: { 
-        type: Boolean, 
-        default: false 
-      }
+      url: { type: String, match: /^https?:\/\// },
+      isPrimary: { type: Boolean, default: false }
     }],
-    tags: [{ 
-      type: String, 
-      trim: true 
-    }],
-    supplierId: { 
-      type: Schema.Types.Mixed 
-    },
-    isActive: { 
-      type: Boolean, 
-      default: true 
-    },
-    createdAt: { 
-      type: Date, 
-      default: Date.now 
-    },
-    updatedAt: { 
-      type: Date, 
-      default: Date.now 
-    },
-    createdBy: { 
-      type: Schema.Types.Mixed, 
-      required: true 
-    },
-    updatedBy: { 
-      type: Schema.Types.Mixed, 
-      required: true 
-    }
+    tags: [{ type: String, trim: true }],
+    isActive: { type: Boolean, default: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   },
   {
-    timestamps: true,  // Automatically manage createdAt and updatedAt
+    timestamps: true, // Automatically manage createdAt and updatedAt
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
   }
 )
 
-// indexes for performance
-ProductSchema.index({ sku: 1 }, { unique: true })
-ProductSchema.index({ productVariants: 1 }) 
-ProductSchema.index({ productName: 'text' })
-ProductSchema.index({ productCategory: 1 })
-ProductSchema.index({ productType: 1 })
-ProductSchema.index({ isActive: 1 })
+// Virtual: Calculate discount percentage
+ProductSchema.virtual('discountPercentage').get(function (this: IProductDocument) {
+  if (this.discount && this.basePrice) {
+    return (this.discount / this.basePrice) * 100
+  }
+  return 0
+})
 
+// Pre-save Hook: Validate that salePrice ≤ basePrice
+ProductSchema.pre('save', function (next) {
+  if (this.salePrice && this.salePrice > this.basePrice) {
+    next(new Error('Sale price cannot be greater than base price.'))
+  } else {
+    next()
+  }
+})
+
+// Indexes
+ProductSchema.index({ sku: 1 }, { unique: true })
+ProductSchema.index({ productCategory: 1, isActive: 1 })
+ProductSchema.index({ productName: 'text' })
 
 const ProductModel: Model<IProductDocument> = model<IProductDocument>('Product', ProductSchema, 'Product')
 
-export  { ProductModel }
+export { ProductModel }

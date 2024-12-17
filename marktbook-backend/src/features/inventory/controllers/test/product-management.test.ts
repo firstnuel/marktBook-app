@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { productManagement } from '@inventory/controllers/product-management'
-import { productService } from '@service/db/productService'
+import { productService } from '@service/db/product.service'
 import { userCache } from '@service/redis/user.cache'
 import { Utils } from '@global/helpers/utils'
 import HTTP_STATUS from 'http-status-codes'

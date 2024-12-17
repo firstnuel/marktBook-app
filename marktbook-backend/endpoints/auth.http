@@ -23,16 +23,10 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-# {
-#  "email": "Baron.Casper45@hotmail.com",
-#  "password": "zccb0dLkwLqEELc",
-#  "username": "Sarah.Bednar67"
-# }
-
 {
- "email": "Joanny_Crona94@gmail.com",
- "password": "Z4VlF9kwrNWQId9",
- "username": "Sydney49"
+  "email": "Gilbert.Crooks@yahoo.com",
+  "password": "12oFOipaL0Vkx51",
+  "username": "Chyna13"
 }
 
 ###  logout
@@ -54,41 +48,41 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-# {
-#     "sku": "PRD35890",
-#     "productName": "Ear Phones",
-#     "businessId": "675ef731a57d646944022a92",
-#     "longDescription": "Noise cancelling earphones with microphone.",
-#     "shortDescription": "Noise cancelling earphones",
-#     "currency": "USD",
-#     "productCategory": "Electronics",
-#     "productType": "Physical",
-#     "barcode": "9876543234987",
-#     "basePrice": 100.0,
-#     "salePrice": 80.0,
-#     "discount": 20.0,
-#     "unit": "piece",
-#     "tags": ["accessories", "sound", "wearable"],
-#     "isActive": true
-# }
-
 {
-    "sku": "PRD49281",
-    "productName": "Wireless Mouse",
-    "businessId": "675ef731a57d646944022a92",
-    "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
-    "shortDescription": "Ergonomic wireless mouse",
+    "sku": "PRD35890",
+    "productName": "Ear Phones",
+    "businessId": "6761f56d9f1141f4f2a48de5",
+    "longDescription": "Noise cancelling earphones with microphone.",
+    "shortDescription": "Noise cancelling earphones",
     "currency": "USD",
     "productCategory": "Electronics",
     "productType": "Physical",
-    "barcode": "1234567890123",
-    "basePrice": 25.0,
-    "salePrice": 20.0,
-    "discount": 5.0,
+    "barcode": "9876543234987",
+    "basePrice": 100.0,
+    "salePrice": 80.0,
+    "discount": 20.0,
     "unit": "piece",
-    "tags": ["computer", "accessories", "wireless", "ergonomic"],
+    "tags": ["accessories", "sound", "wearable"],
     "isActive": true
 }
+
+# {
+#     "sku": "PRD49281",
+#     "productName": "Wireless Mouse",
+#     "businessId": "675ef731a57d646944022a92",
+#     "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
+#     "shortDescription": "Ergonomic wireless mouse",
+#     "currency": "USD",
+#     "productCategory": "Electronics",
+#     "productType": "Physical",
+#     "barcode": "1234567890123",
+#     "basePrice": 25.0,
+#     "salePrice": 20.0,
+#     "discount": 5.0,
+#     "unit": "piece",
+#     "tags": ["computer", "accessories", "wireless", "ergonomic"],
+#     "isActive": true
+# }
 
 
 
@@ -151,21 +145,21 @@ Accept: application/json
 withCredentials: true
 
 ### search products by query
-GET {{baseUrl}}/{{urlpath}}/products/search?sku=PRD49281
+GET {{baseUrl}}/{{urlpath}}/products/search?sku=PRD35890
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 
 ### fetch product by id
-GET {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1489
+GET {{baseUrl}}/{{urlpath}}/products/6762043417bc539e53cc9bb1
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 
 ### edit product by id
-PATCH {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1489
+PATCH {{baseUrl}}/{{urlpath}}/products/6762043417bc539e53cc9bb1
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -174,16 +168,16 @@ withCredentials: true
     "stockId": null,
     "sku": "PRD35890",
     "productName": " Ear Phones",
-    "currency": "NGN",
+    "currency": "USD",
     "businessId": "675ef731a57d646944022a92",
     "longDescription": "Noise cancelling earphones with microphone.",
     "shortDescription": "Noise cancelling earphones",
     "productCategory": "Electronics",
     "productType": "Physical",
     "barcode": "9876543234987",
-    "basePrice": 150,
-    "salePrice": 100,
-    "discount": 30,
+    "basePrice": 120,
+    "salePrice": 130,
+    "discount": 20,
     "unit": "piece"
   }
 
@@ -192,3 +186,29 @@ DELETE  {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1487
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
+
+### fetch all logs
+GET {{baseUrl}}/{{urlpath}}/logs
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### add stock info to product
+POST {{baseUrl}}/{{urlpath}}/stocks
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "businessId": "6761f56d9f1141f4f2a48de5",
+    "locationId": "60f7c7b3a2f38c4e5e8d7f1c",
+    "productId": "6762043417bc539e53cc9bb1",
+    "unitsAvailable": 50,
+    "maxQuantity": 100,
+    "minQuantity": 10,
+    "thresholdAlert": false,
+    "costPerUnit": 15.5,
+    "totalValue": 775,
+    "supplierId": "60f7c7b3a2f38c4e5e8d7f1e",
+    "notes": "Restocked with batch #12345"
+  }

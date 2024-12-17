@@ -50,7 +50,7 @@ class AuthMiddleware {
 
   public checkAuthentication(req: Request, res: Response, next: NextFunction): void {
     if (!req.currentUser) {
-      next(new NotAuthorizedError('Authentication is required to access this route'))
+      return next(new NotAuthorizedError('Authentication is required to access this route'))
     }
     next()
   }

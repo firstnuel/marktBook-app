@@ -6,7 +6,7 @@ import { registerSchema } from '@auth/schemes/authValidation'
 import { IAuthDocument, IRegisterBusinessData } from '@auth/interfaces/auth.interface'
 import { authService } from '@root/shared/services/db/auth.service'
 import { Utils } from '@root/shared/globals/helpers/utils'
-import { constructCloudinaryURL, uploads } from '@root/shared/globals/helpers/cloudinary-upload'
+import { singleImageUpload  } from '@root/shared/globals/helpers/cloudinary-upload'
 import { IBusinessDocument } from '@business/interfaces/business.interface'
 import { businessCache } from '@service/redis/business.cache'
 import { IuserDocument } from '@root/features/users/interfaces/user.interface'
@@ -88,12 +88,6 @@ export class Register {
         businessLogo,
       })
 
-      // Validate businessLogo before uploading
-      if (businessLogo && !Utils.isValidImage(businessLogo)) {
-        logger.warn('Invalid business logo provided.')
-        return next(new BadRequestError('Invalid business logo. Please upload a valid image file.'))
-      }
-
       // Perform file upload and data preparation in parallel
       const [ userDataForCache, businessDataForCache] = await Promise.all([
         // uploads(businessLogo, `${businessObjectId}`, true, true),
@@ -101,18 +95,9 @@ export class Register {
         this.BusinessData(authData, businessObjectId, ownerId),
       ])
 
-      if (businessLogo && Utils.isValidImage(businessLogo)) {
-        const uploadResult = await  uploads(businessLogo, `${businessObjectId}`, true, true)
-        // Check upload result
-        if (!uploadResult?.public_id) {
-          logger.error('Business logo upload failed.')
-          return next(new BadRequestError('File Error: Failed to upload business logo. Please try again.'))
-        }
-  
-        logger.info(`Business logo uploaded successfully: ${uploadResult.public_id}`)
-  
+      if (businessLogo) {  
         // Update business logo URL
-        businessDataForCache.businessLogo = constructCloudinaryURL(uploadResult)
+        businessDataForCache.businessLogo = await singleImageUpload(businessLogo, `${businessObjectId}`)
       }
 
       // Save data to cache
