@@ -6,7 +6,7 @@ import { userMockRequest, userMockResponse } from '@root/mocks/user.mock'
 import { userCache } from '@service/redis/user.cache'
 import { Utils } from '@global/helpers/utils'
 import HTTP_STATUS from 'http-status-codes'
-import { ZodValidationError, NotAuthorizedError } from '@global/helpers/error-handlers'
+import { ZodValidationError, NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
 import { editUserSchema } from '@users/schemes/userValidation'
 import { filterAllowedFields } from '@users/interfaces/user.interface'
 
@@ -68,7 +68,6 @@ describe('UserManagement Controller', () => {
   describe('getUser', () => {
     it('should fetch user successfully', async () => {
       // Mock validation of requesting user
-      // Inherited validateUser method relies on userCache or userService
       ;(userCache.getUserfromCache as jest.Mock).mockResolvedValue({
         _id: validUserId,
         status: 'active',
@@ -160,7 +159,7 @@ describe('UserManagement Controller', () => {
       )
     })
 
-    it('should return 404 if user to edit not found', async () => {
+    it('should call next with NotFoundError if user to edit not found', async () => {
       ;(Utils.schemaParser as jest.Mock).mockReturnValue(true)
       ;(userCache.getUserfromCache as jest.Mock).mockResolvedValue({
         _id: validUserId,
@@ -171,8 +170,7 @@ describe('UserManagement Controller', () => {
 
       await userManagement.editUser(req, res, next)
 
-      expect(res.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND)
-      expect(res.json).toHaveBeenCalledWith({ message: 'User not found' })
+      expect(next).toHaveBeenCalledWith(expect.any(NotFoundError))
     })
 
     it('should throw validation error if input is invalid', async () => {
@@ -226,7 +224,7 @@ describe('UserManagement Controller', () => {
       )
     })
 
-    it('should return 404 if user not found', async () => {
+    it('should call next with NotFoundError if user not found', async () => {
       ;(userCache.getUserfromCache as jest.Mock).mockResolvedValue({
         _id: validUserId,
         status: 'active',
@@ -236,8 +234,7 @@ describe('UserManagement Controller', () => {
 
       await userManagement.deleteUser(req, res, next)
 
-      expect(res.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND)
-      expect(res.json).toHaveBeenCalledWith({ message: 'User not found' })
+      expect(next).toHaveBeenCalledWith(expect.any(NotFoundError))
     })
 
     it('should call next with error if user not authorized', async () => {

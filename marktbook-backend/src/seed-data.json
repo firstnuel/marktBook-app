@@ -1,0 +1,29 @@
+[
+  {
+    "username": "Madyson_Goyette",
+    "email": "Corrine.Reichert@gmail.com",
+    "password": "Mfj0xYUXuAc1Gm2",
+    "adminFullName": "Marco Russel",
+    "businessName": "Kilback, Torphy and Mosciski",
+    "businessType": "Other",
+    "businessCategory": "Grocery"
+  },
+  {
+    "username": "Sarah.Bednar67",
+    "email": "Baron.Casper45@hotmail.com",
+    "password": "zccb0dLkwLqEELc",
+    "adminFullName": "Mrs. Virginia Wilderman",
+    "businessName": "Weissnat, Schinner and Hansen",
+    "businessType": "Wholesale",
+    "businessCategory": "Automobile"
+  },
+  {
+    "username": "Sydney49",
+    "email": "Joanny_Crona94@gmail.com",
+    "password": "Z4VlF9kwrNWQId9",
+    "adminFullName": "Bob Wilderman",
+    "businessName": "Trantow, Spencer and Reinger",
+    "businessType": "Wholesale",
+    "businessCategory": "Other"
+  }
+]

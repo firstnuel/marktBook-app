@@ -24,7 +24,11 @@
 | **14.12.**  | 2  | Extended User controller to edit and delete users, added user edit and delete router |
 |             | 1 | Refactored product and user controller, changed lint indent rules |
 | **15.12.** | 2 | Added unit tests for all implemented controllers |
-| **Total**  | **50** | |
+|             | 3 | Extended products controller to include search by ID, queries and extended api docs |
+| **16.12.**  | 2  | Extended products controller to edit and delete product, added products edit and delete router |
+|             | 2  | Implemented unit tests for all implemented controllers
+| **Total**  | **57** | |
+
 
 
 

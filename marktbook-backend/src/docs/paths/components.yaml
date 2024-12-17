@@ -1,0 +1,266 @@
+components:
+  schemas:
+    Business:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique identifier for the business
+        verifiedStatus:
+          type: boolean
+          description: Indicates whether the business is verified
+        verifyData:
+          type: object
+          description: Data related to business verification
+          properties:
+            verificationStatus:
+              type: string
+              example: pending
+            verificationDate:
+              type: string
+              format: date-time
+              example: 2024-12-15T00:00:00Z
+        businessName:
+          type: string
+          description: Name of the business
+        username:
+          type: string
+          description: Business username
+        email:
+          type: string
+          format: email
+          description: Business email address
+        admins:
+          type: array
+          description: List of business admins
+          items:
+            type: object
+            properties:
+              adminId:
+                type: string
+                description: Unique identifier for the admin
+              adminName:
+                type: string
+                description: Full name of the admin
+        businessLogo:
+          type: string
+          description: URL or base64 encoded business logo
+        uId:
+          type: string
+          description: Unique identifier for caching purposes
+        businessCategory:
+          type: string
+          description: Category of the business
+        businessAddress:
+          type: string
+          description: Physical address of the business
+        businessType:
+          type: string
+          description: Type of business (e.g., Retail, Service)
+        businessAccount:
+          type: object
+          description: Bank account details of the business
+          properties:
+            accountNumber:
+              type: string
+              description: Bank account number
+            bankName:
+              type: string
+              description: Name of the bank
+        businessBio:
+          type: string
+          description: Brief bio or description of the business
+        notifications:
+          type: object
+          description: Notification settings for the business
+          properties:
+            emailNotifications:
+              type: boolean
+              description: Whether email notifications are enabled
+            smsNotifications:
+              type: boolean
+              description: Whether SMS notifications are enabled
+        social:
+          type: object
+          description: Social links for the business
+          properties:
+            facebook:
+              type: string
+              description: Facebook profile link
+            twitter:
+              type: string
+              description: Twitter profile link
+            instagram:
+              type: string
+              description: Instagram profile link
+        bgImageVersion:
+          type: string
+          description: Background image version
+        bgImageId:
+          type: string
+          description: Background image identifier
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time the business was created
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique identifier for the user
+        authId:
+          type: string
+          description: Unique authentication ID for the user
+        name:
+          type: string
+          description: Full name of the user
+        email:
+          type: string
+          format: email
+          description: Email address of the user
+        uId:
+          type: string
+          description: Unique identifier for caching purposes (optional)
+        mobileNumber:
+          type: string
+          description: Mobile phone number of the user
+        role:
+          type: string
+          description: Role of the user in the business
+          example: Admin
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+          description: Current status of the user's account
+        address:
+          type: string
+          description: Address of the user
+        nin:
+          type: string
+          description: National Identification Number of the user
+        username:
+          type: string
+          description: Username of the user
+        associatedBusinessesId:
+          type: string
+          description: Identifier for businesses associated with the user
+        emergencyContact:
+          type: object
+          description: Emergency contact details of the user (optional)
+          properties:
+            name:
+              type: string
+              description: Name of the emergency contact
+            relationship:
+              type: string
+              description: Relationship of the emergency contact to the user
+            contactNumber:
+              type: string
+              description: Contact number of the emergency contact
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time the user account was created (optional)
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time the user account was last updated (optional)
+        lastLogin:
+          type: string
+          format: date-time
+          description: Date and time the user last logged in (optional)
+        notificationPreferences:
+          type: object
+          description: Notification preferences of the user (optional)
+          properties:
+            emailNotifications:
+              type: boolean
+              description: Whether email notifications are enabled
+            smsNotifications:
+              type: boolean
+              description: Whether SMS notifications are enabled
+        languagePreference:
+          type: string
+          description: Preferred language of the user (optional)
+          example: English
+        isVerified:
+          type: boolean
+          description: Indicates whether the user's email or account is verified (optional)
+        profilePicture:
+          type: string
+          description: URL or base64 string for the user's profile picture (optional)
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        stockId:
+          type: string
+          nullable: true
+        sku:
+          type: string
+        currency:
+          type: string
+        productName:
+          type: string
+        businessId:
+          type: string
+        longDescription:
+          type: string
+          nullable: true
+        shortDescription:
+          type: string
+          nullable: true
+        productCategory:
+          type: string
+        productImages:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              isPrimary:
+                type: boolean
+        productType:
+          type: string
+        barcode:
+          type: string
+          nullable: true
+        productVariants:
+          type: array
+          items:
+            type: object
+        basePrice:
+          type: number
+        salePrice:
+          type: number
+        unit:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        discount:
+          type: number
+        isActive:
+          type: boolean
+        supplierId:
+          type: string
+          nullable: true
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

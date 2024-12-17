@@ -1,6 +1,7 @@
 import swaggerJsDoc, { Options } from 'swagger-jsdoc'
 import { serve, setup } from 'swagger-ui-express'
 import { Router } from 'express'
+import { config } from '@root/config'
 
 const swaggerDefinition = {
   openapi: '3.0.0',
@@ -11,7 +12,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'http://localhost:5001/api/v1',
+      url: `${config.API_URL}`,
       description: 'Development server',
     },
   ],

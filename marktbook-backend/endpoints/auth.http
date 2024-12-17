@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:5001
 @urlpath = api/v1
 
-###
+### register
 POST {{baseUrl}}/{{urlpath}}/register
 Content-Type: application/json
 Accept: application/json
@@ -17,60 +17,82 @@ withCredentials: true
  "businessCategory": "Technology"
 }
 
-###
+### login
 POST {{baseUrl}}/{{urlpath}}/login
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
+# {
+#  "email": "Baron.Casper45@hotmail.com",
+#  "password": "zccb0dLkwLqEELc",
+#  "username": "Sarah.Bednar67"
+# }
+
 {
- "email": "johndoe@example.com",
- "password": "SecurePass123!",
- "username": "johnd"
+ "email": "Joanny_Crona94@gmail.com",
+ "password": "Z4VlF9kwrNWQId9",
+ "username": "Sydney49"
 }
 
-###
+###  logout
 GET {{baseUrl}}/{{urlpath}}/logout
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-###
+### fetch current user
 GET {{baseUrl}}/{{urlpath}}/currentuser
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 
-###
+### Add a new product
 POST {{baseUrl}}/{{urlpath}}/products
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
+# {
+#     "sku": "PRD35890",
+#     "productName": "Ear Phones",
+#     "businessId": "675ef731a57d646944022a92",
+#     "longDescription": "Noise cancelling earphones with microphone.",
+#     "shortDescription": "Noise cancelling earphones",
+#     "currency": "USD",
+#     "productCategory": "Electronics",
+#     "productType": "Physical",
+#     "barcode": "9876543234987",
+#     "basePrice": 100.0,
+#     "salePrice": 80.0,
+#     "discount": 20.0,
+#     "unit": "piece",
+#     "tags": ["accessories", "sound", "wearable"],
+#     "isActive": true
+# }
+
 {
-    "sku": "PRD12345",
-    "productName": "Wireless Earbuds",
-    "businessId": "675df7831e2e82150bc6c012",
-    "longDescription": "High-quality wireless earbuds with noise cancellation and 20-hour battery life.",
-    "shortDescription": "Wireless earbuds with long battery life.",
+    "sku": "PRD49281",
+    "productName": "Wireless Mouse",
+    "businessId": "675ef731a57d646944022a92",
+    "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
+    "shortDescription": "Ergonomic wireless mouse",
     "currency": "USD",
     "productCategory": "Electronics",
     "productType": "Physical",
     "barcode": "1234567890123",
-    "basePrice": 50.0,
-    "salePrice": 40.0,
-    "discount": 20.0,
+    "basePrice": 25.0,
+    "salePrice": 20.0,
+    "discount": 5.0,
     "unit": "piece",
-    "tags": ["wireless", "audio", "earbuds"],
-    "isActive": true,
-    "productImages":[{
-        "url": "",
-        "isPrimary": true
-    }]
+    "tags": ["computer", "accessories", "wireless", "ergonomic"],
+    "isActive": true
 }
 
-###
+
+
+### Add a new user
 POST {{baseUrl}}/{{urlpath}}/users
 Content-Type: application/json
 Accept: application/json
@@ -85,7 +107,7 @@ withCredentials: true
   "status": "active",
   "address": "123 Main Street, Springfield",
   "nin": "A24538394",
-  "businessId": "675df7831e2e82150bc6c012"
+  "businessId": "675ef731a57d646944022a92"
 }
 
 ###
@@ -94,36 +116,79 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-###
-GET {{baseUrl}}/{{urlpath}}/users/675df81e1e2e82150bc6c02d
+### fetch user by id
+GET {{baseUrl}}/{{urlpath}}/users/675f0f643d2022961aea1479
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-###
-PATCH {{baseUrl}}/{{urlpath}}/users/675da5a7363965202058858c
+### edit user by id
+PATCH {{baseUrl}}/{{urlpath}}/users/675ef731a57d646944022a91
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-  "name": "Jane Doe",
-  "mobileNumber": "+1234567890",
-  "status": "active",
-  "languagePreference": "english",
-  "emergencyContact": {
-    "name": "Alice Doe",
-    "relationship": "Sister",
-    "contactNumber": "+9876543210"
-  },
-  "notificationPreferences": {
-    "emailNotifications": false,
-    "smsNotifications": true
-  }
+    "role": "Owner"
 }
 
-###
+### Delete user by id
 DELETE {{baseUrl}}/{{urlpath}}/users/675da60336396520205885a5
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### fetch all products
+GET {{baseUrl}}/{{urlpath}}/products
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### fetch all products by category
+GET {{baseUrl}}/{{urlpath}}/products/categories/Electronics
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### search products by query
+GET {{baseUrl}}/{{urlpath}}/products/search?sku=PRD49281
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+### fetch product by id
+GET {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1489
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+### edit product by id
+PATCH {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1489
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "stockId": null,
+    "sku": "PRD35890",
+    "productName": " Ear Phones",
+    "currency": "NGN",
+    "businessId": "675ef731a57d646944022a92",
+    "longDescription": "Noise cancelling earphones with microphone.",
+    "shortDescription": "Noise cancelling earphones",
+    "productCategory": "Electronics",
+    "productType": "Physical",
+    "barcode": "9876543234987",
+    "basePrice": 150,
+    "salePrice": 100,
+    "discount": 30,
+    "unit": "piece"
+  }
+
+### delete product by id
+DELETE  {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1487
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
