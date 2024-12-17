@@ -26,8 +26,10 @@
 | **15.12.** | 2 | Added unit tests for all implemented controllers |
 |             | 3 | Extended products controller to include search by ID, queries and extended api docs |
 | **16.12.**  | 2  | Extended products controller to edit and delete product, added products edit and delete router |
-|             | 2  | Implemented unit tests for all implemented controllers
-| **Total**  | **57** | |
+|             | 2  | Implemented unit tests for all implemented controllers |
+| **18.12.**  | 3  | Implemented log and stock router, controllers, interfaces. |
+|             | 1  | Updated Api Docs |
+| **Total**  | **61** | |
 
 
 
