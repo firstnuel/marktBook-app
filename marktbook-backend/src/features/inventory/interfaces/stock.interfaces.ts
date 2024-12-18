@@ -1,5 +1,7 @@
 import { Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
+import { LocationTypes, Status} from '@inventory/interfaces/location.interfaces'
+
 
 export interface IStockDocument extends Document {
     _id: ObjectId;
@@ -24,7 +26,6 @@ export interface IStockDocument extends Document {
 
 export interface IStockData {
     businessId: ObjectId;
-    locationId?: ObjectId;
     productId: ObjectId;
     unitsAvailable: number;
     maxQuantity: number;
@@ -34,7 +35,15 @@ export interface IStockData {
     totalValue?: number;
     supplierId?: ObjectId;
     notes?: string;
+    //location Data
+    locationName: string;
+    locationType: LocationTypes;
+    address: string;
+    compartment?: string;
+    locationStatus: Status;
 }
+
+
 
 export const ALLOWED_STOCK_FIELDS: (keyof IStockDocument)[] = [
   'unitsAvailable',

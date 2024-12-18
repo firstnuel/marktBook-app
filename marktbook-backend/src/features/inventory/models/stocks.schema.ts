@@ -13,6 +13,11 @@ const StockDataSchema: Schema<IStockDocument> = new Schema(
       ref: 'Location',
       required: true,
     },
+    productId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true,
+    },
     supplierId: {
       type: Schema.Types.ObjectId,
       ref: 'Supplier',

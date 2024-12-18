@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NotAuthorizedError, NotFoundError, ZodValidationError } from '@global/helpers/error-handlers'
+import { BadRequestError, NotAuthorizedError, NotFoundError, ZodValidationError } from '@global/helpers/error-handlers'
 import { Utils } from '@global/helpers/utils'
 import { config } from '@root/config'
-import { ZodType as Schema } from 'zod'
+import { Schema } from 'zod'
 import HTTP_STATUS from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { Request, Response, NextFunction } from 'express'
@@ -18,6 +18,8 @@ import { businessCache } from '@service/redis/business.cache'
 import { stockService } from '@service/db/stock.service'
 import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
+import { ILocationDocument } from '@inventory/interfaces/location.interfaces'
+import { locationService } from '@service/db/location.service'
 
 
 const log = config.createLogger('productsController')
@@ -53,18 +55,25 @@ class Stock {
         return next(new NotFoundError('Product not found'))
       }
 
+      // CHeck if stockData exist for product
+      const stock = await stockService.getByProductID(product._id)
+      if (stock) return next(new BadRequestError(`Stock Data already exist for this product ${product.productName}`))
+
       // Validate business
       await this.validateBusiness(body.businessId.toString(), existingUser)
 
-      const stockObjectId: ObjectId = new ObjectId()
+      const stockId: ObjectId = new ObjectId()
+      const locationId: ObjectId = new ObjectId()
 
-      const stockData: IStockDocument = this.stockData(body, stockObjectId, existingUser._id, product._id)
+      const stockData: IStockDocument = this.stockData(body, stockId, existingUser._id, product._id, locationId)
+      const locationData: ILocationDocument = this.locationData(body, stockId, existingUser._id, locationId)
 
       // save data
       await stockService.createStock(stockData)
+      await locationService.addLocation(locationData)
 
       // update product
-      await productService.editStockId(product._id.toString(), stockObjectId)
+      await productService.editStockId(product._id.toString(), stockId)
 
       // log activity
       const logData = createActivityLog (
@@ -73,7 +82,7 @@ class Stock {
         existingUser.associatedBusinessesId, 
         'CREATE' as ActionType, 
         'STOCK' as EntityType,
-        `${stockObjectId}`,
+        `${stockId}`,
         `Created stock info for '${product.productName}'`)
       
       await logService.createLog(logData)
@@ -145,16 +154,17 @@ class Stock {
   }
   
   /**
-  * Constructs the product document for a new product.
-  * @param data product data
+  * Constructs the Stock document for a new product.
+  * @param data Stock data
   * @param stockId ObjectId of the stock
   * @param userId ObjectId of the user
-  * @returns product document conforming to IProductDocument interface
+  * @returns product document conforming to IStockDocument interface
   */
   private stockData(data: IStockData, 
     stockId: string | ObjectId, 
     userId: string | ObjectId, 
-    productId: string | ObjectId 
+    productId: string | ObjectId ,
+    locationId:  string | ObjectId 
   ): IStockDocument {
     const {
       businessId,
@@ -165,7 +175,6 @@ class Stock {
       costPerUnit,
       notes,
       totalValue,
-      locationId,
       supplierId
     } = data
 
@@ -173,7 +182,7 @@ class Stock {
       _id: stockId,
       businessId: new ObjectId(businessId),
       productId: new ObjectId(productId),
-      locationId,
+      locationId: new ObjectId(locationId),
       unitsAvailable,
       maxQuantity,
       minQuantity,
@@ -186,6 +195,38 @@ class Stock {
       supplierId
     } as IStockDocument
   }
+
+
+  /**
+  * Constructs the location document for a new product.
+  * @param data Stock data
+  * @param stockId ObjectId of the stock
+  * @param locationId ObjectId of the location
+  * @param userId ObjectId of the user
+  * @returns product document conforming to ILocationDocument interface
+  */
+  private locationData(data: IStockData, 
+    stockId: ObjectId, 
+    userId: string | ObjectId, 
+    locationId: ObjectId, 
+  ): ILocationDocument {
+    const { locationName, locationType, address, compartment, locationStatus} =  data
+
+    return {
+      _id: locationId,
+      stockId,
+      locationName,
+      locationType,
+      address,
+      compartment: compartment || '',
+      currentLoad: undefined,
+      capacity: undefined,
+      manager: new ObjectId(userId),
+      locationStatus,
+      stockMovements:[],
+    } as unknown as ILocationDocument
+  }
+
   
 }
 

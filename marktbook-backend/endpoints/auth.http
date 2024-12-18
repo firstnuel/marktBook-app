@@ -200,15 +200,20 @@ Accept: application/json
 withCredentials: true
 
 {
-    "businessId": "6761f56d9f1141f4f2a48de5",
-    "locationId": "60f7c7b3a2f38c4e5e8d7f1c",
-    "productId": "6762043417bc539e53cc9bb1",
-    "unitsAvailable": 50,
-    "maxQuantity": 100,
-    "minQuantity": 10,
-    "thresholdAlert": false,
-    "costPerUnit": 15.5,
-    "totalValue": 775,
-    "supplierId": "60f7c7b3a2f38c4e5e8d7f1e",
-    "notes": "Restocked with batch #12345"
-  }
+  "businessId": "6761f56d9f1141f4f2a48de5",
+  "productId": "6762043417bc539e53cc9bb1",
+  "unitsAvailable": 50,
+  "maxQuantity": 100,
+  "minQuantity": 10,
+  "thresholdAlert": false,
+  "costPerUnit": 15.5,
+  "totalValue": 775,
+  "supplierId": "60f7c7b3a2f38c4e5e8d7f1e",
+  "notes": "Restocked with batch #12345",
+  "locationName": "Main Warehouse",
+  "locationType": "WAREHOUSE",
+  "address": "123 Market Street, Lagos",
+  "compartment": "Section A - Row 3",
+  "capacity": 200,
+  "locationStatus": "Active"
+}
