@@ -30,7 +30,8 @@
 | **18.12.**  | 3  | Implemented log and stock router, controllers, interfaces. |
 |             | 1  | Updated Api Docs |
 |             | 2  | Implemented location interface and model. Refactored stock controller to handle location data |
-| **Total**  | **63** | |
+| **19.12.**  | 2  | Extended stock router, controllers, interfaces.|
+| **Total**  | **65** | |
 
 
 
