@@ -11,7 +11,7 @@ class CurrentUserRoutes {
   }
 
   public currentUserRoute(): Router {
-    this.router.get('/currentuser', authMiddleware.checkAuthentication, currentUser.read)
+    this.router.get('/me', authMiddleware.checkAuthentication, currentUser.read)
     
     return this.router
   }

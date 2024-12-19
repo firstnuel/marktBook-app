@@ -4,7 +4,9 @@ paths:
       summary: Create a new product
       description: Endpoint to create a new product under a business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
         - bearerAuth: []
       requestBody:
@@ -217,7 +219,9 @@ paths:
       summary: Retrieve all products
       description: Endpoint to retrieve all products associated with the authenticated user's business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
         - bearerAuth: []
       responses:
@@ -261,7 +265,9 @@ paths:
       summary: Retrieve products by category
       description: Endpoint to retrieve products filtered by a specific category under the authenticated user's business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
         - bearerAuth: []
       parameters:
@@ -324,7 +330,9 @@ paths:
       summary: Search for products
       description: Endpoint to search for products based on name, SKU, barcode, or tags under the authenticated user's business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
         - bearerAuth: []
       parameters:
@@ -408,7 +416,9 @@ paths:
       summary: Retrieve a single product by ID
       description: Endpoint to retrieve detailed information about a specific product by its ID under the authenticated user's business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
         - bearerAuth: []
       parameters:
@@ -479,7 +489,9 @@ paths:
       summary: Edit a product
       description: Endpoint to update product details based on the user's role and permissions.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
         - bearerAuth: []
       parameters:
@@ -563,7 +575,9 @@ paths:
       summary: Delete a product
       description: Endpoint to delete a specific product by ID. Only accessible to users with 'Owner' or 'Manager' roles.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
         - bearerAuth: []
       parameters:

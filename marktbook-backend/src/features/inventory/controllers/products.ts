@@ -231,7 +231,7 @@ export class Product {
 
     } catch(error) {
       // Log and forward the error to a centralized error handler
-      log.error('Error fetching uses')
+      log.error('Error fetching product')
       next(error)
     }
   }

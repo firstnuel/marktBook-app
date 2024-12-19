@@ -327,7 +327,7 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /currentuser:
+  /me:
     get:
       summary: Get Current User
       description: Retrieve details of the currently authenticated user

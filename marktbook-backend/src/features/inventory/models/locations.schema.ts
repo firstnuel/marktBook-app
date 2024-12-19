@@ -8,6 +8,10 @@ const LocationSchema: Schema<ILocationDocument> = new Schema({
     type: Schema.Types.ObjectId, 
     ref: 'Stock'
   },
+  businessId: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'Business'
+  },
   locationType: {
     type: String,
     enum:  Object.values(LocationTypes)
@@ -25,24 +29,20 @@ const LocationSchema: Schema<ILocationDocument> = new Schema({
     type: String,
     enum: Object.values(Status)
   },
-  stockMovements: [
-    {
-      productId:  { type: Schema.Types.ObjectId, ref: 'Product' },
-      movementType: {
-        type: String,
-        enum: Object.values(MovementType)
+  stockMovements: {
+    type: [
+      {
+        productId: { type: Schema.Types.ObjectId, ref: 'Product' },
+        movementType: { type: String, enum: Object.values(MovementType) },
+        quantity: { type: Number },
+        destination: { type: Schema.Types.ObjectId, ref: 'Location' },
+        initiatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        reason: { type: String },
+        timestamp: { type: Date, default: Date.now },
       },
-      quantity: { type: Number },
-      destination:  { type: Schema.Types.ObjectId, ref: 'Location' },
-      initiatedBy: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'User', 
-        required: true 
-      },
-      reason: { type: String },
-      timestamp:  { type: Date, default: Date.now }
-    }
-  ]
+    ],
+    default: [],
+  },
 },
 {
   timestamps: true, 
@@ -52,13 +52,15 @@ const LocationSchema: Schema<ILocationDocument> = new Schema({
 
 
 LocationSchema.virtual('calculatedLoad').get(function () {
+  const movements = this.stockMovements || [] 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return this.stockMovements.reduce((total: number, movement: any) => {
+  return movements.reduce((total: number, movement: any) => {
     return movement.movementType === 'IN'
       ? total + movement.quantity
       : total - movement.quantity
   }, 0)
 })
+
 
 
 

@@ -36,7 +36,7 @@ Accept: application/json
 withCredentials: true
 
 ### fetch current user
-GET {{baseUrl}}/{{urlpath}}/currentuser
+GET {{baseUrl}}/{{urlpath}}/me
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -48,41 +48,41 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-{
-    "sku": "PRD35890",
-    "productName": "Ear Phones",
-    "businessId": "6761f56d9f1141f4f2a48de5",
-    "longDescription": "Noise cancelling earphones with microphone.",
-    "shortDescription": "Noise cancelling earphones",
-    "currency": "USD",
-    "productCategory": "Electronics",
-    "productType": "Physical",
-    "barcode": "9876543234987",
-    "basePrice": 100.0,
-    "salePrice": 80.0,
-    "discount": 20.0,
-    "unit": "piece",
-    "tags": ["accessories", "sound", "wearable"],
-    "isActive": true
-}
-
 # {
-#     "sku": "PRD49281",
-#     "productName": "Wireless Mouse",
-#     "businessId": "675ef731a57d646944022a92",
-#     "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
-#     "shortDescription": "Ergonomic wireless mouse",
+#     "sku": "PRD35890",
+#     "productName": "Ear Phones",
+#     "businessId": "6761f56d9f1141f4f2a48de5",
+#     "longDescription": "Noise cancelling earphones with microphone.",
+#     "shortDescription": "Noise cancelling earphones",
 #     "currency": "USD",
 #     "productCategory": "Electronics",
 #     "productType": "Physical",
-#     "barcode": "1234567890123",
-#     "basePrice": 25.0,
-#     "salePrice": 20.0,
-#     "discount": 5.0,
+#     "barcode": "9876543234987",
+#     "basePrice": 100.0,
+#     "salePrice": 80.0,
+#     "discount": 20.0,
 #     "unit": "piece",
-#     "tags": ["computer", "accessories", "wireless", "ergonomic"],
+#     "tags": ["accessories", "sound", "wearable"],
 #     "isActive": true
 # }
+
+{
+    "sku": "PRD49281",
+    "productName": "Wireless Mouse",
+    "businessId": "6761f56d9f1141f4f2a48de5",
+    "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
+    "shortDescription": "Ergonomic wireless mouse",
+    "currency": "USD",
+    "productCategory": "Electronics",
+    "productType": "Physical",
+    "barcode": "1234567890123",
+    "basePrice": 25.0,
+    "salePrice": 20.0,
+    "discount": 5.0,
+    "unit": "piece",
+    "tags": ["computer", "accessories", "wireless", "ergonomic"],
+    "isActive": true
+}
 
 
 
@@ -104,7 +104,7 @@ withCredentials: true
   "businessId": "675ef731a57d646944022a92"
 }
 
-###
+### fetch all users
 GET  {{baseUrl}}/{{urlpath}}/users
 Content-Type: application/json
 Accept: application/json
@@ -117,7 +117,7 @@ Accept: application/json
 withCredentials: true
 
 ### edit user by id
-PATCH {{baseUrl}}/{{urlpath}}/users/675ef731a57d646944022a91
+PATCH {{baseUrl}}/{{urlpath}}/users/67644278e86c081b85339b87
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -127,7 +127,7 @@ withCredentials: true
 }
 
 ### Delete user by id
-DELETE {{baseUrl}}/{{urlpath}}/users/675da60336396520205885a5
+DELETE {{baseUrl}}/{{urlpath}}/users/67644278e86c081b85339b87
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -152,7 +152,7 @@ withCredentials: true
 
 
 ### fetch product by id
-GET {{baseUrl}}/{{urlpath}}/products/6762043417bc539e53cc9bb1
+GET {{baseUrl}}/{{urlpath}}/products/67644278e86c081b85339b87
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -182,7 +182,7 @@ withCredentials: true
   }
 
 ### delete product by id
-DELETE  {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1487
+DELETE  {{baseUrl}}/{{urlpath}}/products/676441881a122d71c60c392e
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -201,19 +201,48 @@ withCredentials: true
 
 {
   "businessId": "6761f56d9f1141f4f2a48de5",
-  "productId": "6762043417bc539e53cc9bb1",
-  "unitsAvailable": 50,
-  "maxQuantity": 100,
-  "minQuantity": 10,
+  "productId": "67646f6822c5430e6817ac7b",
+  "unitsAvailable": 40,
+  "maxQuantity": 150,
+  "minQuantity": 15,
   "thresholdAlert": false,
   "costPerUnit": 15.5,
   "totalValue": 775,
   "supplierId": "60f7c7b3a2f38c4e5e8d7f1e",
-  "notes": "Restocked with batch #12345",
+  "notes": "Restocked with batch #143",
   "locationName": "Main Warehouse",
   "locationType": "WAREHOUSE",
   "address": "123 Market Street, Lagos",
   "compartment": "Section A - Row 3",
   "capacity": 200,
   "locationStatus": "Active"
+}
+
+
+### fetch all stocks
+GET {{baseUrl}}/{{urlpath}}/stocks
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### Fetch stock by product id
+GET {{baseUrl}}/{{urlpath}}/stocks/67646f6822c5430e6817ac7b
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+### Edit stock by product id
+PATCH {{baseUrl}}/{{urlpath}}/stocks/67644278e86c081b85339b87
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "unitsAvailable": 60,
+  "maxQuantity": 200,
+  "minQuantity": 20,
+  "thresholdAlert": false,
+  "costPerUnit": 17.5,
+  "totalValue": 980
 }

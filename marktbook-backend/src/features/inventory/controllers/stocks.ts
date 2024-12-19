@@ -6,11 +6,11 @@ import { Schema } from 'zod'
 import HTTP_STATUS from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { Request, Response, NextFunction } from 'express'
-import { StockDataSchema } from '@inventory/schemes/stockValidation'
+import { StockDataSchema, editStockSchema } from '@inventory/schemes/stockValidation'
 import { IuserDocument } from '@users/interfaces/user.interface'
 import { userCache } from '@service/redis/user.cache'
 import { userService } from '@service/db/user.service'
-import { IStockData, IStockDocument } from '@inventory/interfaces/stock.interfaces'
+import { ALLOWED_STOCK_FIELDS, filterStockFields, IStockData, IStockDocument } from '@inventory/interfaces/stock.interfaces'
 import { productService } from '@service/db/product.service'
 import { IBusinessDocument } from '@business/interfaces/business.interface'
 import { businessService } from '@service/db/business.service'
@@ -20,6 +20,7 @@ import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/
 import { logService } from '@service/db/logs.service'
 import { ILocationDocument } from '@inventory/interfaces/location.interfaces'
 import { locationService } from '@service/db/location.service'
+import { omit } from 'lodash'
 
 
 const log = config.createLogger('productsController')
@@ -28,6 +29,9 @@ class Stock {
 
   constructor() {
     this.create = this.create.bind(this)
+    this.read = this.read.bind(this)
+    this.edit = this.edit.bind(this)
+    this.fetch = this.fetch.bind(this)
   }
     
   /**
@@ -87,9 +91,11 @@ class Stock {
       
       await logService.createLog(logData)
 
+      const Data = {... stockData, ...locationData}
+
       res.status(HTTP_STATUS.CREATED).json({
-        message: `Stock info for '${product.productName}' created successfully`,
-        data: stockData,
+        message: `Stock and location info for '${product.productName}' created successfully`,
+        data: Data,
         status: 'success'
       })
     
@@ -210,12 +216,13 @@ class Stock {
     userId: string | ObjectId, 
     locationId: ObjectId, 
   ): ILocationDocument {
-    const { locationName, locationType, address, compartment, locationStatus} =  data
+    const { locationName, locationType, address, compartment, locationStatus, businessId} =  data
 
     return {
       _id: locationId,
       stockId,
       locationName,
+      businessId: new ObjectId(businessId),
       locationType,
       address,
       compartment: compartment || '',
@@ -227,6 +234,155 @@ class Stock {
     } as unknown as ILocationDocument
   }
 
+
+  /**
+  * Handles the returning of all StockData.
+  * @param req Express Request object
+  * @param res Express Response object
+  * @param next Express NextFunction for error handling
+  */
+
+  public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      // validate user 
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+
+      // fetch stockData
+      const stockData = await stockService.fetchAll(`${existingUser.associatedBusinessesId}`)
+
+      const message = stockData.length? 'Stocks data fetched successfully' : 'No stock data found'
+      res.status(HTTP_STATUS.OK).json({ message, data: stockData })
+
+    } catch(error) {
+      // Log and forward the error to a centralized error handler
+      log.error('Error fetching stock')
+      next(error)
+    }
+  }
+
+
+  /**
+  * Handles the returning StockData for a Product.
+  * @param req Express Request object
+  * @param res Express Response object
+  * @param next Express NextFunction for error handling
+  */
+  public async fetch(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      // validate user 
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+
+      const { productId } = req.params 
+
+      // Check if product exist
+      const product = await productService.getById(`${productId}`, `${existingUser.associatedBusinessesId}`)
+      if (!product) {
+        return next(new NotFoundError('Product not found'))
+      }
+
+      // check if stock exist 
+      const stock = await stockService.getByProductID(new ObjectId(product._id))
+      if (!stock) {
+        return next(new NotFoundError('Stock data not found for this product'))
+      }
+      // transform data
+      const stockData = stock.toObject()
+      if (stockData.locationId) {
+        stockData.locationData = omit(stockData.locationId, ['_id', 'id', 'calculatedLoad'])
+        delete stockData.locationId
+      }
+
+      const returnData = omit(stockData,
+        ['_id', 'stockId', 'manager', 'locationStatus', 'updatedAt',
+          'updatedBy',  'createdBy', 'createdAt', '__v', 'businessId', 'productId'])
+
+
+      res.status(HTTP_STATUS.OK).json({
+        message: 'Product stock data fetched successfully', 
+        data: returnData 
+      })
+
+    } catch(error) {
+      // Log and forward the error to a centralized error handler
+      log.error('Error fetching stock')
+      next(error)
+    }
+  }
+
+
+  /**
+   * Handles editing stock for a product
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express NextFunction for error handling
+   */
+
+  public async edit(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      // validate input
+      this.validateInput(editStockSchema, req.body)
+
+      const { productId } = req.params 
+
+      // validate requesting user
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      if (existingUser.role === 'Staff') {
+        return next(new NotAuthorizedError('Not Authorized: User not authorized to edit stock'))
+      }
+
+      // Check if product exist
+      const product = await productService.getById(`${productId}`, `${existingUser.associatedBusinessesId}`)
+      if (!product) {
+        return next(new NotFoundError('Product not found'))
+      }
+
+      // check if stock exist 
+      const stock = await stockService.getByProductID(new ObjectId(product._id))
+      if (!stock) {
+        return next(new NotFoundError('Stock data not found for this product'))
+      }
+
+      // sanitize the input data
+      const body = Utils.sanitizeInput(req.body)
+
+      // validate business
+      await this.validateBusiness(stock.businessId.toString(), existingUser)
+      const filteredData = filterStockFields(body, ALLOWED_STOCK_FIELDS)
+
+      filteredData.updatedAt = new Date()
+      filteredData.updatedBy = new ObjectId(existingUser._id)
+
+      // check if restocked
+      if (body.unitsAvailable > stock.unitsAvailable) {
+        filteredData.lastRestocked =  new Date()
+      }
+      // Perform update
+      const updateStockData = await stockService.editStock(new ObjectId(stock._id), filteredData)
+
+      // log update
+      const logData = createActivityLog (
+        existingUser._id, 
+        existingUser.username, 
+        existingUser.associatedBusinessesId, 
+        'EDIT' as ActionType, 
+        'STOCK' as EntityType,
+        `${updateStockData?._id}`,
+        `Edited stock for product '${product?.productName}'`)
+
+      await logService.createLog(logData)
+
+      // Respond to client
+      res.status(HTTP_STATUS.OK).json({
+        status: 'success',
+        message: 'Product stock data updated successfully',
+        data: updateStockData,
+      })
+
+    } catch (error: any) {
+      log.error(`Error updating user: ${error.message}`)
+      next(error)
+    }
+  }
   
 }
 

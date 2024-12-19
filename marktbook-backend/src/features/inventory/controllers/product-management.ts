@@ -13,6 +13,9 @@ import { BadRequestError, NotAuthorizedError, NotFoundError } from '@global/help
 import { uploadProductImages } from '@global/helpers/cloudinary-upload'
 import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
+import { stockService } from '@service/db/stock.service'
+import { ObjectId } from 'mongodb'
+import { locationService } from '@service/db/location.service'
 
 
 const log = config.createLogger('productMangementController')
@@ -87,6 +90,7 @@ class ProductManagement extends Product {
       }
 
       filteredData.updatedAt = new Date()
+      filteredData.updatedBy = new ObjectId(existingUser._id)
 
       // Perform update
       const updatedProduct = await productService.editProduct(`${productId}`, filteredData)
@@ -130,6 +134,10 @@ class ProductManagement extends Product {
       if (!product) {
         return next(new NotFoundError('Product not found'))
       }
+
+      // delete stock and location data
+      await locationService.deleteLocation(new ObjectId(product.stockId))
+      await stockService.deleteStock(new ObjectId(product.stockId))
 
       // Perform deletion
       await productService.deleteProductById(product!._id)

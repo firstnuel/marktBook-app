@@ -25,3 +25,17 @@ export const StockDataSchema = z.object({
   locationStatus: z.nativeEnum(Status)
 })
 
+export const editStockSchema = z.object({
+  businessId: z.string().optional(),
+  productId: z.string().optional(),
+  locationId: z.string().optional(),
+  unitsAvailable: z.number().optional(),
+  maxQuantity: z.number().optional(),
+  minQuantity: z.number().optional(),
+  thresholdAlert: z.boolean().optional(),
+  lastRestocked: z.date().optional(),
+  costPerUnit: z.number().optional(),
+  totalValue: z.number().optional(),
+  supplierId: z.string().optional(),
+  notes: z.string().optional(),
+})

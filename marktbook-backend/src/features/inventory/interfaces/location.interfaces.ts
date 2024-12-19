@@ -6,6 +6,7 @@ export interface ILocationDocument extends Document {
     _id: ObjectId;
     stockId: ObjectId;
     locationName: string;
+    businessId:  ObjectId;
     locationType: LocationTypes;
     address: string;
     compartment: string;

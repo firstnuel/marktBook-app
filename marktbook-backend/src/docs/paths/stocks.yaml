@@ -1,19 +1,36 @@
+
 paths:
   /stocks:
     post:
       summary: Create a new stock entry
-      description: Allows an authenticated user to create a new stock entry for a product.
+      description: Allows an authenticated user to create a new stock entry for a product along with its location details.
       tags:
         - Inventory
+      sub-tags:
+        - Stock
       security:
         - BearerAuth: []
       requestBody:
-        description: JSON payload to create a new stock entry.
+        description: JSON payload to create a new stock entry along with location information.
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - productId
+                - businessId
+                - unitsAvailable
+                - maxQuantity
+                - minQuantity
+                - thresholdAlert
+                - costPerUnit
+                - totalValue
+                - supplierId
+                - locationName
+                - locationType
+                - address
+                - locationStatus
               properties:
                 productId:
                   type: string
@@ -23,22 +40,21 @@ paths:
                   type: string
                   description: ID of the business owning the stock.
                   example: "60c72b2f9af1b8b1f2d7b933"
-                locationId:
-                  type: string
-                  description: ID of the stock location.
-                  example: "60c72b2f9af1b8b1f2d7b937"
                 unitsAvailable:
                   type: integer
                   description: Number of units currently available.
                   example: 100
+                  minimum: 0
                 maxQuantity:
                   type: integer
                   description: Maximum quantity of stock allowed.
                   example: 500
+                  minimum: 0
                 minQuantity:
                   type: integer
                   description: Minimum quantity of stock allowed.
                   example: 20
+                  minimum: 0
                 thresholdAlert:
                   type: boolean
                   description: Whether to enable threshold alerts.
@@ -48,6 +64,7 @@ paths:
                   format: float
                   description: Cost per unit of stock.
                   example: 25.50
+                  minimum: 0
                 notes:
                   type: string
                   description: Additional notes about the stock.
@@ -57,10 +74,38 @@ paths:
                   format: float
                   description: Total value of the stock.
                   example: 2550.00
+                  minimum: 0
                 supplierId:
                   type: string
                   description: ID of the supplier.
                   example: "60c72b2f9af1b8b1f2d7b938"
+                locationName:
+                  type: string
+                  description: Name of the stock location.
+                  example: "Warehouse A"
+                locationType:
+                  type: string
+                  description: Type of the location.
+                  example: "Warehouse"
+                  enum:
+                    - Warehouse
+                    - Store
+                    - Distribution Center
+                address:
+                  type: string
+                  description: Address of the stock location.
+                  example: "1234 Elm Street, Springfield, USA"
+                compartment:
+                  type: string
+                  description: Compartment within the location (optional).
+                  example: "Section B"
+                locationStatus:
+                  type: string
+                  description: Current status of the location.
+                  example: "Active"
+                  enum:
+                    - Active
+                    - Inactive
       responses:
         '201':
           description: Stock info created successfully.
@@ -71,7 +116,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Stock info for 'Product Name' created successfully
+                    example: Stock and location info for 'Product Name' created successfully
                   data:
                     type: object
                     properties:
@@ -171,3 +216,352 @@ paths:
                   message:
                     type: string
                     example: An error occurred while creating stock
+    get:
+      summary: Retrieve all stock entries
+      description: Allows an authenticated user to retrieve all stock entries associated with their business.
+      tags:
+        - Inventory
+      sub-tags:
+        - Stock
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Stocks data fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Stocks data fetched successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: "60c72b2f9af1b8b1f2d7b939"
+                        businessId:
+                          type: string
+                          example: "60c72b2f9af1b8b1f2d7b933"
+                        productId:
+                          type: string
+                          example: "60c72b2f9af1b8b1f2d7b935"
+                        locationId:
+                          type: string
+                          example: "60c72b2f9af1b8b1f2d7b937"
+                        unitsAvailable:
+                          type: integer
+                          example: 100
+                        maxQuantity:
+                          type: integer
+                          example: 500
+                        minQuantity:
+                          type: integer
+                          example: 20
+                        thresholdAlert:
+                          type: boolean
+                          example: true
+                        costPerUnit:
+                          type: number
+                          format: float
+                          example: 25.50
+                        notes:
+                          type: string
+                          example: "Urgent restock required."
+                        totalValue:
+                          type: number
+                          format: float
+                          example: 2550.00
+                        supplierId:
+                          type: string
+                          example: "60c72b2f9af1b8b1f2d7b938"
+                        updatedBy:
+                          type: string
+                          example: "60c72b2f9af1b8b1f2d7b940"
+                        createdBy:
+                          type: string
+                          example: "60c72b2f9af1b8b1f2d7b940"
+        '401':
+          description: Unauthorized - User not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Invalid User
+        '404':
+          description: Not Found - No stock data found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: No stock data found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: An error occurred while fetching stock data
+
+  /stocks/{productId}:
+    get:
+      summary: Retrieve stock entry by product ID
+      description: Allows an authenticated user to fetch stock information for a specific product.
+      tags:
+        - Inventory
+      sub-tags:
+        - Stock
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: ID of the product to retrieve stock data for.
+          schema:
+            type: string
+            example: "60c72b2f9af1b8b1f2d7b935"
+      responses:
+        '200':
+          description: Stock data fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Product stock data fetched successfully
+                  data:
+                    type: object
+                    properties:
+                      unitsAvailable:
+                        type: integer
+                        example: 100
+                      maxQuantity:
+                        type: integer
+                        example: 500
+                      minQuantity:
+                        type: integer
+                        example: 20
+                      thresholdAlert:
+                        type: boolean
+                        example: true
+                      costPerUnit:
+                        type: number
+                        format: float
+                        example: 25.50
+                      notes:
+                        type: string
+                        example: "Urgent restock required."
+                      totalValue:
+                        type: number
+                        format: float
+                        example: 2550.00
+                      supplierId:
+                        type: string
+                        example: "60c72b2f9af1b8b1f2d7b938"
+        '401':
+          description: Unauthorized - User not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Invalid User
+        '404':
+          description: Not Found - Stock data not found for the product.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Stock data not found for this product
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: An error occurred while fetching stock data
+
+    patch:
+      summary: Update stock entry for a product
+      description: Allows an authenticated user to update stock information for a specific product.
+      tags:
+        - Inventory
+      sub-tags:
+        - Stock
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: ID of the product to update stock data for.
+          schema:
+            type: string
+            example: "60c72b2f9af1b8b1f2d7b935"
+      requestBody:
+        description: JSON payload to update stock information.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                unitsAvailable:
+                  type: integer
+                  description: Number of units currently available.
+                  example: 150
+                  minimum: 0
+                maxQuantity:
+                  type: integer
+                  description: Maximum quantity of stock allowed.
+                  example: 600
+                  minimum: 0
+                minQuantity:
+                  type: integer
+                  description: Minimum quantity of stock allowed.
+                  example: 30
+                  minimum: 0
+                thresholdAlert:
+                  type: boolean
+                  description: Whether to enable threshold alerts.
+                  example: false
+                costPerUnit:
+                  type: number
+                  format: float
+                  description: Cost per unit of stock.
+                  example: 30.00
+                  minimum: 0
+                notes:
+                  type: string
+                  description: Additional notes about the stock.
+                  example: "Updated stock info."
+      responses:
+        '200':
+          description: Stock data updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Product stock data updated successfully
+                  data:
+                    type: object
+                    properties:
+                      unitsAvailable:
+                        type: integer
+                        example: 150
+                      maxQuantity:
+                        type: integer
+                        example: 600
+                      minQuantity:
+                        type: integer
+                        example: 30
+                      thresholdAlert:
+                        type: boolean
+                        example: false
+                      costPerUnit:
+                        type: number
+                        format: float
+                        example: 30.00
+                      notes:
+                        type: string
+                        example: "Updated stock info."
+        '400':
+          description: Validation failed for input data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Validation failed: unitsAvailable must be a positive integer"
+        '401':
+          description: Unauthorized - User not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Invalid User
+        '404':
+          description: Not Found - Stock data not found for the product.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Stock data not found for this product
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: An error occurred while updating stock data
