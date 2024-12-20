@@ -22,6 +22,7 @@ const StockDataSchema: Schema<IStockDocument> = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Supplier',
     },
+    compartment: { type: String },
     unitsAvailable: { type: Number, min: 0, required: true },
     maxQuantity: { type: Number, min: 1, required: true },
     minQuantity: { type: Number, min: 0, default: 0 },

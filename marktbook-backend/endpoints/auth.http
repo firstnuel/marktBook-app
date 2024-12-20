@@ -201,15 +201,15 @@ withCredentials: true
 
 {
   "businessId": "6761f56d9f1141f4f2a48de5",
-  "productId": "67646f6822c5430e6817ac7b",
-  "unitsAvailable": 40,
-  "maxQuantity": 150,
-  "minQuantity": 15,
+  "productId": "67644278e86c081b85339b87",
+  "unitsAvailable": 50,
+  "maxQuantity": 250,
+  "minQuantity": 20,
   "thresholdAlert": false,
   "costPerUnit": 15.5,
   "totalValue": 775,
   "supplierId": "60f7c7b3a2f38c4e5e8d7f1e",
-  "notes": "Restocked with batch #143",
+  "notes": "Restocked with batch #113",
   "locationName": "Main Warehouse",
   "locationType": "WAREHOUSE",
   "address": "123 Market Street, Lagos",
@@ -245,4 +245,19 @@ withCredentials: true
   "thresholdAlert": false,
   "costPerUnit": 17.5,
   "totalValue": 980
+}
+
+
+### Move stock to another location
+POST {{baseUrl}}/{{urlpath}}/stocks/movements
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "productId": "67644278e86c081b85339b87",
+  "movementType": "OUT",
+  "quantity": 10,
+  "destination":  "67644278e86c081b85339b92",
+  "reason": "Damaged goods"
 }

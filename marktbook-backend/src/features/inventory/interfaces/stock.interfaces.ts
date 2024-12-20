@@ -12,6 +12,7 @@ export interface IStockDocument extends Document {
     maxQuantity: number;
     minQuantity: number;
     thresholdAlert: boolean;
+    compartment: string;
     lastRestocked: Date;
     costPerUnit?: number;
     totalValue?: number;
@@ -34,13 +35,14 @@ export interface IStockData {
     costPerUnit?: number;
     totalValue?: number;
     supplierId?: ObjectId;
+    compartment?: string;
     notes?: string;
     //location Data
     locationName: string;
     locationType: LocationTypes;
     address: string;
-    compartment?: string;
     locationStatus: Status;
+    capacity?: number;
 }
 
 

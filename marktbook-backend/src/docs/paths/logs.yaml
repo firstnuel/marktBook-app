@@ -9,7 +9,7 @@ paths:
       tags:
         - Activity
       security:
-        - bearerAuth: []
+         - cookieAuth: []
       responses:
         '200':
           description: Logs data fetched successfully
@@ -44,11 +44,4 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
 
-  

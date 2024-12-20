@@ -14,6 +14,7 @@ class StockRoutes {
     this.router.get('/stocks', authMiddleware.checkAuthentication, stock.read)
     this.router.patch('/stocks/:productId', authMiddleware.checkAuthentication, stock.edit)
     this.router.get('/stocks/:productId', authMiddleware.checkAuthentication, stock.fetch)
+    this.router.post('/stocks/movements', authMiddleware.checkAuthentication, stock.move)
 
     return this.router
   }

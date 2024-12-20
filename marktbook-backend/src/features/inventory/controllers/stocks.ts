@@ -18,9 +18,10 @@ import { businessCache } from '@service/redis/business.cache'
 import { stockService } from '@service/db/stock.service'
 import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
-import { ILocationDocument } from '@inventory/interfaces/location.interfaces'
+import { ILocationDocument, StockMovement } from '@inventory/interfaces/location.interfaces'
 import { locationService } from '@service/db/location.service'
 import { omit } from 'lodash'
+import { movementSchema } from '@inventory/schemes/locationValidation'
 
 
 const log = config.createLogger('productsController')
@@ -32,6 +33,7 @@ class Stock {
     this.read = this.read.bind(this)
     this.edit = this.edit.bind(this)
     this.fetch = this.fetch.bind(this)
+    this.move = this.move.bind(this)
   }
     
   /**
@@ -69,12 +71,20 @@ class Stock {
       const stockId: ObjectId = new ObjectId()
       const locationId: ObjectId = new ObjectId()
 
-      const stockData: IStockDocument = this.stockData(body, stockId, existingUser._id, product._id, locationId)
-      const locationData: ILocationDocument = this.locationData(body, stockId, existingUser._id, locationId)
+      // Check if location exist
+      const location = await locationService.findByName(body.locationName, new ObjectId(body.businessId))
+      if (location) {
+        location.stocks.push(stockId)
+        await location.save()
+      } else {
+        // save locationData
+        const locationData: ILocationDocument = this.locationData(body, stockId, existingUser._id, locationId)
+        await locationService.addLocation(locationData)
+      }
 
-      // save data
+      // save stockData
+      const stockData: IStockDocument = this.stockData(body, stockId, existingUser._id, product._id, location?._id || locationId)
       await stockService.createStock(stockData)
-      await locationService.addLocation(locationData)
 
       // update product
       await productService.editStockId(product._id.toString(), stockId)
@@ -91,10 +101,10 @@ class Stock {
       
       await logService.createLog(logData)
 
-      const Data = {... stockData, ...locationData}
+      const Data = { ...stockData, locationName: body.locationName, address: body.address }
 
       res.status(HTTP_STATUS.CREATED).json({
-        message: `Stock and location info for '${product.productName}' created successfully`,
+        message: `Stock and location info for '${product.productName}' added successfully`,
         data: Data,
         status: 'success'
       })
@@ -181,7 +191,8 @@ class Stock {
       costPerUnit,
       notes,
       totalValue,
-      supplierId
+      supplierId,
+      compartment,
     } = data
 
     return {
@@ -190,6 +201,7 @@ class Stock {
       productId: new ObjectId(productId),
       locationId: new ObjectId(locationId),
       unitsAvailable,
+      compartment: compartment || '',
       maxQuantity,
       minQuantity,
       thresholdAlert,
@@ -215,20 +227,21 @@ class Stock {
     stockId: ObjectId, 
     userId: string | ObjectId, 
     locationId: ObjectId, 
+    currentLoad: number = 0,
+    manager: string =''
   ): ILocationDocument {
-    const { locationName, locationType, address, compartment, locationStatus, businessId} =  data
+    const { locationName, locationType, address, locationStatus, capacity, businessId} =  data
 
     return {
       _id: locationId,
-      stockId,
-      locationName,
+      stocks: [ stockId ],
+      locationName: Utils.firstLetterToUpperCase(locationName),
       businessId: new ObjectId(businessId),
       locationType,
       address,
-      compartment: compartment || '',
-      currentLoad: undefined,
-      capacity: undefined,
-      manager: new ObjectId(userId),
+      currentLoad,
+      capacity: capacity === 0 ? undefined : capacity,
+      manager: manager? new ObjectId(manager) :new ObjectId(userId),
       locationStatus,
       stockMovements:[],
     } as unknown as ILocationDocument
@@ -379,7 +392,80 @@ class Stock {
       })
 
     } catch (error: any) {
-      log.error(`Error updating user: ${error.message}`)
+      log.error(`Error updating stock data: ${error.message}`)
+      next(error)
+    }
+  }
+
+
+  /**
+   * Handles movement of stock to another location
+   * @param req Express Request Object
+   * @param res Express Response Object
+   * @param next Express NextFunction for error handling
+   */
+
+  public async move(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // validate input and sanitize input
+      this.validateInput(movementSchema, req.body)
+      const { productId, movementType, quantity, destination, reason } = Utils.sanitizeInput(req.body)
+
+      // validate requesting user
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+
+      // Check if product exist
+      const product = await productService.getById(`${productId}`, `${existingUser.associatedBusinessesId}`)
+      if (!product) return next(new NotFoundError('Product not found'))
+
+      const stock = await stockService.getByProductID(new ObjectId(product._id))
+      if (!stock)  return next(new NotFoundError('Stock data not found for this product'))
+
+      // Ensure sufficient stock for 'OUT' movement
+      if (movementType === 'OUT' && quantity > stock.unitsAvailable) {
+        return next(new BadRequestError('Insufficient stock for the requested movement'))
+      }
+      
+      // Fetch location data
+      const location = await locationService.getById(new ObjectId(stock.locationId))
+      if (!location) {
+        return next(new NotFoundError('location data not found for this product'))
+      }
+
+      // Update stock movement
+      location.stockMovements.push(
+        {
+          productId: new ObjectId(product._id),
+          movementType,
+          quantity,
+          destination: new ObjectId(destination as string),
+          initiatedBy: new ObjectId(existingUser._id),
+          reason
+        } as StockMovement
+      )
+      // Save location changes
+      await location.save()
+
+      // Log the activity
+      const logData = createActivityLog (
+        existingUser._id, 
+        existingUser.username, 
+        existingUser.associatedBusinessesId, 
+        'UPDATE' as ActionType, 
+        'LOCATION' as EntityType,
+        `${location?._id}`,
+        `Updated stock movement for product '${product?.productName}'`)
+
+      await logService.createLog(logData)
+
+      // Respond to client
+      res.status(HTTP_STATUS.OK).json({
+        status: 'success',
+        message: `Updated stock movement for product '${product?.productName}' successfully`,
+        data: omit(location.toJSON(), ['_id', 'createdAt', '__v"']),
+      }) 
+    } catch (error: any) {
+      log.error(`Error moving stock: ${error.message}`)
       next(error)
     }
   }

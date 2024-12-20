@@ -4,10 +4,12 @@ import { model, Schema, Model } from 'mongoose'
 
 const LocationSchema: Schema<ILocationDocument> = new Schema({
   locationName: { type: String, required: true },
-  stockId: { 
-    type: Schema.Types.ObjectId, 
-    ref: 'Stock'
-  },
+  stocks: [
+    { 
+      type: Schema.Types.ObjectId, 
+      ref: 'Stock'
+    }
+  ],
   businessId: { 
     type: Schema.Types.ObjectId, 
     ref: 'Business'
@@ -17,7 +19,6 @@ const LocationSchema: Schema<ILocationDocument> = new Schema({
     enum:  Object.values(LocationTypes)
   },
   address: { type: String },
-  compartment: { type: String },
   currentLoad: { type: Number },
   capacity: { type: Number },
   manager:  { 
@@ -51,15 +52,15 @@ const LocationSchema: Schema<ILocationDocument> = new Schema({
 })
 
 
-LocationSchema.virtual('calculatedLoad').get(function () {
-  const movements = this.stockMovements || [] 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return movements.reduce((total: number, movement: any) => {
-    return movement.movementType === 'IN'
-      ? total + movement.quantity
-      : total - movement.quantity
-  }, 0)
-})
+// LocationSchema.virtual('calculatedLoad').get(async function () {  
+//   // Aggregate the total units available for all stocks in this location
+//   const stocks = await StockModel.find({ locationId: this._id }).select('unitsAvailable')
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   const currentLoad = stocks.reduce((total: number, stock: any) => total + (stock.unitsAvailable || 0), 0)
+  
+//   return currentLoad
+// })
+
 
 
 

@@ -6,7 +6,7 @@ paths:
       tags:
         - Users
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         description: Details of the user to be created.
         required: true
@@ -132,7 +132,7 @@ paths:
       tags:
         - Users
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         '200':
           description: Successfully retrieved users.
@@ -199,7 +199,7 @@ paths:
       tags:
         - Users
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - in: path
           name: id
@@ -262,7 +262,7 @@ paths:
       tags:
         - Users
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - in: path
           name: id
@@ -339,7 +339,7 @@ paths:
       tags:
         - Users
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - in: path
           name: id
@@ -391,3 +391,4 @@ paths:
                   error:
                     type: string
                     example: Failed to delete user. Please try again.
+

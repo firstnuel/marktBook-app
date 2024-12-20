@@ -8,7 +8,7 @@ paths:
       sub-tags:
           - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         description: Details of the product to be created.
         required: true
@@ -223,7 +223,7 @@ paths:
       sub-tags:
           - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         '200':
           description: Successfully retrieved products.
@@ -269,7 +269,7 @@ paths:
       sub-tags:
           - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: category
           in: path
@@ -334,7 +334,7 @@ paths:
       sub-tags:
           - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: name
           in: query
@@ -420,7 +420,7 @@ paths:
       sub-tags:
           - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: productId
           in: path
@@ -493,7 +493,7 @@ paths:
       sub-tags:
           - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: productId
           in: path
@@ -573,13 +573,13 @@ paths:
 
     delete:
       summary: Delete a product
-      description: Endpoint to delete a specific product by ID. Only accessible to users with 'Owner' or 'Manager' roles.
+      description: "Endpoint to delete a specific product by ID. Only accessible to users with 'Owner' or 'Manager' roles. NOTE: This will delete both stock and location data relating to the product."
       tags:
           - Inventory
       sub-tags:
           - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: productId
           in: path

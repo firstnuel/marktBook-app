@@ -258,13 +258,6 @@ components:
         updatedBy:
           type: string
 
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
-
 
 schema:
   Stock:
@@ -316,3 +309,9 @@ schema:
       type: string
       description: ID of the supplier.
       example: "60c72b2f9af1b8b1f2d7b938"
+
+  securitySchemes:
+    cookieAuth:
+      type: sessionId
+      in: cookie
+      name: sessionId

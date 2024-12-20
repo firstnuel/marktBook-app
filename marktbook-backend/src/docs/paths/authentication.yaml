@@ -1,10 +1,3 @@
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
 paths:
   /register:
     post:
@@ -334,7 +327,7 @@ paths:
       tags:
         - Authentication
       security:
-        - bearerAuth: []
+         - cookieAuth: []
       responses:
         '200':
           description: Successfully retrieved user details

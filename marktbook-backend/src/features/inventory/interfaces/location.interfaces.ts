@@ -4,12 +4,11 @@ import { ObjectId } from 'mongodb'
 
 export interface ILocationDocument extends Document {
     _id: ObjectId;
-    stockId: ObjectId;
+    stocks: ObjectId[];
     locationName: string;
     businessId:  ObjectId;
     locationType: LocationTypes;
     address: string;
-    compartment: string;
     currentLoad?: number;
     capacity?: number;
     manager: ObjectId;
@@ -51,7 +50,6 @@ export interface ILocationData {
     name: string;
     type: LocationTypes;
     address: string;
-    compartment: string;
     capacity?: number;
     status: Status;
 }
