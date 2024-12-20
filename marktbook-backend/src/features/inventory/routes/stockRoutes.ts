@@ -12,9 +12,11 @@ class StockRoutes {
   public StockRoutes(): Router {
     this.router.post('/stocks', authMiddleware.checkAuthentication, stock.create)
     this.router.get('/stocks', authMiddleware.checkAuthentication, stock.read)
+    this.router.get('/stocks/low-stock', authMiddleware.checkAuthentication, stock.low)
     this.router.patch('/stocks/:productId', authMiddleware.checkAuthentication, stock.edit)
     this.router.get('/stocks/:productId', authMiddleware.checkAuthentication, stock.fetch)
     this.router.post('/stocks/movements', authMiddleware.checkAuthentication, stock.move)
+
 
     return this.router
   }

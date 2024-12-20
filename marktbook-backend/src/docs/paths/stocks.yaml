@@ -729,5 +729,143 @@ paths:
                   description: Error message indicating an unexpected server error.
                   example: "An error occurred while updating stock movement"
 
-
-
+/stocks/low-stock:
+  get:
+    summary: Retrieve low stock entries
+    description: Allows an authenticated user to retrieve stock entries that are low in quantity.
+    tags:
+      - Inventory
+    sub-tags:
+      - Stock
+    security:
+      - cookieAuth: []
+    responses:
+      '200':
+        description: Low stocks data fetched successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Low stocks data fetched successfully"
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      locationId:
+                        type: string
+                        description: ID of the location where the stock is held.
+                        example: "6764e486c17a65d31e9b7aaa"
+                      productId:
+                        type: string
+                        description: ID of the product associated with the stock.
+                        example: "67646f6822c5430e6817ac7b"
+                      supplierId:
+                        type: string
+                        description: ID of the supplier.
+                        example: "60f7c7b3a2f38c4e5e8d7f1e"
+                      compartment:
+                        type: string
+                        description: Compartment within the location.
+                        example: "Section A - Row 3"
+                      unitsAvailable:
+                        type: integer
+                        description: Number of units currently available.
+                        example: 9
+                      maxQuantity:
+                        type: integer
+                        description: Maximum quantity of stock allowed.
+                        example: 150
+                      minQuantity:
+                        type: integer
+                        description: Minimum quantity of stock allowed.
+                        example: 10
+                      thresholdAlert:
+                        type: boolean
+                        description: Whether to enable threshold alerts.
+                        example: false
+                      costPerUnit:
+                        type: number
+                        format: float
+                        description: Cost per unit of stock.
+                        example: 15.5
+                      totalValue:
+                        type: number
+                        format: float
+                        description: Total value of the stock.
+                        example: 775
+                      notes:
+                        type: string
+                        description: Additional notes about the stock.
+                        example: "Restocked with batch #105"
+                      updatedBy:
+                        type: string
+                        description: ID of the user who last updated the stock.
+                        example: "6761f56d9f1141f4f2a48de4"
+                      lastRestocked:
+                        type: string
+                        format: date-time
+                        description: Last restocked date.
+                        example: "2024-12-20T03:29:10.854Z"
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: Last updated date.
+                        example: "2024-12-20T03:29:10.855Z"
+                      computedTotalValue:
+                        type: number
+                        format: float
+                        description: Computed total value of the stock.
+                        example: 139.5
+                      id:
+                        type: string
+                        description: ID of the stock entry.
+                        example: "6764e486c17a65d31e9b7aa9"
+            example:
+              message: "Low stocks data fetched successfully"
+              data:
+                - locationId: "6764e486c17a65d31e9b7aaa"
+                  productId: "67646f6822c5430e6817ac7b"
+                  supplierId: "60f7c7b3a2f38c4e5e8d7f1e"
+                  compartment: "Section A - Row 3"
+                  unitsAvailable: 9
+                  maxQuantity: 150
+                  minQuantity: 10
+                  thresholdAlert: false
+                  costPerUnit: 15.5
+                  totalValue: 775
+                  notes: "Restocked with batch #105"
+                  updatedBy: "6761f56d9f1141f4f2a48de4"
+                  lastRestocked: "2024-12-20T03:29:10.854Z"
+                  updatedAt: "2024-12-20T03:29:10.855Z"
+                  computedTotalValue: 139.5
+                  id: "6764e486c17a65d31e9b7aa9"
+      '401':
+        description: Unauthorized - User not authenticated.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statusCode:
+                  type: integer
+                  example: 401
+                message:
+                  type: string
+                  example: Invalid User
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statusCode:
+                  type: integer
+                  example: 500
+                message:
+                  type: string
+                  example: An error occurred while fetching low stock data

@@ -28,6 +28,16 @@ class StockService {
     return StockModel.findByIdAndUpdate(Id, data, { new: true })
   }
 
+  public async lowStock(id: ObjectId | string): Promise<IStockDocument[] | []> {
+    const result = await StockModel.find({ 
+      businessId: id,
+      $expr: {
+        $lte: ['$unitsAvailable', '$minQuantity']
+      }
+    }).exec()
+    return result
+  }
+
 }
 
 export const stockService = new StockService()

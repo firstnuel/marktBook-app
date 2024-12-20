@@ -261,3 +261,11 @@ withCredentials: true
   "destination":  "67644278e86c081b85339b92",
   "reason": "Damaged goods"
 }
+
+
+
+### fetch all low  stocks
+GET {{baseUrl}}/{{urlpath}}/stocks/low-stock
+Content-Type: application/json
+Accept: application/json
+withCredentials: true

@@ -59,11 +59,21 @@ StockDataSchema.virtual('computedTotalValue').get(function (this: IStockDocument
 
 // Pre-save Hook: Auto-update `totalValue` if unitsAvailable or costPerUnit changes
 StockDataSchema.pre('save', function (next) {
+  // Update `totalValue` if unitsAvailable or costPerUnit changes
   if (this.isModified('unitsAvailable') || this.isModified('costPerUnit')) {
     this.totalValue = (this.unitsAvailable ?? 0) * (this.costPerUnit ?? 0)
   }
+
+  // Update `thresholdAlert` if unitsAvailable <= minQuantity
+  if (this.unitsAvailable <= this.minQuantity) {
+    this.thresholdAlert = true
+  } else {
+    this.thresholdAlert = false
+  }
+
   next()
 })
+
 
 const StockModel: Model<IStockDocument> = model<IStockDocument>('Stock', StockDataSchema, 'Stock')
 

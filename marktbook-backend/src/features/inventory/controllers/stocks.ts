@@ -23,8 +23,7 @@ import { locationService } from '@service/db/location.service'
 import { omit } from 'lodash'
 import { movementSchema } from '@inventory/schemes/locationValidation'
 
-
-const log = config.createLogger('productsController')
+const log = config.createLogger('stockController')
 
 class Stock {
 
@@ -34,6 +33,7 @@ class Stock {
     this.edit = this.edit.bind(this)
     this.fetch = this.fetch.bind(this)
     this.move = this.move.bind(this)
+    this.low = this.low.bind(this)
   }
     
   /**
@@ -467,6 +467,35 @@ class Stock {
     } catch (error: any) {
       log.error(`Error moving stock: ${error.message}`)
       next(error)
+    }
+  }
+
+  /**
+   * Handles fetching low StockData
+   * @param req Express Request Object
+   * @param res Express Response Object
+   * @param next Express NextFunction for error handling
+   */
+
+  public async low(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // validate user 
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      if (existingUser.role === 'Staff') {
+        return next(new NotAuthorizedError('Not Authorized: User not authorized to fetch low stock data'))
+      }
+
+      // fetch low stock data
+      const stockData = await stockService.lowStock(existingUser.associatedBusinessesId)
+      const returnData = stockData.length? stockData.map(data =>
+        omit(data.toObject(), ['createdBy', 'createdAt', '__v', 'businessId', '_id'])) : [] 
+
+      const message = stockData.length? 'Low stocks data fetched successfully' : 'No low stock data found'
+      res.status(HTTP_STATUS.OK).json({ message,  data: returnData})
+
+    } catch (error: any) {
+      log.error(`Error fetching low stock data: ${error.message}`)
+      next(error) 
     }
   }
   
