@@ -47,9 +47,32 @@ export interface StockMovement {
 }
 
 export interface ILocationData {
-    name: string;
-    type: LocationTypes;
+    locationName: string;
+    locationType: LocationTypes;
     address: string;
     capacity?: number;
-    status: Status;
+    manager?: ObjectId;
+    currentLoad?: number;
+    locationStatus?: Status;
+}
+
+export const EditableFields: (keyof ILocationDocument)[] = [
+  'locationName',
+  'address',
+  'currentLoad',
+  'capacity',
+  'manager',
+  'locationStatus'
+]
+
+export const filterLocationFields = (data: Partial<ILocationDocument>,
+  filterKeys: (keyof ILocationDocument)[]):  Partial<ILocationDocument> => {
+  const filterData:  Partial<ILocationDocument> = {}
+
+  for (const key in data) {
+    if (filterKeys.includes(key as keyof ILocationDocument)) {
+      filterData[key as keyof ILocationDocument] = data[key as keyof ILocationDocument]
+    }
+  }
+  return filterData
 }

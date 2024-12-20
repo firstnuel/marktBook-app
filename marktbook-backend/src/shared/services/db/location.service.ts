@@ -22,6 +22,15 @@ class LocationService {
     return result
   }
 
+  public async fetchAll(businessId: ObjectId): Promise<ILocationDocument[] | []> {
+    const result = await LocationModel.find({ businessId }).exec()
+    return result
+  }
+
+  public async editLocation(Id: ObjectId, data: Partial<ILocationDocument>): Promise<ILocationDocument | null> {
+    return LocationModel.findByIdAndUpdate(Id, data, { new: true })
+  }
+
 }
 
 export const locationService = new LocationService()

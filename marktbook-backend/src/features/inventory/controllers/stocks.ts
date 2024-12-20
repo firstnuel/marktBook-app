@@ -25,7 +25,7 @@ import { movementSchema } from '@inventory/schemes/locationValidation'
 
 const log = config.createLogger('stockController')
 
-class Stock {
+export class Stock {
 
   constructor() {
     this.create = this.create.bind(this)
@@ -108,8 +108,6 @@ class Stock {
         data: Data,
         status: 'success'
       })
-    
-
 
     } catch (error: any) {
       log.error(`Product creation failed: ${error.message}`)
@@ -223,7 +221,7 @@ class Stock {
   * @param userId ObjectId of the user
   * @returns product document conforming to ILocationDocument interface
   */
-  private locationData(data: IStockData, 
+  protected locationData(data: IStockData, 
     stockId: ObjectId, 
     userId: string | ObjectId, 
     locationId: ObjectId, 
