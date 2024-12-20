@@ -31,7 +31,9 @@
 |             | 1  | Updated Api Docs |
 |             | 2  | Implemented location interface and model. Refactored stock controller to handle location data |
 | **19.12.**  | 2  | Extended stock router, controllers, interfaces.|
-| **Total**  | **65** | |
+| **20.12.**  | 2  | Extended stock router, controllers, interfaces to fetch low stock. Updated API Docs|
+|             | 2  | Implemented location controllers and routes to create, fetch and edit locations|
+| **Total**  | **72** | |
 
 
 
