@@ -33,7 +33,8 @@
 | **19.12.**  | 2  | Extended stock router, controllers, interfaces.|
 | **20.12.**  | 2  | Extended stock router, controllers, interfaces to fetch low stock. Updated API Docs|
 |             | 2  | Implemented location controllers and routes to create, fetch and edit locations|
-| **Total**  | **72** | |
+| **21.12.**  | 3  | Implemented sales router, schema, controllers and interfaces, munor refactoring of product Contoller|
+| **Total**  | **75** | |
 
 
 
