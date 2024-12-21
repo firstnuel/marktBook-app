@@ -1,6 +1,6 @@
 import { StockModel } from '@inventory/models/stocks.schema'
 import { IStockDocument } from '@inventory/interfaces/stock.interfaces'
-import { ObjectId } from 'mongodb'
+import { ObjectId, BulkWriteResult } from 'mongodb'
 
 class StockService {
   public async createStock(data: IStockDocument): Promise<void> {
@@ -36,6 +36,11 @@ class StockService {
       }
     }).exec()
     return result
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async bulkUpdate(bulkOperations: any[]): Promise<BulkWriteResult> {
+    return await StockModel.bulkWrite(bulkOperations)
   }
 
 }

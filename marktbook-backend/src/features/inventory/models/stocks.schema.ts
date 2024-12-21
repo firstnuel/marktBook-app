@@ -74,6 +74,7 @@ StockDataSchema.pre('save', function (next) {
   next()
 })
 
+StockDataSchema.index({ businessId: 1, locationId: 1, productId: 1 })
 
 const StockModel: Model<IStockDocument> = model<IStockDocument>('Stock', StockDataSchema, 'Stock')
 

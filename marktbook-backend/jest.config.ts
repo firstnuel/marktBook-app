@@ -27,6 +27,7 @@ const config: Config = {
     '^@auth/(.*)$': '<rootDir>/src/features/auth/$1',
     '^@inventory/(.*)$': '<rootDir>/src/features/inventory/$1',
     '^@activity/(.*)$': '<rootDir>/src/features/activity/$1',
+    '^@contacts/(.*)$': '<rootDir>/src/features/contacts/$1',
     '^@transactions/(.*)$': '<rootDir>/src/features/transactions/$1',
     '^@users/(.*)$': '<rootDir>/src/features/users/$1',
     '^@business/(.*)$': '<rootDir>/src/features/business/$1',

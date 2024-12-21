@@ -95,8 +95,7 @@ ProductSchema.pre('save', function (next) {
   }
 })
 
-// Indexes
-ProductSchema.index({ sku: 1 }, { unique: true })
+
 ProductSchema.index({ productCategory: 1, isActive: 1 })
 ProductSchema.index({ productName: 'text' })
 

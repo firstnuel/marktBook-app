@@ -32,6 +32,7 @@
         "@inventory/*": ["src/features/inventory/*"],
         "@transactions/*": ["src/features/transactions/*"],
         "@users/*": ["src/features/users/*"],
+        "@contacts/*": ["src/features/contacts/*"],
         "@business/*": ["src/features/business/*"],
         "@global/*": ["src/shared/globals/*"],
         "@service/*": ["src/shared/services/*"],

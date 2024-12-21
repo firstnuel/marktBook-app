@@ -25,6 +25,9 @@ export const log = config.createLogger('productsController')
 export class Product {
   constructor() {
     this.create = this.create.bind(this)
+    this.read = this.read.bind(this)
+    this.categories = this.categories.bind(this)
+    this.search = this.search.bind(this)
   }
 
   /**
@@ -40,7 +43,7 @@ export class Product {
       // validate incoming data
       this.validateInput(productSchema, req.body)
 
-      // Validate user
+      // Validate user 
       const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
 
       // Sanitize input

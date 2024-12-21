@@ -21,6 +21,15 @@ import { locationService } from '@service/db/location.service'
 const log = config.createLogger('productMangementController')
 
 class ProductManagement extends Product {
+  constructor() {
+    super()
+    this.fetch = this.fetch.bind(this)
+    this.editProduct = this.editProduct.bind(this)
+    this.deleteProduct = this.deleteProduct.bind(this)
+
+  }
+
+
   /**
    * Handles fetching Product by Id     
    * @param req Express Request object
