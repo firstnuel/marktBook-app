@@ -11,7 +11,7 @@ import { stockService } from '@service/db/stock.service'
 import { BadRequestError, NotFoundError } from '@global/helpers/error-handlers'
 import { IuserDocument } from '@users/interfaces/user.interface'
 import { saleService } from '@service/db/sale.service'
-
+import { omit } from 'lodash'
 
 
 export const log = config.createLogger('saleController')
@@ -20,6 +20,8 @@ class Sale extends Product {
   constructor(){
     super()
     this.new = this.new.bind(this)
+    this.read = this.read.bind(this)
+    this.fetch = this.fetch.bind(this)
   }
   /**
    * Handles the make a new sale.
@@ -50,12 +52,16 @@ class Sale extends Product {
       if (!valid) {
         return next(new BadRequestError('The total price is not correct'))
       }
+      // Save the sale to the database
+      const savedData = await saleService.newSale(salesData)
 
-      await saleService.newSale(salesData)
+      // Remove sensitive fields before sending response
+      const resData = omit(savedData.toJSON(), ['businessId', 'customerId', 'initiatedBy', 'updatedAt'])
 
+      // Send success response
       res.status(HTTP_STATUS.CREATED).json({
         message: 'Sale completed successfully',
-        data: salesData,
+        data: resData,
         status: 'success'
       })
 
@@ -65,16 +71,18 @@ class Sale extends Product {
     }
   }
 
-
+  // Helper method to format sale data with required fields
   private saleData(data: ISaleData, saleId: ObjectId, user: IuserDocument): ISaleDocument {
     return {
       _id: saleId,
       customerId: data.customerId ?? undefined,
+      customerName: data.customerName,
       businessId: new ObjectId(user.associatedBusinessesId),
       initiatedBy: new ObjectId(user._id),
       completedBy: undefined,
       subtotalAmount: data.subtotalAmount,
       taxAmount: data.taxAmount,
+      paymentRef: data.paymentRef,
       taxRate: data.taxRate,
       currency: data.currency,
       paymentMethod: data.paymentMethod,
@@ -82,12 +90,23 @@ class Sale extends Product {
       status: data.status,
       refundStatus: 'NONE',
       saleItems: data.saleItems,
-      totalPrice: data.totalPrice
+      totalPrice: data.totalPrice,
     } as ISaleDocument
   }
   
 
   protected async updateStock(saleItems: SaleItem[]): Promise<void> {
+    // validate stock quantity
+    for (const { productId, quantity, productName } of saleItems) {
+      const stock = await stockService.getByProductID(productId)
+      if(!stock) {
+        throw new NotFoundError(`No stock data found for product '${productName}'`)
+      } else if(stock.unitsAvailable < quantity) {
+        throw new BadRequestError(`Insufficient stock for '${productName}'. Requested quantity exceeds available units.`)
+      }
+    }
+
+    // bulk update stock
     const bulkOperations = saleItems.map(({ productId, quantity }) => ({
       updateOne: {
         filter: {
@@ -98,15 +117,57 @@ class Sale extends Product {
 
       }
     }))
-  
-    const result = await stockService.bulkUpdate(bulkOperations)
-    if (result.modifiedCount < saleItems.length) {
-      throw new NotFoundError('Some products in the sale could not be found or have insufficient stock.')
+
+    await stockService.bulkUpdate(bulkOperations)
+
+  }
+
+  public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // Validate user
+      const user = await this.validateUser(`${req.currentUser?.userId}`)
+
+      const sales = await saleService.getAll(new ObjectId(user.associatedBusinessesId))
+      const message = sales.length? 'Sales data fetched successfully' : 'No sales data found'
+
+      //remove sensitive fields
+      const salesData = sales
+        .map(sale => omit(sale.toJSON(), ['businessId', 'customerId', 'initiatedBy', 'updatedAt']))
+
+      res.status(HTTP_STATUS.OK).json({ 
+        status: sales.length? 'success': undefined,
+        message,
+        data: salesData
+      })
+
+    } catch (error: any) {
+      log.error(`Failed to fetch sales: ${error.message}`)
+      next(error)
+    }
+  }
+
+  public async fetch(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // Validate user
+      const user = await this.validateUser(`${req.currentUser?.userId}`)
+
+      const { id } = req.params
+
+      const saleData = await saleService.getById(new ObjectId(id), new ObjectId(user.associatedBusinessesId))
+
+      if (!saleData){
+        return next(new NotFoundError('Sale not found'))
+      }
+      res.status(HTTP_STATUS.OK).json({
+        status: 'success', 
+        message: 'Sale retrieved successfully', 
+        data: saleData })
+    } catch (error: any) {
+      log.error(`Failed to fetch sale: ${error.message}`)
+      next(error)
     }
   }
   
-
-
 }
 
 export const sale: Sale = new Sale()

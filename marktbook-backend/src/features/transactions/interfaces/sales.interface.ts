@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb'
 export interface ISaleDocument extends Document {
     _id: ObjectId;
     customerId?: ObjectId;
+    customerName: string;
     businessId: ObjectId;
     createdAt: Date;
     updatedAt: Date;
@@ -14,6 +15,7 @@ export interface ISaleDocument extends Document {
     taxRate?: number;
     currency: Currency;
     paymentMethod: PaymentMethod;
+    paymentRef?: string;
     discount?: {
         type: DiscountType;
         value: number;
@@ -35,6 +37,7 @@ export interface ISaleData {
     taxAmount?: number;
     taxRate?: number;
     currency: Currency;
+    paymentRef?: string;
     paymentMethod: PaymentMethod;
     discount?: {
         type: DiscountType;

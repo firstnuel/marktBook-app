@@ -75,13 +75,15 @@ const salesSchema: Schema<ISaleDocument> = new Schema(
       required: true,
     },
     totalPrice: { type: Number, required: true },
+    paymentRef: { type: String },
+    customerName: { type: String },
     discount: { type: discountSchema },
     saleItems: { type: [saleItemSchema], required: true },
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toJSON: { virtuals: true, transform: (doc, ret) => { ret.id = ret._id.toString(); delete ret._id; delete ret.__v } },
+    toObject: { virtuals: true, transform: (doc, ret) => { ret.id = ret._id.toString(); delete ret._id; delete ret.__v } },
   }
 )
 

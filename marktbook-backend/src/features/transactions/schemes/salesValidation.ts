@@ -21,11 +21,12 @@ const saleItems = z.object({
 
 export const salesDataSchema = z.object({
   customerId: z.string().optional(),
-  customerName: z.string().optional(),
+  customerName: z.string({ required_error: 'customerName is required'}),
   subtotalAmount: z.number().optional(),
   taxAmount: z.number().optional(),
   currency: z.nativeEnum(Currency),
   paymentMethod: z.nativeEnum(PaymentMethod),
+  paymentRef: z.string().optional(),
   discount,
   status: z.nativeEnum(SaleStatus),
   saleItems: z.array(saleItems),

@@ -12,6 +12,8 @@ class SaleRoutes {
 
   public SaleRoutes(): Router {
     this.router.post('/sales', authMiddleware.checkAuthentication, sale.new)
+    this.router.get('/sales', authMiddleware.checkAuthentication, sale.read)
+    this.router.get('/sales/:id', authMiddleware.checkAuthentication, sale.fetch)
 
     return this.router
   }
