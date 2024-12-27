@@ -1,0 +1,47 @@
+paths:
+  /logs:
+    get:
+      summary: Retrieve logs for the business associated with the authenticated user
+      description: >
+        Retrieves all logs related to the business that the authenticated user is associated with.
+        Only users with 'Owner' or 'Manager' roles and 'active' status are authorized to access this endpoint.
+      operationId: getLogs
+      tags:
+        - Activity
+      security:
+         - cookieAuth: []
+      responses:
+        '200':
+          description: Logs data fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logs data fetched successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Log'
+        '401':
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - User not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+

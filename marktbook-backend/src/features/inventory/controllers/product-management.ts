@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { productService } from '@service/db/productService'
+import { productService } from '@service/db/product.service'
 import HTTP_STATUS from 'http-status-codes'
 import { Product } from '@inventory/controllers/products'
 import { Response, Request, NextFunction } from 'express-serve-static-core'
@@ -9,12 +9,27 @@ import { productSchema } from '@inventory/schemes/productValidation'
 import { filterProductFields, 
   ALLOWED_ALL_FIELDS, 
   ALLOWED_STAFF_FIELDS } from '@inventory/interfaces/products.interface'
-import { NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
+import { BadRequestError, NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
+import { uploadProductImages } from '@global/helpers/cloudinary-upload'
+import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
+import { logService } from '@service/db/logs.service'
+import { stockService } from '@service/db/stock.service'
+import { ObjectId } from 'mongodb'
+import { locationService } from '@service/db/location.service'
 
 
 const log = config.createLogger('productMangementController')
 
 class ProductManagement extends Product {
+  constructor() {
+    super()
+    this.fetch = this.fetch.bind(this)
+    this.editProduct = this.editProduct.bind(this)
+    this.deleteProduct = this.deleteProduct.bind(this)
+
+  }
+
+
   /**
    * Handles fetching Product by Id     
    * @param req Express Request object
@@ -26,9 +41,7 @@ class ProductManagement extends Product {
       // validate user
       const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
 
-      //sanitize params
-      const sanitizedParams = Utils.sanitizeInput(req.params)
-      const { productId } = sanitizedParams
+      const { productId } = req.params
 
       // fetch product
       const product = await productService.getById(`${productId}`, `${existingUser?.associatedBusinessesId}`)
@@ -55,9 +68,7 @@ class ProductManagement extends Product {
       // Validate input
       this.validateInput(productSchema, req.body)
 
-      // sanitize product ID
-      const sanitizedParams = Utils.sanitizeInput(req.params)
-      const { productId } = sanitizedParams
+      const { productId } = req.params
 
       // validate requesting user
       const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
@@ -77,10 +88,33 @@ class ProductManagement extends Product {
       const filterKeys = existingUser.role === 'Staff'? ALLOWED_STAFF_FIELDS : ALLOWED_ALL_FIELDS
       const filteredData = filterProductFields(body, filterKeys)
 
+      // Upload Product Images if provided
+      if (filteredData.productImages){
+        const result = await uploadProductImages(filteredData.productImages)
+        if (result instanceof Error) {
+          return next(new BadRequestError('File Error: Failed to upload product images. Please try again.'))
+        } else {
+          filteredData.productImages = result
+        }
+      }
+
       filteredData.updatedAt = new Date()
+      filteredData.updatedBy = new ObjectId(existingUser._id)
 
       // Perform update
       const updatedProduct = await productService.editProduct(`${productId}`, filteredData)
+
+      // log update
+      const logData = createActivityLog (
+        existingUser._id, 
+        existingUser.username, 
+        existingUser.associatedBusinessesId, 
+        'EDIT' as ActionType, 
+        'PRODUCT' as EntityType,
+        `${productId}`,
+        `Edited product '${updatedProduct?.productName}'`)
+
+      await logService.createLog(logData)
 
       // Respond to client
       res.status(HTTP_STATUS.OK).json({
@@ -96,9 +130,7 @@ class ProductManagement extends Product {
 
   public async deleteProduct(req: Request, res: Response, next: NextFunction): Promise<void> { 
     try{
-      // Sanitize product ID
-      const sanitizedParams = Utils.sanitizeInput(req.params)
-      const { productId } = sanitizedParams
+      const { productId } = req.params
 
       // Validate requesting user
       const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
@@ -112,8 +144,24 @@ class ProductManagement extends Product {
         return next(new NotFoundError('Product not found'))
       }
 
+      // delete stock and location data
+      await locationService.deleteLocation(new ObjectId(product.stockId))
+      await stockService.deleteStock(new ObjectId(product.stockId))
+
       // Perform deletion
       await productService.deleteProductById(product!._id)
+
+      // log update
+      const logData = createActivityLog (
+        existingUser._id, 
+        existingUser.username, 
+        existingUser.associatedBusinessesId, 
+        'DELETE' as ActionType, 
+        'PRODUCT' as EntityType,
+        `${productId}`,
+        `Deleted product '${product?.productName}'`)
+      
+      await logService.createLog(logData)
 
       // Respond to client
       res.status(HTTP_STATUS.OK).json({

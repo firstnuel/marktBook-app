@@ -1,6 +1,8 @@
 import { v2 as cloudinary, UploadApiResponse, UploadApiErrorResponse } from 'cloudinary'
 import { config } from '@root/config'
 import { ProductImage } from '@inventory/interfaces/products.interface'
+import { BadRequestError } from '@global/helpers/error-handlers'
+import { Utils } from '@global/helpers/utils'
 
 const log = config.createLogger('cloudinaryUploads')
 
@@ -102,4 +104,17 @@ export async function uploadProductImages(
       ? error 
       : new Error('An unexpected error occurred during image uploads')
   }
+
+}
+
+export async function singleImageUpload(image: string, id: string): Promise<string | undefined> {
+  if (Utils.isValidImage(image)) {
+    const uploadResult = await uploads(image, id, true, true)
+    if (!uploadResult?.public_id) {
+      throw new BadRequestError('File Error: Failed to upload profile picture')
+    }
+    log.info(`Profile picture uploaded successfully: ${uploadResult.public_id}`)
+    return constructCloudinaryURL(uploadResult)
+  }
+  return undefined
 }

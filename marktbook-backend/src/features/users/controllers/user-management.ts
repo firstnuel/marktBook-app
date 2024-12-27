@@ -7,7 +7,10 @@ import { config } from '@root/config'
 import { Utils } from '@global/helpers/utils'
 import { editUserSchema } from '@users/schemes/userValidation'
 import { filterAllowedFields } from '@users/interfaces/user.interface'
-import { NotFoundError } from '@global/helpers/error-handlers'
+import {  NotFoundError } from '@global/helpers/error-handlers'
+import {  singleImageUpload } from '@global/helpers/cloudinary-upload'
+import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
+import { logService } from '@service/db/logs.service'
 
 const log  = config.createLogger('userController')
 
@@ -20,14 +23,13 @@ class UserManagement extends Users {
    */
   public async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      // Extract and sanitize Id
+      // Extract Id
       const { id } = req.params
-      const userId = Utils.sanitizeInput(id)
 
       // Validate the requesting user
       await this.validateUser(`${req.currentUser?.userId}`)
 
-      const fetchedUser = await userService.getUserById(userId)
+      const fetchedUser = await userService.getUserById(id)
 
       if (fetchedUser) {
         res.status(HTTP_STATUS.OK).json({ status: 'success',
@@ -63,23 +65,39 @@ class UserManagement extends Users {
       const body = Utils.sanitizeInput(req.body)
       const filteredData = filterAllowedFields(body)
   
-      filteredData.updatedAt = new Date()
-  
-      // sanitize user ID
+      // Extract user ID
       const { id } = req.params
-      const userId = Utils.sanitizeInput(id)
   
       // Validate requesting user
-      await this.validateUser(`${req.currentUser?.userId}`)
+      const admin = await this.validateUser(`${req.currentUser?.userId}`)
   
       // Check if user exists
-      const existingUser = await userService.getUserById(userId)
+      const existingUser = await userService.getUserById(id)
       if (!existingUser) {
         return next(new NotFoundError('User not found'))
       }
+
+      // Upload profille picture if provided
+      if (filteredData.profilePicture){ 
+        filteredData.profilePicture = await singleImageUpload(filteredData.profilePicture, id)
+      }
+  
+      filteredData.updatedAt = new Date()
   
       // Perform update
-      const updatedUser = await userService.editUser(userId, filteredData)
+      const updatedUser = await userService.editUser(id, filteredData)
+
+      // log user activity
+      const logData = createActivityLog (
+        admin._id, 
+        admin.username, 
+        admin.associatedBusinessesId, 
+        'EDIT' as ActionType, 
+        'USER' as EntityType,
+        `${id}`,
+        `Edited user '${existingUser.username}'`)
+      
+      await logService.createLog(logData)
   
       // Respond to client
       res.status(HTTP_STATUS.OK).json({
@@ -101,21 +119,32 @@ class UserManagement extends Users {
    */
   public async deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      // Extract and sanitize user ID
+      // Extract ID
       const { id } = req.params
-      const userId = Utils.sanitizeInput(id)
 
       // Validate the requesting user
-      await this.validateUser(`${req.currentUser?.userId}`)
+      const admin = await this.validateUser(`${req.currentUser?.userId}`)
 
       // Check if user exists
-      const existingUser = await userService.getUserById(userId)
+      const existingUser = await userService.getUserById(id)
       if (!existingUser) {
         return next(new NotFoundError('User not found'))
       }
 
       // Perform deletion
-      await userService.deleteUserById(userId)
+      await userService.deleteUserById(id)
+
+      // log user activity
+      const logData = createActivityLog (
+        admin._id, 
+        admin.username, 
+        admin.associatedBusinessesId, 
+        'DELETE' as ActionType, 
+        'USER' as EntityType,
+        `${id}`,
+        `Deleted user '${existingUser.username}'`)
+            
+      await logService.createLog(logData)
 
       // Respond to client
       res.status(HTTP_STATUS.OK).json({

@@ -4,9 +4,11 @@ paths:
       summary: Create a new product
       description: Endpoint to create a new product under a business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         description: Details of the product to be created.
         required: true
@@ -217,9 +219,11 @@ paths:
       summary: Retrieve all products
       description: Endpoint to retrieve all products associated with the authenticated user's business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         '200':
           description: Successfully retrieved products.
@@ -261,9 +265,11 @@ paths:
       summary: Retrieve products by category
       description: Endpoint to retrieve products filtered by a specific category under the authenticated user's business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: category
           in: path
@@ -324,9 +330,11 @@ paths:
       summary: Search for products
       description: Endpoint to search for products based on name, SKU, barcode, or tags under the authenticated user's business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: name
           in: query
@@ -408,9 +416,11 @@ paths:
       summary: Retrieve a single product by ID
       description: Endpoint to retrieve detailed information about a specific product by its ID under the authenticated user's business.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: productId
           in: path
@@ -479,9 +489,11 @@ paths:
       summary: Edit a product
       description: Endpoint to update product details based on the user's role and permissions.
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: productId
           in: path
@@ -561,11 +573,13 @@ paths:
 
     delete:
       summary: Delete a product
-      description: Endpoint to delete a specific product by ID. Only accessible to users with 'Owner' or 'Manager' roles.
+      description: "Endpoint to delete a specific product by ID. Only accessible to users with 'Owner' or 'Manager' roles. NOTE: This will delete both stock and location data relating to the product."
       tags:
-        - Inventory
+          - Inventory
+      sub-tags:
+          - Products
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: productId
           in: path

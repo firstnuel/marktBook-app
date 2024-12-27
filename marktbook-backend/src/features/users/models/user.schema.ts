@@ -94,11 +94,6 @@ const userSchema: Schema = new Schema(
   }
 )
   
-// Indexing for efficient queries
-userSchema.index({ email: 1 }, { unique: true, sparse: true })
-userSchema.index({ username: 1 })
-userSchema.index({ nin: 1 }, { unique: true, sparse: true })
-
 
 userSchema.pre('save', function(next) {
   if (this.nin === '') {

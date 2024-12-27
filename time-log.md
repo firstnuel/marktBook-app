@@ -26,8 +26,16 @@
 | **15.12.** | 2 | Added unit tests for all implemented controllers |
 |             | 3 | Extended products controller to include search by ID, queries and extended api docs |
 | **16.12.**  | 2  | Extended products controller to edit and delete product, added products edit and delete router |
-|             | 2  | Implemented unit tests for all implemented controllers
-| **Total**  | **57** | |
+|             | 2  | Implemented unit tests for all implemented controllers |
+| **18.12.**  | 3  | Implemented log and stock router, controllers, interfaces. |
+|             | 1  | Updated Api Docs |
+|             | 2  | Implemented location interface and model. Refactored stock controller to handle location data |
+| **19.12.**  | 2  | Extended stock router, controllers, interfaces.|
+| **20.12.**  | 2  | Extended stock router, controllers, interfaces to fetch low stock. Updated API Docs|
+|             | 2  | Implemented location controllers and routes to create, fetch and edit locations|
+| **21.12.**  | 3  | Implemented sales router, schema, controllers and interfaces, munor refactoring of product Contoller|
+| **22.12.**  | 2  | Extended sales router, schema, controllers and interface to handle refund |
+| **Total**  | **75** | |
 
 
 

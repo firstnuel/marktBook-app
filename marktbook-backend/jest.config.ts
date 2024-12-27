@@ -26,9 +26,9 @@ const config: Config = {
   moduleNameMapper: {
     '^@auth/(.*)$': '<rootDir>/src/features/auth/$1',
     '^@inventory/(.*)$': '<rootDir>/src/features/inventory/$1',
-    '^@customers/(.*)$': '<rootDir>/src/features/customers/$1',
+    '^@activity/(.*)$': '<rootDir>/src/features/activity/$1',
+    '^@contacts/(.*)$': '<rootDir>/src/features/contacts/$1',
     '^@transactions/(.*)$': '<rootDir>/src/features/transactions/$1',
-    '^@suppliers/(.*)$': '<rootDir>/src/features/suppliers/$1',
     '^@users/(.*)$': '<rootDir>/src/features/users/$1',
     '^@business/(.*)$': '<rootDir>/src/features/business/$1',
     '^@global/(.*)$': '<rootDir>/src/shared/globals/$1',

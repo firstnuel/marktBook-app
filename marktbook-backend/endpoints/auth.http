@@ -23,16 +23,10 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-# {
-#  "email": "Baron.Casper45@hotmail.com",
-#  "password": "zccb0dLkwLqEELc",
-#  "username": "Sarah.Bednar67"
-# }
-
 {
- "email": "Joanny_Crona94@gmail.com",
- "password": "Z4VlF9kwrNWQId9",
- "username": "Sydney49"
+  "email": "Gilbert.Crooks@yahoo.com",
+  "password": "12oFOipaL0Vkx51",
+  "username": "Chyna13"
 }
 
 ###  logout
@@ -42,7 +36,7 @@ Accept: application/json
 withCredentials: true
 
 ### fetch current user
-GET {{baseUrl}}/{{urlpath}}/currentuser
+GET {{baseUrl}}/{{urlpath}}/me
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -57,7 +51,7 @@ withCredentials: true
 # {
 #     "sku": "PRD35890",
 #     "productName": "Ear Phones",
-#     "businessId": "675ef731a57d646944022a92",
+#     "businessId": "6761f56d9f1141f4f2a48de5",
 #     "longDescription": "Noise cancelling earphones with microphone.",
 #     "shortDescription": "Noise cancelling earphones",
 #     "currency": "USD",
@@ -75,7 +69,7 @@ withCredentials: true
 {
     "sku": "PRD49281",
     "productName": "Wireless Mouse",
-    "businessId": "675ef731a57d646944022a92",
+    "businessId": "6761f56d9f1141f4f2a48de5",
     "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
     "shortDescription": "Ergonomic wireless mouse",
     "currency": "USD",
@@ -110,7 +104,7 @@ withCredentials: true
   "businessId": "675ef731a57d646944022a92"
 }
 
-###
+### fetch all users
 GET  {{baseUrl}}/{{urlpath}}/users
 Content-Type: application/json
 Accept: application/json
@@ -123,7 +117,7 @@ Accept: application/json
 withCredentials: true
 
 ### edit user by id
-PATCH {{baseUrl}}/{{urlpath}}/users/675ef731a57d646944022a91
+PATCH {{baseUrl}}/{{urlpath}}/users/67644278e86c081b85339b87
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -133,7 +127,7 @@ withCredentials: true
 }
 
 ### Delete user by id
-DELETE {{baseUrl}}/{{urlpath}}/users/675da60336396520205885a5
+DELETE {{baseUrl}}/{{urlpath}}/users/67644278e86c081b85339b87
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -151,21 +145,21 @@ Accept: application/json
 withCredentials: true
 
 ### search products by query
-GET {{baseUrl}}/{{urlpath}}/products/search?sku=PRD49281
+GET {{baseUrl}}/{{urlpath}}/products/search?sku=PRD35890
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 
 ### fetch product by id
-GET {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1489
+GET {{baseUrl}}/{{urlpath}}/products/67644278e86c081b85339b87
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 
 ### edit product by id
-PATCH {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1489
+PATCH {{baseUrl}}/{{urlpath}}/products/6762043417bc539e53cc9bb1
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -174,21 +168,104 @@ withCredentials: true
     "stockId": null,
     "sku": "PRD35890",
     "productName": " Ear Phones",
-    "currency": "NGN",
+    "currency": "USD",
     "businessId": "675ef731a57d646944022a92",
     "longDescription": "Noise cancelling earphones with microphone.",
     "shortDescription": "Noise cancelling earphones",
     "productCategory": "Electronics",
     "productType": "Physical",
     "barcode": "9876543234987",
-    "basePrice": 150,
-    "salePrice": 100,
-    "discount": 30,
+    "basePrice": 120,
+    "salePrice": 130,
+    "discount": 20,
     "unit": "piece"
   }
 
 ### delete product by id
-DELETE  {{baseUrl}}/{{urlpath}}/products/675f0f763d2022961aea1487
+DELETE  {{baseUrl}}/{{urlpath}}/products/676441881a122d71c60c392e
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### fetch all logs
+GET {{baseUrl}}/{{urlpath}}/logs
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### add stock info to product
+POST {{baseUrl}}/{{urlpath}}/stocks
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "businessId": "6761f56d9f1141f4f2a48de5",
+  "productId": "67644278e86c081b85339b87",
+  "unitsAvailable": 50,
+  "maxQuantity": 250,
+  "minQuantity": 20,
+  "thresholdAlert": false,
+  "costPerUnit": 15.5,
+  "totalValue": 775,
+  "supplierId": "60f7c7b3a2f38c4e5e8d7f1e",
+  "notes": "Restocked with batch #113",
+  "locationName": "Main Warehouse",
+  "locationType": "WAREHOUSE",
+  "address": "123 Market Street, Lagos",
+  "compartment": "Section A - Row 3",
+  "capacity": 200,
+  "locationStatus": "Active"
+}
+
+
+### fetch all stocks
+GET {{baseUrl}}/{{urlpath}}/stocks
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### Fetch stock by product id
+GET {{baseUrl}}/{{urlpath}}/stocks/67646f6822c5430e6817ac7b
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+### Edit stock by product id
+PATCH {{baseUrl}}/{{urlpath}}/stocks/67644278e86c081b85339b87
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "unitsAvailable": 60,
+  "maxQuantity": 200,
+  "minQuantity": 20,
+  "thresholdAlert": false,
+  "costPerUnit": 17.5,
+  "totalValue": 980
+}
+
+
+### Move stock to another location
+POST {{baseUrl}}/{{urlpath}}/stocks/movements
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "productId": "67644278e86c081b85339b87",
+  "movementType": "OUT",
+  "quantity": 10,
+  "destination":  "67644278e86c081b85339b92",
+  "reason": "Damaged goods"
+}
+
+
+
+### fetch all low  stocks
+GET {{baseUrl}}/{{urlpath}}/stocks/low-stock
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

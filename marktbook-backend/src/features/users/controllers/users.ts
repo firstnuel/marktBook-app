@@ -18,6 +18,8 @@ import { authQueue } from '@service/queues/auth.queue'
 import { businessQueue } from '@service/queues/business.queue'
 import { Schema } from 'zod'
 import { authService } from '@service/db/auth.service'
+import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
+import { logService } from '@service/db/logs.service'
 
 
 const log  = config.createLogger('userController')
@@ -96,6 +98,19 @@ export class Users {
         log.error(`Failed to add jobs to queues: ${(queueError as Error).message}`)
         return next(new ServerError('Failed to process registration. Please try again.'))
       }
+
+      // log user activity
+      const logData = createActivityLog (
+        existingUser._id, 
+        existingUser.username, 
+        existingUser.associatedBusinessesId, 
+        'CREATE' as ActionType, 
+        'USER' as EntityType,
+        `${authObjectId}`,
+        `Created user '${username}'`)
+      
+      await logService.createLog(logData)
+      
 
       log.info(`User '${name} account created successfully`)
       // Respond to client
@@ -231,8 +246,9 @@ export class Users {
   
       let users = await userService.getAllUsers(existingUser.associatedBusinessesId)
       users = users?.filter(user => user._id.toString() !== existingUser._id.toString())
-  
-      res.status(HTTP_STATUS.OK).json({data: users})
+
+      const message = users.length? 'Users data fetched successfully' : 'No user found'
+      res.status(HTTP_STATUS.OK).json({ message, data: users })
 
     } catch (error: any) {
       // Log and forward the error to a centralized error handler

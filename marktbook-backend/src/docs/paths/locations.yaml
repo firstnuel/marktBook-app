@@ -1,0 +1,429 @@
+paths:
+  /locations:
+    post:
+      summary: Create a New Location
+      description: Endpoint to create a new location within a business.
+      tags:
+        - Inventory
+      subtags:
+        - Location
+      security:
+        - cookieAuth: []
+      requestBody:
+        description: Details of the location to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - locationName
+                - locationType
+                - address
+                - currentLoad
+                - capacity
+                - locationStatus
+              properties:
+                locationName:
+                  type: string
+                  example: Main Warehouse
+                locationType:
+                  type: string
+                  example: Warehouse
+                address:
+                  type: string
+                  example: 1234 Storage Lane, City, Country
+                currentLoad:
+                  type: number
+                  format: float
+                  example: 50.5
+                capacity:
+                  type: number
+                  format: float
+                  example: 100.0
+                manager:
+                  type: string
+                  description: ObjectId of the manager (optional)
+                  example: "60d5f484f8d2e30d8c8b4567"
+                locationStatus:
+                  type: string
+                  enum: [ACTIVE, INACTIVE]
+                  example: ACTIVE
+      responses:
+        '201':
+          description: Location created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Created new location 'Main Warehouse' successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Unique identifier for the location
+                        example: "60d5f484f8d2e30d8c8b4567"
+                      locationName:
+                        type: string
+                        example: Main Warehouse
+                      locationType:
+                        type: string
+                        example: Warehouse
+                      address:
+                        type: string
+                        example: 1234 Storage Lane, City, Country
+                      currentLoad:
+                        type: number
+                        format: float
+                        example: 50.5
+                      capacity:
+                        type: number
+                        format: float
+                        example: 100.0
+                      manager:
+                        type: string
+                        example: "60d5f484f8d2e30d8c8b4567"
+                      locationStatus:
+                        type: string
+                        enum: [ACTIVE, INACTIVE]
+                        example: ACTIVE
+                  status:
+                    type: string
+                    example: success
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - Validation failed
+                      - Invalid location data provided
+        '401':
+          description: Unauthorized - User not authenticated or not authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Not Authorized: User not authorized to create location"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to create location. Please try again.
+
+    get:
+      summary: Get All Locations
+      description: Retrieve all locations associated with the authenticated user's business.
+      tags:
+        - Inventory
+      subtags:
+        - Location
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved all locations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All Location data fetched successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        locationName:
+                          type: string
+                          example: Main Warehouse
+                        locationType:
+                          type: string
+                          example: Warehouse
+                        address:
+                          type: string
+                          example: 1234 Storage Lane, City, Country
+                        currentLoad:
+                          type: number
+                          format: float
+                          example: 50.5
+                        capacity:
+                          type: number
+                          format: float
+                          example: 100.0
+                        manager:
+                          type: string
+                          example: "60d5f484f8d2e30d8c8b4567"
+                        locationStatus:
+                          type: string
+                          enum: [ACTIVE, INACTIVE]
+                          example: ACTIVE
+                  status:
+                    type: string
+                    example: success
+        '401':
+          description: Unauthorized - User not authenticated or not authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Not Authorized: User not authorized to fetch location data"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to fetch location data. Please try again.
+
+  /locations/{id}:
+    get:
+      summary: Get Location by ID
+      description: Retrieve details of a specific location by its unique identifier.
+      tags:
+        - Inventory
+      subtags:
+        - Location
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the location
+          example: "60d5f484f8d2e30d8c8b4567"
+      responses:
+        '200':
+          description: Successfully retrieved location details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Location data fetched successfully
+                  data:
+                    type: object
+                    properties:
+                      locationName:
+                        type: string
+                        example: Main Warehouse
+                      locationType:
+                        type: string
+                        example: Warehouse
+                      address:
+                        type: string
+                        example: 1234 Storage Lane, City, Country
+                      currentLoad:
+                        type: number
+                        format: float
+                        example: 50.5
+                      capacity:
+                        type: number
+                        format: float
+                        example: 100.0
+                      manager:
+                        type: string
+                        example: "60d5f484f8d2e30d8c8b4567"
+                      locationStatus:
+                        type: string
+                        enum: [ACTIVE, INACTIVE]
+                        example: ACTIVE
+        '401':
+          description: Unauthorized - User not authenticated or not authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Not Authorized: User not authorized to fetch location data"
+        '404':
+          description: Location Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Location not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to fetch location data. Please try again.
+
+    patch:
+      summary: Edit Location
+      description: Update details of an existing location by its unique identifier.
+      tags:
+        - Inventory
+      subtags:
+        - Location
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the location to be edited
+          example: "60d5f484f8d2e30d8c8b4567"
+      requestBody:
+        description: Fields to update for the location.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locationName:
+                  type: string
+                  example: Main Distribution Center
+                locationType:
+                  type: string
+                  example: Distribution Center
+                address:
+                  type: string
+                  example: 5678 Logistics Ave, City, Country
+                currentLoad:
+                  type: number
+                  format: float
+                  example: 75.0
+                capacity:
+                  type: number
+                  format: float
+                  example: 150.0
+                manager:
+                  type: string
+                  description: ObjectId of the new manager (optional)
+                  example: "60d5f484f8d2e30d8c8b4568"
+                locationStatus:
+                  type: string
+                  enum: [ACTIVE, INACTIVE]
+                  example: ACTIVE
+      responses:
+        '200':
+          description: Location updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Location data updated successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Unique identifier for the location
+                        example: "60d5f484f8d2e30d8c8b4567"
+                      locationName:
+                        type: string
+                        example: Main Distribution Center
+                      locationType:
+                        type: string
+                        example: Distribution Center
+                      address:
+                        type: string
+                        example: 5678 Logistics Ave, City, Country
+                      currentLoad:
+                        type: number
+                        format: float
+                        example: 75.0
+                      capacity:
+                        type: number
+                        format: float
+                        example: 150.0
+                      manager:
+                        type: string
+                        example: "60d5f484f8d2e30d8c8b4568"
+                      locationStatus:
+                        type: string
+                        enum: [ACTIVE, INACTIVE]
+                        example: ACTIVE
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - Validation failed
+                      - Invalid update data provided
+        '401':
+          description: Unauthorized - User not authenticated or not authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example:" Not Authorized: User not authorized to edit location"
+        '404':
+          description: Location Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Location not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to update location data. Please try again.

@@ -1,6 +1,6 @@
 import { DoneCallback, Job } from 'bull'
 import { config } from '@root/config'
-import { productService } from '@service/db/productService'
+import { productService } from '@service/db/product.service'
 
 const log = config.createLogger('productWorker')
 

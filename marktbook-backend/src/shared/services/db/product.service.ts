@@ -38,6 +38,10 @@ class ProductService {
     return ProductModel.findByIdAndUpdate(new ObjectId(productId), data, { new: true }).exec()
   }
 
+  public async editStockId(productId: string, stockId: ObjectId): Promise<void> {
+    await ProductModel.findByIdAndUpdate(new ObjectId(productId), { stockId }).exec()
+  }
+
   public async deleteProductById(productId: string | ObjectId): Promise<void> {
     await ProductModel.findByIdAndDelete(productId).exec()
   }
