@@ -14,6 +14,7 @@ class SaleRoutes {
     this.router.post('/sales', authMiddleware.checkAuthentication, sale.new)
     this.router.get('/sales', authMiddleware.checkAuthentication, sale.read)
     this.router.get('/sales/:id', authMiddleware.checkAuthentication, sale.fetch)
+    this.router.patch('/sales/:id', authMiddleware.checkAuthentication, sale.updateStatus)
 
     return this.router
   }

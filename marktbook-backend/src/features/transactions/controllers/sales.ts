@@ -5,13 +5,15 @@ import { config } from '@root/config'
 import { ObjectId } from 'mongodb'
 import { Utils } from '@root/shared/globals/helpers/utils'
 import { Product } from '@inventory/controllers/products'
-import { salesDataSchema } from '@transactions/schemes/salesValidation'
+import { salesDataSchema, saleStatusSchema } from '@transactions/schemes/salesValidation'
 import { ISaleData, ISaleDocument, SaleItem, validateTotals } from '@transactions/interfaces/sales.interface'
 import { stockService } from '@service/db/stock.service'
 import { BadRequestError, NotFoundError } from '@global/helpers/error-handlers'
 import { IuserDocument } from '@users/interfaces/user.interface'
 import { saleService } from '@service/db/sale.service'
 import { omit } from 'lodash'
+import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
+import { logService } from '@service/db/logs.service'
 
 
 export const log = config.createLogger('saleController')
@@ -22,6 +24,7 @@ class Sale extends Product {
     this.new = this.new.bind(this)
     this.read = this.read.bind(this)
     this.fetch = this.fetch.bind(this)
+    this.updateStatus = this.updateStatus.bind(this)
   }
   /**
    * Handles the make a new sale.
@@ -122,6 +125,13 @@ class Sale extends Product {
 
   }
 
+  /**
+   * Handles fetching all sales data
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express NextFunction for error handling
+  */
+
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // Validate user
@@ -146,6 +156,12 @@ class Sale extends Product {
     }
   }
 
+  /**
+   * Handles fetch sale data by ID
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express NextFunction for error handling
+  */
   public async fetch(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // Validate user
@@ -156,7 +172,7 @@ class Sale extends Product {
       const saleData = await saleService.getById(new ObjectId(id), new ObjectId(user.associatedBusinessesId))
 
       if (!saleData){
-        return next(new NotFoundError('Sale not found'))
+        return next(new NotFoundError('Sale data not found'))
       }
       res.status(HTTP_STATUS.OK).json({
         status: 'success', 
@@ -166,6 +182,60 @@ class Sale extends Product {
       log.error(`Failed to fetch sale: ${error.message}`)
       next(error)
     }
+  }
+
+  /**
+   * Handles updating a sale status
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express NextFunction for error handling
+  */
+  public async updateStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // Validate user
+      const user = await this.validateUser(`${req.currentUser?.userId}`)
+
+      // Validate and sanitize input 
+      this.validateInput(saleStatusSchema, req.body)
+      const { id } = req.params
+      const { status } = Utils.sanitizeInput(req.body)
+
+      // update saleData
+      const  updatedSaleData = await saleService.updateStatus(
+        new ObjectId(id),
+        new ObjectId(user.associatedBusinessesId),
+        {
+          status,
+          completedBy: new ObjectId(user._id),
+          updatedAt: new Date(),
+        }
+      )
+      if(!updatedSaleData) {
+        return next(new NotFoundError('Sale data not found'))
+      }
+
+      // log update
+      const logData = createActivityLog (
+        user._id, 
+        user.username, 
+        user.associatedBusinessesId, 
+        'UPDATE' as ActionType, 
+        'SALE' as EntityType,
+        `${id}`,
+        `Updated sale staus to '${status}'`)
+
+      await logService.createLog(logData)
+      
+      res.status(HTTP_STATUS.OK).json({
+        status: 'success', 
+        message: 'Sale status updated successfully', 
+        data: updatedSaleData
+      })
+    } catch (error: any) {
+      log.error(`Failed to update sale status: ${error.message}`)
+      next(error)
+    }
+
   }
   
 }

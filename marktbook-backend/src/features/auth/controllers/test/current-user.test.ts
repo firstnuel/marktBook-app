@@ -67,7 +67,6 @@ describe('CurrentUser Controller', () => {
       'mobileNumber',
       'profilePicture',
       'status',
-      'associatedBusinessesId',
       'isVerified',
     ])
 
@@ -108,7 +107,6 @@ describe('CurrentUser Controller', () => {
       'mobileNumber',
       'profilePicture',
       'status',
-      'associatedBusinessesId',
       'isVerified',
     ])
 

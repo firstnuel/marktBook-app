@@ -145,9 +145,11 @@ class ProductManagement extends Product {
       }
 
       // delete stock and location data
-      await locationService.deleteLocation(new ObjectId(product.stockId))
-      await stockService.deleteStock(new ObjectId(product.stockId))
-
+      if (product.stockId) {
+        await locationService.deleteLocation(new ObjectId(product.stockId))
+        await stockService.deleteStock(new ObjectId(product.stockId))
+      }
+      
       // Perform deletion
       await productService.deleteProductById(product!._id)
 

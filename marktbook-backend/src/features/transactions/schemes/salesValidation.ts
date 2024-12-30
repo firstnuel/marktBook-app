@@ -33,4 +33,7 @@ export const salesDataSchema = z.object({
   totalPrice: z.number({ required_error: 'totalPrice value is required'})
 })
 
+export const saleStatusSchema = z.object({
+  status: z.nativeEnum(SaleStatus)
+})
 

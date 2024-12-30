@@ -24,9 +24,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "email": "Gilbert.Crooks@yahoo.com",
-  "password": "12oFOipaL0Vkx51",
-  "username": "Chyna13"
+  "email": "johndoe@example.com",
+  "password":  "SecurePass123!",
+  "username": "johnd"
 }
 
 ###  logout
@@ -64,12 +64,13 @@ withCredentials: true
 #     "unit": "piece",
 #     "tags": ["accessories", "sound", "wearable"],
 #     "isActive": true
+# FIX SKU BUG IN SKU
 # }
 
 {
     "sku": "PRD49281",
     "productName": "Wireless Mouse",
-    "businessId": "6761f56d9f1141f4f2a48de5",
+    "businessId": "676857bfb27b2f69708674d9",
     "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
     "shortDescription": "Ergonomic wireless mouse",
     "currency": "USD",

@@ -11,10 +11,17 @@ import HTTP_STATUS from 'http-status-codes'
 import { ZodValidationError, BadRequestError, NotAuthorizedError, NotFoundError, ServerError } from '@global/helpers/error-handlers'
 import { productSchema } from '@inventory/schemes/productValidation'
 import { IProductData } from '@inventory/interfaces/products.interface'
+import { logService } from '@service/db/logs.service'
 
 jest.mock('@service/redis/user.cache', () => ({
   userCache: {
     getUserfromCache: jest.fn(),
+  },
+}))
+
+jest.mock('@service/db/logs.service', () => ({
+  logService: {
+    createLog: jest.fn(),
   },
 }))
 
@@ -30,7 +37,7 @@ jest.mock('@service/queues/product.queue', () => ({
   },
 }))
 
-jest.mock('@service/db/productService', () => ({
+jest.mock('@service/db/product.service', () => ({
   productService: {
     getBySku: jest.fn(),
   },
@@ -52,9 +59,10 @@ describe('Product Controller - Create', () => {
   let req: Request
   let res: Response
   let next: NextFunction
-  const validBusinessId = '507f1f77bcf86cd799439012' // valid 24-char hex ObjectId
-  const userId = '507f1f77bcf86cd799439011'      // valid ObjectId for user
-  const associatedBusinessId = '507f1f77bcf86cd799439012' // matches the business
+  
+  const validBusinessId = '507f1f77bcf86cd799439012'
+  const userId = '507f1f77bcf86cd799439011'
+  const associatedBusinessId = '507f1f77bcf86cd799439012'
 
   beforeEach(() => {
     req = productMockRequest(
@@ -62,24 +70,26 @@ describe('Product Controller - Create', () => {
       {
         sku: 'product-sku-123',
         productName: 'Sample Product',
-        businessId: validBusinessId, 
+        businessId: validBusinessId,
         basePrice: 100,
         unit: 'kg',
       } as IProductData,
       {
         userId,
         businessId: validBusinessId,
-        uId: {
-          userUId: '',
-          businessUId: ''
-        },
+        uId: { userUId: '', businessUId: '' },
         email: '',
         username: ''
       }
     ) as Request
+
     res = productMockResponse()
     next = jest.fn()
-    jest.clearAllMocks()
+
+    jest.clearAllMocks();
+    
+    // Mock logService
+    (logService.createLog as jest.Mock).mockResolvedValue({}) 
   })
 
   it('should create a product successfully', async () => {
@@ -88,24 +98,26 @@ describe('Product Controller - Create', () => {
     const sanitizeInputSpy = jest.spyOn(Utils, 'sanitizeInput').mockReturnValue(req.body)
     const firstLetterToUpperCaseSpy = jest
       .spyOn(Utils, 'firstLetterToUpperCase')
-      .mockImplementation((str: string) => str)
+      .mockImplementation((str: string) => str);
 
-    // Mocks for successful scenario
-    ;(userCache.getUserfromCache as jest.Mock).mockResolvedValue({ 
+    // Mocks for a successful scenario
+    (userCache.getUserfromCache as jest.Mock).mockResolvedValue({ 
       _id: userId, 
       associatedBusinessesId: associatedBusinessId, 
-      status: 'active' 
-    })
-    ;(businessCache.getBusinessFromCache as jest.Mock).mockResolvedValue({ 
+      status: 'active'
+    });
+    (businessCache.getBusinessFromCache as jest.Mock).mockResolvedValue({ 
       _id: associatedBusinessId 
-    })
-    ;(productService.getBySku as jest.Mock).mockResolvedValue(null)
+    });
+    (productService.getBySku as jest.Mock).mockResolvedValue(null)
 
     await product.create(req, res, next)
 
     expect(schemaParserSpy).toHaveBeenCalledWith(productSchema, req.body)
     expect(sanitizeInputSpy).toHaveBeenCalledWith(req.body)
     expect(productQueue.addProductJob).toHaveBeenCalledWith('addProductToDb', expect.anything())
+    expect(logService.createLog).toHaveBeenCalledTimes(1)  // log service called once
+
     expect(res.status).toHaveBeenCalledWith(HTTP_STATUS.CREATED)
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -118,6 +130,7 @@ describe('Product Controller - Create', () => {
     sanitizeInputSpy.mockRestore()
     firstLetterToUpperCaseSpy.mockRestore()
   })
+
 
   it('should throw validation error for invalid product data', async () => {
     jest.spyOn(Utils, 'schemaParser').mockReturnValue('Validation failed')
@@ -142,7 +155,7 @@ describe('Product Controller - Create', () => {
     await product.create(req, res, next)
 
     expect(next).toHaveBeenCalledWith(expect.any(BadRequestError))
-    expect(next).toHaveBeenCalledWith(expect.objectContaining({ message: 'Product with unique sku already exists.' }))
+    expect(next).toHaveBeenCalledWith(expect.objectContaining({ message: `Product creation failed: Product with unique sku '${req.body.sku}' already exists for this business.` }))
   })
 
   it('should throw error if business is invalid', async () => {

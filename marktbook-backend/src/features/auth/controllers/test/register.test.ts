@@ -67,7 +67,8 @@ describe('Register Controller', () => {
     createdAt: '2022-08-31T07:42:24.451Z',
     businessType: 'Retail' as BusinessType,
     businessCategory: 'Technology' as BusinessCategory,
-    businessLogo: 'data:image/png;base64,validBase64Image'
+    businessLogo: 'data:image/png;base64,validBase64Image',
+    businessAddress: '123 Business St' 
   }
 
   beforeEach(() => {
