@@ -50,7 +50,7 @@ export class Product {
       const body = Utils.sanitizeInput(req.body) as IProductData
 
       // Validate product uniqueness by SKU
-      await this.validateProduct(body.sku)
+      await this.validateProduct(body.sku, new ObjectId(body.businessId))
 
       // Validate business
       await this.validateBusiness(body.businessId as string, existingUser)
@@ -138,11 +138,11 @@ export class Product {
      * Protected method to validate product uniqueness by SKU
      * @param sku string
      */
-  protected async validateProduct(sku: string): Promise<void> {
-    const checkIfProductExist: IProductDocument | null = await productService.getBySku(sku)
+  protected async validateProduct(sku: string, businessId: ObjectId): Promise<void> {
+    const checkIfProductExist: IProductDocument | null = await productService.getBySku(sku, businessId)
     if (checkIfProductExist) {
-      log.warn(`Product creation failed: Product with unique sku "${sku}" already exists.`)
-      throw new BadRequestError('Product with unique sku already exists.')
+      log.warn(`Product creation failed: Product with unique sku '${sku}' already exists for this business.`)
+      throw new BadRequestError(`Product creation failed: Product with unique sku '${sku}' already exists for this business.`)
     }
   }
 

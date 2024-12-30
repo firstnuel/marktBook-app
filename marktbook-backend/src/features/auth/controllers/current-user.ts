@@ -36,7 +36,6 @@ class CurrentUser{
         'mobileNumber',
         'profilePicture',
         'status',
-        'associatedBusinessesId',
         'isVerified'
       ])
     }

@@ -19,9 +19,13 @@ class SaleService {
     return await SaleModel.findOne({ _id: saleId, businessId }).exec()
   }
 
-  // Update a sale by ID
-  public async update(saleId: string, updates: Partial<ISaleDocument>): Promise<ISaleDocument | null> {
-    return await SaleModel.findByIdAndUpdate(saleId, updates, { new: true }).exec()
+  public async updateStatus( saleId: ObjectId, businessId: ObjectId, updateData: Partial<ISaleDocument>): 
+  Promise<ISaleDocument | null> {
+    return await SaleModel.findOneAndUpdate(
+      { _id: saleId,  businessId },
+      { $set: updateData }, 
+      { new: true } 
+    )
   }
 
   // Delete a sale by ID
