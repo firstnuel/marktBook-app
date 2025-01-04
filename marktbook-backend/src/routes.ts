@@ -10,6 +10,7 @@ import { logsRoutes } from '@activity/routes/logRoutes'
 import { stockRoutes } from '@inventory/routes/stockRoutes'
 import { locationRoutes } from '@inventory/routes/locationRoutes'
 import { saleRoutes } from '@transactions/routes/saleRoutes'
+import { businessRoutes } from '@business/routes/businessRoutes'
 
 const BASE_PATH = '/api/v1/'
 
@@ -30,6 +31,7 @@ export default (app: Application) => {
     app.use(BASE_PATH, authMiddleware.verifyUser, locationRoutes.LocationRoutes())
 
     app.use(BASE_PATH, authMiddleware.verifyUser, saleRoutes.SaleRoutes())
+    app.use(BASE_PATH, authMiddleware.verifyUser, businessRoutes.businessRoutes())
   }
 
   routes()

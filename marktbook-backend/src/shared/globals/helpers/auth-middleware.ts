@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from 'express'
 import JWT from 'jsonwebtoken'
 import { config } from '@root/config'
-import { NotAuthorizedError } from '@global/helpers/error-handlers'
+import { NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
 import { AuthPayload } from '@auth/interfaces/auth.interface'
+import { userCache } from '@service/redis/user.cache'
+import { IuserDocument } from '@users/interfaces/user.interface'
+import { userService } from '@service/db/user.service'
+import { businessCache } from '@service/redis/business.cache'
+import { businessService } from '@service/db/business.service'
 
 const log = config.createLogger('authMiddleware')
 
@@ -52,6 +57,35 @@ class AuthMiddleware {
     if (!req.currentUser) {
       return next(new NotAuthorizedError('Authentication is required to access this route'))
     }
+    next()
+  }
+
+  public async validateUserRole (req: Request, res: Response, next: NextFunction): Promise<void> {
+    const cachedUser = await userCache.getUserfromCache(`${req.currentUser?.userId}`) as IuserDocument
+    const user = cachedUser || await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
+    
+    if(user?.status !== 'active' || !( user?.role === 'Owner' || user?.role === 'Manager')) {
+      return next(new NotAuthorizedError('Invalid User: Not authorized for user role')) 
+    }
+  
+    next()
+  }
+
+  public async validateBusiness (req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    const { businessId } = req.params
+    const cachedBusiness = await businessCache.getBusinessFromCache(businessId)
+    const business = cachedBusiness || await businessService.getBusinessById(businessId)
+    console.log(business)
+
+    if(!business) {
+      return next(new NotFoundError('Invalid Business: Business account not found')) 
+    }
+
+    if (req.params?.businessId && req.params.businessId !== req.currentUser?.businessId) {
+      return next(new NotAuthorizedError('Invalid User: Not authorized for Business role'))
+    }
+
     next()
   }
 }
