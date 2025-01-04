@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { z, ZodError } from 'zod'
 import sanitize from 'sanitize-html'
+import mongoose from 'mongoose'
 
 
 export class Utils {
@@ -107,6 +108,10 @@ export class Utils {
   
     // Unsupported input type
     return false
+  }
+
+  static isValidObjectId (id: string): boolean { 
+    return mongoose.Types.ObjectId.isValid(id)
   }
 
   

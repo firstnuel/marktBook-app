@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from 'express'
 import JWT from 'jsonwebtoken'
 import { config } from '@root/config'
-import { NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
+import { BadRequestError, NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
 import { AuthPayload } from '@auth/interfaces/auth.interface'
 import { userCache } from '@service/redis/user.cache'
 import { IuserDocument } from '@users/interfaces/user.interface'
 import { userService } from '@service/db/user.service'
 import { businessCache } from '@service/redis/business.cache'
 import { businessService } from '@service/db/business.service'
+import { Utils } from '@global/helpers/utils'
 
 const log = config.createLogger('authMiddleware')
 
@@ -73,16 +74,19 @@ class AuthMiddleware {
 
   public async validateBusiness (req: Request, res: Response, next: NextFunction): Promise<void> {
 
-    const { businessId } = req.params
+    const businessId = req.params.businessId || req.body.businessId
+    if (!Utils.isValidObjectId(businessId)) {
+      return next(new BadRequestError('Invalid Business ID: businessId is not valid')) 
+    }
+
     const cachedBusiness = await businessCache.getBusinessFromCache(businessId)
     const business = cachedBusiness || await businessService.getBusinessById(businessId)
-    console.log(business)
 
     if(!business) {
       return next(new NotFoundError('Invalid Business: Business account not found')) 
     }
 
-    if (req.params?.businessId && req.params.businessId !== req.currentUser?.businessId) {
+    if (businessId !== req.currentUser?.businessId) {
       return next(new NotAuthorizedError('Invalid User: Not authorized for Business role'))
     }
 

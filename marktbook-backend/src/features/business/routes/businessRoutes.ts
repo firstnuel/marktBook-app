@@ -16,6 +16,13 @@ class BusinessRoutes {
       authMiddleware.validateBusiness,
       business.editBusiness
     )
+    this.router.get('/business/:businessId', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      authMiddleware.validateBusiness,
+      business.fetch
+    )
+
 
     return this.router
   }
