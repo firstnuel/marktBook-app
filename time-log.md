@@ -35,7 +35,9 @@
 |             | 2  | Implemented location controllers and routes to create, fetch and edit locations|
 | **21.12.**  | 3  | Implemented sales router, schema, controllers and interfaces, munor refactoring of product Contoller|
 | **22.12.**  | 2  | Extended sales router, schema, controllers and interface to handle refund |
-| **Total**  | **75** | |
+| **04.01.**  | 3  | Implemented business router, schema, controllers and interface to handle business |
+| **05.01.**  | 1  | Implemented customer router, schema, controllers and interface to handle customer |
+| **Total**  | **79** | |
 
 
 
