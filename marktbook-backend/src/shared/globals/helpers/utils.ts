@@ -64,50 +64,20 @@ export class Utils {
     return data
   }
 
-  static isValidImage(fileOrBase64: any): boolean {
-    // Define allowed MIME types
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+  static isValidImage(input: any): boolean {
+    const maxSize = 10 * 1024 * 1024 // 10MB
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
   
-    // Define maximum allowed size (e.g., 5MB)
-    const maxSizeInBytes = 5 * 1024 * 1024 // 5MB
+    if (!input) return false
   
-    if (!fileOrBase64) {
-      return false
+    if (typeof input === 'string') {
+      return /^data:image\/(jpeg|png|gif|webp);base64,/.test(input) && 
+             Buffer.byteLength(input, 'base64') <= maxSize
     }
   
-    // Check if input is a base64 string
-    if (typeof fileOrBase64 === 'string') {
-      const base64Regex = /^data:image\/(jpeg|png|gif|webp);base64,/
-      if (!base64Regex.test(fileOrBase64)) {
-        return false
-      }
-  
-      // Estimate size by decoding base64
-      const sizeInBytes = Buffer.byteLength(fileOrBase64, 'base64')
-      if (sizeInBytes > maxSizeInBytes) {
-        return false
-      }
-  
-      return true
-    }
-  
-    // If input is a file object (e.g., from multer)
-    if (typeof fileOrBase64 === 'object') {
-      const { mimetype, size } = fileOrBase64
-  
-      if (!allowedMimeTypes.includes(mimetype)) {
-        return false
-      }
-  
-      if (size > maxSizeInBytes) {
-        return false
-      }
-  
-      return true
-    }
-  
-    // Unsupported input type
-    return false
+    return input?.mimetype && 
+           validTypes.includes(input.mimetype) && 
+           input.size <= maxSize
   }
 
   static isValidObjectId (id: string): boolean { 

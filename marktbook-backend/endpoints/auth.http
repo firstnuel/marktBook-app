@@ -8,11 +8,11 @@ Accept: application/json
 withCredentials: true
 
 {
- "email": "johndoe@example.com",
- "adminFullName": "John Doe",
- "username": "johnd",
+ "email": "loveth@example.com",
+ "adminFullName": "loveth Doe",
+ "username": "loveth",
  "password": "SecurePass123!",
- "businessName": "Tech Innovations LLC",
+ "businessName": "LoveTech Innovations LLC",
  "businessType": "Retail",
  "businessCategory": "Technology"
 }
@@ -68,15 +68,19 @@ withCredentials: true
 # }
 
 {
-    "sku": "PRD49281",
-    "productName": "Wireless Mouse",
+    "sku": "PRD47281",
+    "productName": "Airforce one",
     "businessId": "676857bfb27b2f69708674d9",
-    "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
-    "shortDescription": "Ergonomic wireless mouse",
+    "longDescription": "Nice air force shoes.",
+    "shortDescription": "Airforce one",
     "currency": "USD",
     "productCategory": "Electronics",
     "productType": "Physical",
     "barcode": "1234567890123",
+    "attributes": {
+        "color": "Black",
+        "brand": "nike"
+    },
     "basePrice": 25.0,
     "salePrice": 20.0,
     "discount": 5.0,

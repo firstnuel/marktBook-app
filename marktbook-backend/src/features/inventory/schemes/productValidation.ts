@@ -1,10 +1,25 @@
 import { z } from  'zod'
-import { ProductType, ProductCategory, Unit, Currency } from '@inventory/interfaces/products.interface'
+import { ProductType, ProductCategory, Unit, Currency, } from '@inventory/interfaces/products.interface'
 
 
 const ProductImage = z.object({
   url: z.string(),
   isPrimary: z.boolean()
+})
+
+const DimensionsSchema = z.object({
+  length: z.number().optional(),
+  width: z.number().optional(),
+  height: z.number().optional(),
+  weight: z.number().optional(),
+})
+
+const ProductAttributesSchema = z.object({
+  color: z.string().optional(),
+  size: z.number().optional(),
+  brand: z.string().optional(),
+  manufacturer: z.string().optional(),
+  dimensions: DimensionsSchema.optional(),
 })
 
 
@@ -13,8 +28,8 @@ const ProductVariant = z.object({
   variantName:z.string(),
   sku: z.string(),
   barcode: z.string(),
+  attributes: ProductAttributesSchema,
   priceAdjustment: z.number().min(0, {message: 'Price adjustment must be non-negative'}),
-  attributes: z.array(z.object({ name: z.string(), value: z.string() })),
   images: z.array(ProductImage).min(1, {message: 'At least one product image is required'}),
   stockId: z.string()
 })
@@ -28,6 +43,7 @@ export const productSchema = z.object({
   longDescription: z.string().optional(),
   shortDescription: z.string().optional(),
   productCategory: z.nativeEnum(ProductCategory),
+  attributes: ProductAttributesSchema,
   productType: z.nativeEnum(ProductType),
   barcode: z.string().optional(),
   productVariants: z.array(ProductVariant).optional(),

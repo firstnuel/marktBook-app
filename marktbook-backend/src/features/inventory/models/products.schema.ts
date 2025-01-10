@@ -1,5 +1,20 @@
-import { Currency, IProductDocument, ProductCategory, ProductType, Unit } from '@inventory/interfaces/products.interface'
+import { Currency, IProductDocument, ProductCategory, ProductType, Unit, ProductAttributes } from '@inventory/interfaces/products.interface'
 import { model, Model, Schema } from 'mongoose'
+
+const Dimensions = new Schema({
+  length: { type: Number, required: false },
+  width: { type: Number, required: false },
+  height: { type: Number, required: false },
+  weight: { type: Number, required: false },
+})
+
+const Attributes: Schema<ProductAttributes> = new Schema({
+  color: { type: String, required: false },
+  size: { type: Number, required: false },
+  brand: { type: String, required: false },
+  manufacturer: { type: String, required: false },
+  dimensions: { type: Dimensions, required: false },
+})
 
 const ProductSchema: Schema<IProductDocument> = new Schema(
   {
@@ -15,6 +30,10 @@ const ProductSchema: Schema<IProductDocument> = new Schema(
     supplierId: { 
       type: Schema.Types.ObjectId,
       ref: 'Supplier'
+    },
+    attributes: { 
+      type: Attributes, 
+      required: true 
     },
     sku: { 
       type: String, 
@@ -50,7 +69,7 @@ const ProductSchema: Schema<IProductDocument> = new Schema(
       sku: { type: String, sparse: true, default: null },
       barcode: { type: String },
       priceAdjustment: { type: Number, default: 0 },
-      attributes: [{ name: String, value: String }],
+      attributes: { type: Attributes, required: true },
       images: [{
         url: { type: String, match: /^https?:\/\// }, 
         isPrimary: { type: Boolean, default: false }

@@ -174,53 +174,33 @@ export class Product {
      * @returns product document conforming to IProductDocument interface
      */
   private productData(data: IProductData, productId: ObjectId, userId: ObjectId | string): IProductDocument {
-    const {
-      sku,
-      productName,
-      currency,
-      businessId,
-      longDescription,
-      shortDescription,
-      productCategory,
-      productType,
-      barcode,
-      productVariants,
-      basePrice,
-      salePrice,
-      discount,
-      unit,
-      tags,
-      supplierId,
-      productImages,
-      isActive
-    } = data
-
     return {
       _id: productId,
       stockId: null,
-      sku,
-      currency,
-      productName: Utils.firstLetterToUpperCase(productName),
-      businessId: new ObjectId(businessId),
-      longDescription: longDescription || null,
-      shortDescription: shortDescription || null,
-      productCategory,
-      productImages: productImages || [],
-      productType,
-      barcode: barcode || null,
-      productVariants: productVariants || [],
-      basePrice,
-      salePrice: salePrice ?? 0,
-      unit,
-      tags: tags || [],
-      discount: discount ?? 0,
-      isActive: isActive || false,
-      supplierId: supplierId || null,
+      sku: data.sku,
+      currency: data.currency,
+      productName: Utils.firstLetterToUpperCase(data.productName),
+      businessId: new ObjectId(data.businessId),
+      attributes: data.attributes,
+      longDescription: data.longDescription ?? null,
+      shortDescription: data.shortDescription ?? null,
+      productCategory: data.productCategory,
+      productImages: data.productImages ?? [],
+      productType: data.productType,
+      barcode: data.barcode ?? null,
+      productVariants: data.productVariants ?? [],
+      basePrice: data.basePrice,
+      salePrice: data.salePrice ?? 0,
+      unit: data.unit,
+      tags: data.tags ?? [],
+      discount: data.discount ?? 0,
+      isActive: data.isActive ?? false,
+      supplierId: data.supplierId ?? null,
       createdBy: new ObjectId(userId),
       updatedBy: new ObjectId(userId),
     } as unknown as IProductDocument
   }
-
+  
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
       // validate user 

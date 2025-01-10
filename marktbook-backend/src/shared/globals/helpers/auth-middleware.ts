@@ -19,6 +19,7 @@ class AuthMiddleware {
        * @param res Express Response object
        * @param next Express NextFunction for error handling
        */
+      
   public verifyUser(req: Request, res: Response, next: NextFunction): void {
     // Check if JWT token exists in session
     if (!req.session?.jwt) {

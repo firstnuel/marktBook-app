@@ -14,6 +14,7 @@ export interface IProductDocument extends Document {
     productType: ProductType;
     barcode?: string;
     productVariants: ProductVariants[];
+    attributes: ProductAttributes;
     basePrice: number;
     salePrice: number;
     unit: Unit;
@@ -40,9 +41,22 @@ export interface ProductVariants {
     sku: string;
     barcode?: string;
     priceAdjustment: number;
-    attributes: { name: string; value: string }[];
+    attributes: ProductAttributes;
     images: ProductImage[];
     stockId: ObjectId | string;
+}
+
+export interface ProductAttributes {
+  color?: string;
+  size?: number;
+  brand?: string;
+  manufacturer?: string;
+  dimensions?: {                 
+    length?: number;          
+    width?: number;         
+    height?: number;   
+    weight?: number;
+  }
 }
 
 export interface ProductImage {
@@ -122,6 +136,7 @@ export interface IProductData {
     businessId: string | ObjectId;
     longDescription?: string;
     shortDescription?: string;
+    attributes: ProductAttributes;
     productCategory: ProductCategory;
     productType: ProductType;
     barcode?: string;
