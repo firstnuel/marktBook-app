@@ -33,11 +33,12 @@
 | **19.12.**  | 2  | Extended stock router, controllers, interfaces.|
 | **20.12.**  | 2  | Extended stock router, controllers, interfaces to fetch low stock. Updated API Docs|
 |             | 2  | Implemented location controllers and routes to create, fetch and edit locations|
-| **21.12.**  | 3  | Implemented sales router, schema, controllers and interfaces, munor refactoring of product Contoller|
+| **21.12.**  | 3  | Implemented sales router, schema, controllers and interfaces, minor refactoring of product Contoller|
 | **22.12.**  | 2  | Extended sales router, schema, controllers and interface to handle refund |
 | **04.01.**  | 3  | Implemented business router, schema, controllers and interface to handle business |
 | **05.01.**  | 1  | Implemented customer router, schema, controllers and interface to handle customer |
-| **Total**  | **79** | |
-
+| **09.01.** | 2  | refactored auth and product router, schema, controllers  |
+| **10.01.**  | 3  | Implemented login functionality on the frontend |
+| **Total**  | **84** | |
 
 
