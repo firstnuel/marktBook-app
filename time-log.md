@@ -39,6 +39,8 @@
 | **05.01.**  | 1  | Implemented customer router, schema, controllers and interface to handle customer |
 | **09.01.** | 2  | refactored auth and product router, schema, controllers  |
 | **10.01.**  | 3  | Implemented login functionality on the frontend |
-| **Total**  | **84** | |
+|   | 2  | Extended auth functionalities on the frontend to handle password reset and update |
+|  **11.01.** | 2  | Extended auth on the frontend to handle registration, minor auth controller refactoring |
+| **Total**  | **88** | |
 
 
