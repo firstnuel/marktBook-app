@@ -22,7 +22,9 @@ export interface AuthState {
   user: User | null;
   loading: boolean;
   error: string | null;
-  registered: boolean | null
+  registered: boolean | null;
+  reset: boolean;
+  updated: boolean | null;
 }
 
 export enum BusinessType {
@@ -59,4 +61,9 @@ export interface RegisterData {
   businessType: BusinessType;
   businessCategory: BusinessCategory;
   businessLogo?: string;
+}
+
+export interface passwordData {
+  password: string,
+  confirmPassword: string
 }

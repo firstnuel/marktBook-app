@@ -1,12 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { AuthState, LoginData, RegisterData } from '../types/auth'
+import { AuthState, LoginData, RegisterData, passwordData } from '../types/auth'
 import { authService } from '@services/authService'
 
 const initialState: AuthState = {
   user: null,
   loading: false,
   error: null,
-  registered: null
+  registered: null,
+  reset: false,
+  updated: null
 }
 
 export const login = createAsyncThunk('auth/loginUser', async (userData: LoginData) => {
@@ -26,13 +28,27 @@ export const logout = createAsyncThunk('auth/logoutUser', async () => {
 
 export const register = createAsyncThunk('auth/register', async (registerData: RegisterData) => {
   const response = await authService.register(registerData)
+  if (response.status !== 201) {
+    throw new Error(response.data.message)
+  }
+  const businessData =  response.data.data
+  localStorage.setItem('businessData', businessData)
+  return businessData
+})
+
+export const passwordReset = createAsyncThunk('auth/passwordReset', async(email: string) => {
+  const response = await authService.passwordReset(email)
   if (response.status !== 200) {
     throw new Error(response.data.message)
   }
-  const businessData =  response.data.data.json()
-  localStorage.setItem('businessData', businessData)
 })
 
+export const passwordUpdate = createAsyncThunk('auth/passwordUpdate', async (passwordData: { passwordData: passwordData, token: string }) => {
+  const response = await authService.updatePassword(passwordData.passwordData, passwordData.token)
+  if (response.status !== 200) {
+    throw new Error(response.data.message)
+  }
+})
 
 const authSlice = createSlice({
   name: 'auth',
@@ -55,7 +71,7 @@ const authSlice = createSlice({
     })
     builder.addCase(login.rejected, (state, action) => {
       state.loading = false
-      state.error = action.error.message ?? 'User login failed'
+      state.error = action.error.message || 'User login failed, Try again later'
     })
 
     //logout
@@ -64,7 +80,7 @@ const authSlice = createSlice({
       state.user = null
     })
     builder.addCase(logout.rejected, (state, action) => {
-      state.error = action.error.message ?? 'User logout failed'
+      state.error = action.error.message ||'User logout failed, Try again later'
     })
 
     //register
@@ -79,10 +95,41 @@ const authSlice = createSlice({
     })
     builder.addCase(register.rejected, (state, action) => {
       state.loading = false
-      state.error = action.error.message ?? 'Business registeration failed'
+      state.error = action.error.message ||'Business registeration failed, Try again later'
       state.registered = false
     })
 
+    // password reset
+    builder.addCase(passwordReset.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    builder.addCase(passwordReset.fulfilled, (state) => {
+      state.loading = false
+      state.error = null
+      state.reset = true
+    })
+    builder.addCase(passwordReset.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.error.message ||'Password reset failed, Try again later'
+      state.reset = false
+    })
+
+    // password update
+    builder.addCase(passwordUpdate.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    builder.addCase(passwordUpdate.fulfilled, (state) => {
+      state.loading = false
+      state.error = null
+      state.updated = true
+    })
+    builder.addCase(passwordUpdate.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.error.message ||'Password update failed, Try again later'
+      state.updated = false
+    })
   }
 })
 

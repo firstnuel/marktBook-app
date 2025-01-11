@@ -13,8 +13,8 @@
     min-height: 100vh;
     width: 100%;
     padding: 30px 20px;
+    overflow: scroll;
 }
-
 .back-home {
     display: flex;
     justify-content: flex-end;
@@ -38,8 +38,7 @@
     }
 
 }
-
-.form-container {
+.form-container, .registerform-container {
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -51,13 +50,16 @@
 }
 
 /* Error and Info messages */
-.error, .info {
+.error, .info, .success {
     font-size: 0.875rem;
     margin-bottom: 12px;
 }
+.success {
+    color: var(--tertiary-color);
+}
 
 .error {
-    color: #dc3545;
+    color: var(--secondary-color);
 }
 
 /* App name */
@@ -90,6 +92,11 @@
     margin-bottom: 16px;
 }
 
+.login {
+    margin: 5px 5px;
+
+}
+
 .register-link {
     color: var(--primary-color);
     font-weight: 500;
@@ -105,33 +112,45 @@
     margin: 12px 0 20px;
 }
 
+
+
 /* Small screens (mobile) */
-@media screen and (max-width: 576px) {
+@media screen  and (max-width: 576px) {
     .container-fluid {
         padding: 15px;
 
-        .form-container {
+        .form-container, .registerform-container {
             padding: 20px;
-            height: 90vh;
+            height: 100%;
             gap: 10px;
             margin-top: 20px;
+        }
+        .registerform-container {
+           .summary {
+               margin-bottom: 6px;
+           }
         }
     }    
 }
 
 /* Medium screens (tablet) */
 @media screen and (min-width: 577px) and (max-width: 768px) {
-    .form-container {
+    .back-home {
+        margin: 20px !important;
+    }
+    .form-container, .registerform-container  {
         max-width: 500px;
+        height: 100%;
     }
 }
 
 /* Screens larger than 10 inches (approximately 960px at 96dpi) */
 @media screen and (min-width: 960px) {
 
-    .form-container {
-        width: 90%;
+    .registerform-container, .form-container {
+        width: 35% !important;
         position: relative;
-        right: 30%;
+        right: 25%;
+        padding: 25px !important;
     }
 }
