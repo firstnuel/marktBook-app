@@ -49,11 +49,12 @@ class Password {
     // generate random characters for password token
     const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(20))
     const randomChars: string = randomBytes.toString('hex')
-    await authService.updatePasswordToken(existingUser._id, randomChars, Date.now() + 36000000) // adds 1 hr to current date
+    await authService.updatePasswordToken(existingUser._id, randomChars, Date.now() + 3600000) // adds 1 hr to current date
 
     // send password reset link to client email
     const resetLink = `${config.CLIENT_URL}/reset-password?token=${randomChars}`
     const template = forgotPasswordTemplate.passwordResetTemplate(existingUser.username, resetLink)
+
     emailQueue.addEmailJob('forgotPasswordEmail', { 
       template, 
       receiveEmail: email, 
