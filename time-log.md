@@ -41,6 +41,7 @@
 | **10.01.**  | 3  | Implemented login functionality on the frontend |
 |   | 2  | Extended auth functionalities on the frontend to handle password reset and update |
 |  **11.01.** | 2  | Extended auth on the frontend to handle registration, minor auth controller refactoring |
-| **Total**  | **88** | |
+|  **11-12.01.** | 5 | Researched, designed, and implemented menu bar |
+| **Total**  | **93** | |
 
 
