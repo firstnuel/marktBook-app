@@ -26,6 +26,7 @@
       "@utils/*": ["src/utils/*"],
       "@hooks/*": ["src/hooks/*"],
       "@services/*": ["src/services/*"],
+      "@styles/*": ["src/styles/*"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@typess/*": ["src/types/*"]

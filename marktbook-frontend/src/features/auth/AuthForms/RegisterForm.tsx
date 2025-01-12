@@ -8,10 +8,12 @@ import { NavLink } from 'react-router'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@hooks/useAuth'
 import { BusinessCategory, BusinessType, RegisterData } from '@typess/auth'
-import { validationErrorFn } from '@utils/helpers'
+import { parseZError, validationErrorFn } from '@utils/helpers'
 import icons from '@assets/icons'
 import './index.scss'
 import { ZodError } from 'zod'
+import BackHome from '@components/BackHome'
+import AppNameTag from '@components/AppNameTag'
 
 
 const RegisterForm = () => {
@@ -65,7 +67,7 @@ const RegisterForm = () => {
 
     } catch (err) {
       if (err instanceof ZodError) {
-        validationErrorFn(err.errors.map(error => error.message).join(', '), setValidationError)
+        validationErrorFn(parseZError(err), setValidationError)
       }
       console.error('Login error:', err)
     }
@@ -75,22 +77,9 @@ const RegisterForm = () => {
 
   return (
     <div className='container-fluid' >
-      <div className="back-home">
-        <a href="" className="home-link">
-          <img src={icons.arrowback} alt="Back to homepage arrow icon" />
-        </a>
-        <a href="" className="home-link">
-          <p>Back to home</p>
-        </a>
-      </div>
+      <BackHome />
       <Container className='registerform-container'>
-        <div className='app-name'>
-          <p>MarktBook</p>
-        </div>
-        <div className='summary'>
-          <p className="catch-phrase">Manage your business, smarter and simpler.</p>
-        </div>
-
+        <AppNameTag />
         <Form onSubmit={handleSubmit} className="d-grid gap-2">
           <div className={IError? 'error': 'info'}>
             {IError? IError : 'Let\'s get you started'}

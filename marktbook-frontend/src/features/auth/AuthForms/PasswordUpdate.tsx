@@ -5,13 +5,15 @@ import { useField } from '@hooks/useField'
 import { NavLink, useSearchParams } from 'react-router-dom'
 import { passwordSchema } from '@auth/auth.schema'
 import Form from 'react-bootstrap/Form'
-import { validationErrorFn } from '@utils/helpers'
+import { validationErrorFn, parseZError } from '@utils/helpers'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@hooks/useAuth'
 import { useNavigate } from 'react-router'
 import icons from '@assets/icons'
 import './index.scss'
 import { ZodError } from 'zod'
+import BackHome from '@components/BackHome'
+import AppNameTag from '@components/AppNameTag'
 
 
 const PasswordUpdateForm = () => {
@@ -47,7 +49,7 @@ const PasswordUpdateForm = () => {
       await passwordUpdate({ passwordData: password, token: token! })
     } catch (err) {
       if (err instanceof ZodError) {
-        validationErrorFn(err.errors.map(error => error.message).join(', '), setValidationError)
+        validationErrorFn(parseZError(err), setValidationError)
       }
       console.error('Password update error:', err)
     }
@@ -57,22 +59,9 @@ const PasswordUpdateForm = () => {
 
   return (
     <div className='container-fluid' >
-      <div className="back-home">
-        <a href="" className="home-link">
-          <img src={icons.arrowback} alt="Back to homepage arrow icon" />
-        </a>
-        <a href="" className="home-link">
-          <p>Back to home</p>
-        </a>
-      </div>
+      <BackHome />
       <Container className='registerform-container'>
-        <div className='app-name'>
-          <p>MarktBook</p>
-        </div>
-        <div className='summary'>
-          <p className="catch-phrase">Password Reset</p>
-        </div>
-
+        <AppNameTag tagline='Password Update' />
         { error ?
           <>
             <h2 className="mb-3">Reset link has expired or is broken</h2>

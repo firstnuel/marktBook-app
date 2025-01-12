@@ -3,10 +3,14 @@
 
 :root {
   --primary-color: #2D71F8;
+  --light-blue: #F0F5FF;
   --secondary-color: #FC4A4A;
+  --secondary-red: #FFF4F4;
   --tertiary-color: #1C8370;
   --dark-color: #1A1A1A;
-  --light-color: #F2F2F2;
+  --light-color: #FAFAFA;
+  --white-color: #FFFFFF;
+  --light-gray: #EDEDED;
   --svg-fill-color: black;
   --svg-stroke-color: none;
   --font-family: 'Urbanist', sans-serif;
@@ -17,6 +21,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: var(--font-family);
+  font-weight: 400;
 }
 
 
@@ -27,9 +32,19 @@
       --svg-fill-color: white;
       --svg-stroke-color: gray;
     }
+    svg {
+      .main-icons {
+        fill: var(--primary-color)
+      }
+    }
   }
 
 svg {
     fill: var(--svg-fill-color);
     stroke: var(--svg-stroke-color);
 }
+
+// .menu-icons {
+//   height: 1.5rem;
+//   width: 1.5rem;
+// }

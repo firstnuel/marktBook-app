@@ -1,10 +1,12 @@
 import Container from 'react-bootstrap/Container'
+import BackHome from '@components/BackHome'
+import AppNameTag from '@components/AppNameTag'
 import { InputGroup } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import { useField } from '@hooks/useField'
 import Form from 'react-bootstrap/Form'
 import { LoginFormSchema } from '@auth/auth.schema'
-import { validationErrorFn } from '@utils/helpers'
+import { parseZError, validationErrorFn } from '@utils/helpers'
 import { NavLink } from 'react-router'
 import { useEffect, useState } from 'react'
 import { LoginData } from '@typess/auth'
@@ -45,7 +47,7 @@ const LoginForm = () => {
       await login(userData)
     } catch (err) {
       if (err instanceof ZodError) {
-        validationErrorFn(err.errors.map(error => error.message).join(', '), setValidationError)
+        validationErrorFn(parseZError(err), setValidationError)
       }
       console.error('Login error:', err)
     }
@@ -55,22 +57,9 @@ const LoginForm = () => {
 
   return (
     <div className='container-fluid' >
-      <div className="back-home">
-        <a href="" className="home-link">
-          <img src={icons.arrowback} alt="Back to homepage arrow icon" />
-        </a>
-        <a href="" className="home-link">
-          <p>Back to home</p>
-        </a>
-      </div>
+      <BackHome />
       <Container className='form-container'>
-        <div className='app-name'>
-          <p>MarktBook</p>
-        </div>
-        <div className='summary'>
-          <p className="catch-phrase">Manage your business, smarter and simpler.</p>
-        </div>
-
+        <AppNameTag />
         <Form onSubmit={handleSubmit} className="d-grid gap-2">
           <div className={IError? 'error': 'info'}>
             {IError? IError : 'Log in to your account'}

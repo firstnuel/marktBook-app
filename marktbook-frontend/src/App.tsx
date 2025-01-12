@@ -1,5 +1,6 @@
-import AppRoutes from './Routes'
+import AppRoutes from './AppRoutes'
 import './App.scss'
+import MenuBar from '@components/MenuBar'
 
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
 
   return (
     <>
+      <MenuBar />
       <AppRoutes />
     </>
   )

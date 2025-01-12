@@ -1,12 +1,15 @@
 import Container from 'react-bootstrap/Container'
 import { InputGroup } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
+import BackHome from '@components/BackHome'
+import AppNameTag from '@components/AppNameTag'
 import { useField } from '@hooks/useField'
 import Form from 'react-bootstrap/Form'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@hooks/useAuth'
 import icons from '@assets/icons'
 import './index.scss'
+
 
 
 const PasswordResetForm = () => {
@@ -36,22 +39,9 @@ const PasswordResetForm = () => {
 
   return (
     <div className='container-fluid' >
-      <div className="back-home">
-        <a href="" className="home-link">
-          <img src={icons.arrowback} alt="Back to homepage arrow icon" />
-        </a>
-        <a href="" className="home-link">
-          <p>Back to home</p>
-        </a>
-      </div>
+      <BackHome />
       <Container className='registerform-container'>
-        <div className='app-name'>
-          <p>MarktBook</p>
-        </div>
-        <div className='summary'>
-          <p className="catch-phrase">Password Reset</p>
-        </div>
-
+        <AppNameTag tagline='Password Reset' />
         <Form onSubmit={handleSubmit} className="d-grid gap-2">
           <div className={error? 'error': success? 'success' : 'info'}>
             {error? error : success? 'Password reset email sent'

@@ -8,6 +8,7 @@ export default defineConfig({
       '@auth': '/src/features/auth',
       '@utils': '/src/utils',
       '@hooks': '/src/hooks',
+      '@styles': '/src/styles',
       '@services': '/src/services',
       '@assets': '/src/assets',
       '@components': '/src/components',
