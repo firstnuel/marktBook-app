@@ -3,19 +3,19 @@ import LoginForm from '@auth/AuthForms/LoginForm'
 import RegisterForm from '@auth/AuthForms/RegisterForm'
 import PasswordResetForm from '@auth/AuthForms/PasswordReset'
 import PasswordUpdateForm from '@auth/AuthForms/PasswordUpdate'
-// import MenuBar from '@components/MenuBar'
+import PointOfSale from '@features/pos/PointOfSale'
 
 
 const AppRoutes = () => {
   return(
     <Routes>
 
-      <Route path='login' element={<LoginForm />}></Route>
-      <Route path='register' element={<RegisterForm />}></Route>
-      <Route path='forgot-password' element={<PasswordResetForm />}></Route>
+      <Route path='login' element={<LoginForm />} />
+      <Route path='register' element={<RegisterForm />} />
+      <Route path='forgot-password' element={<PasswordResetForm />} />
       <Route path="/reset-password" element={<PasswordUpdateForm />} />
+      <Route path="/pos" element={<PointOfSale />} />
 
-      {/* <Route path='/' element={<MenuBar />}></Route> */}
     </Routes>
   )
 }

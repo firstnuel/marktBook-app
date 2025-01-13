@@ -14,3 +14,4 @@ const IconBox = ({ clName, onClick, src, imgClName, alt }: IconBoxProps) => (
 )
 
 export default IconBox
+

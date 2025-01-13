@@ -16,6 +16,11 @@ import helpIcon from '@assets/icons/help-icon.svg'
 import accountsIcon from '@assets/icons/accounts-icon.svg'
 import logoutIcon from '@assets/icons/logout-icon.svg'
 import arrowDropDown from '@assets/icons/arrow-down.svg'
+import dateIcon from '@assets/icons/date-icon.svg'
+import timeIcon from '@assets/icons/time-icon.svg'
+import allCatIcon from '@assets/icons/cat-icon.svg'
+import catOtherIcon from '@assets/icons/cat-search-icon.svg'
+import powerIcon from '@assets/icons/power-icon.svg'
 
 
 const icons = {
@@ -36,7 +41,12 @@ const icons = {
   accounts: accountsIcon,
   help: helpIcon,
   logout: logoutIcon,
-  arrowDropDown: arrowDropDown
+  arrowDropDown: arrowDropDown,
+  date: dateIcon,
+  time: timeIcon,
+  allCategories: allCatIcon,
+  categories: catOtherIcon,
+  power: powerIcon
 }
 
 export default icons

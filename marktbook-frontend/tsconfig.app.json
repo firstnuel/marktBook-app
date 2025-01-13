@@ -32,6 +32,8 @@
       "@styles/*": ["src/styles/*"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
+      "@features/*": ["src/features/*"],
+      "@reducers/*": ["src/reducers/*"],
       "@typess/*": ["src/types/*"]
     }
   },

@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../store'
 import { login, clearError, register, passwordReset, passwordUpdate } from '../reducers/authReducer'
-import { LoginData, RegisterData, passwordData } from '../types/auth'
+import { LoginData, RegisterData, passwordData } from '@typess/auth'
 
 
 export const useAuth = () => {

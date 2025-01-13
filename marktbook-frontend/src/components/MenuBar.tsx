@@ -17,11 +17,8 @@ const MenuBar = () => {
 
   return(
     <>
-      {!showBar &&
-        <IconBox src={icons.menu} clName="menu-icon-div"
-          imgClName="menu-icon" onClick={handleShow} />
-      }
-
+      <IconBox src={icons.menu} clName="menu-icon-div"
+        imgClName="menu-icon" onClick={handleShow} />
       <div className={`menu-bar ${showBar ? 'open' : ''}`}>
         <MenuBarUser name='Emmanuel Okechukwu' role='Owner' closeFn={handleClose} />
         <div className="menu-options">
@@ -33,7 +30,6 @@ const MenuBar = () => {
           <MenuOption option='Contacts' icon={icons.contacts} />
           <MenuOption option='Manage Accounts' icon={icons.accounts} />
           <MenuOption option='Settings' icon={icons.settings} />
-
         </div>
         <div className="log-out-div">
           <div className="log-out" onClick={handleLogout} >

@@ -67,14 +67,14 @@ const LoginForm = () => {
           <InputGroup className="mb-3">
             <InputGroup.Text> <img src={icons.email} alt="email icon" className="icon" />
             </InputGroup.Text>
-            <Form.Control size="lg" {...email} placeholder="Business email" autoComplete='current-email'/>
+            <Form.Control size="lg" { ...email } placeholder="Business email" autoComplete='current-email'/>
           </InputGroup>
 
           <InputGroup className="mb-3">
             <InputGroup.Text>
               <img src={icons.user} alt="username icon" className="icon" />
             </InputGroup.Text>
-            <Form.Control size="lg"  {...username} placeholder="Username"  autoComplete='current-username'/>
+            <Form.Control size="lg"  { ...username } placeholder="Username"  autoComplete='current-username'/>
           </InputGroup>
 
           <InputGroup className="mb-3">

@@ -12,8 +12,8 @@ export const parseZError = (error: ZodError): string =>
 
 
 export const cutName = (name: string): string => {
-  if(name.length > 17 ) {
-    return name.substring(0, 17) + '...'
+  if(name.length > 10 ) {
+    return name.substring(0, 10) + '...'
   }
   return name
 }

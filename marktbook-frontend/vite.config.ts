@@ -12,7 +12,11 @@ export default defineConfig({
       '@services': '/src/services',
       '@assets': '/src/assets',
       '@components': '/src/components',
-      '@typess': '/src/types'
+      '@typess': '/src/types',
+      '@features': '/src/features',
+      '@reducers': '/src/reducers'
     }
   }
 })
+
+

@@ -20,11 +20,16 @@
     flex-direction: column;
     position: fixed;
     justify-content: space-between;
+    background-color: var(--white-color);
     top: 0;
+    left: 0;
     width: 25%;
-    min-height: 100vh;
+    min-height: 100dvh;
     transform: translateX(-100%); 
     transition: transform 0.3s ease-in-out; 
+    overflow: scroll;
+    opacity: 1;
+    z-index: 1000;
 
     .log-out-div {
         display: flex;
