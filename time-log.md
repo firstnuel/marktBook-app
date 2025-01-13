@@ -42,6 +42,7 @@
 |   | 2  | Extended auth functionalities on the frontend to handle password reset and update |
 |  **11.01.** | 2  | Extended auth on the frontend to handle registration, minor auth controller refactoring |
 |  **11-12.01.** | 5 | Researched, designed, and implemented menu bar |
-| **Total**  | **93** | |
+|  **12-13.01.** | 4 | Implement point of sales page, made resuable UI components |
+| **Total**  | **97** | |
 
 
