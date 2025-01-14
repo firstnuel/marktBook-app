@@ -11,6 +11,38 @@
         flex-direction: column;
         background-color: var(--light-gray);
 
+        .products{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            height: 68dvh; 
+            width: 100%;
+            gap: 0.5em;
+            border-radius: 1em;
+            overflow-y: auto; 
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        
+            &::-webkit-scrollbar {
+                display: none; 
+            }
+        }
+        .search-bar{
+            padding: 0.5em 0.5em 0 0.5em;
+            height: auto;
+            input {
+                border-top-left-radius: 1em !important; 
+                border-bottom-left-radius: 1em !important; 
+                outline: none;
+                &:focus {
+                    box-shadow: none !important; 
+                    outline: var(--primary-color) auto 1px;
+                }
+                &:hover {
+                    outline: var(--primary-color) auto 1px;
+                }
+            }
+        }
+
         .categories{
             display: flex;
             gap: 0.5em;
@@ -20,6 +52,7 @@
             overflow-x: auto; 
             overflow-y: hidden; 
             scroll-behavior: smooth; 
+            scroll-snap-type: x mandatory;
             white-space: nowrap; 
             &::-webkit-scrollbar {
                 display: none;
@@ -27,7 +60,7 @@
         }
         .header-info {
             display: flex;
-            height: 8%;
+            height: 7.2%;
             align-items: center;
             justify-content: space-between;
             width: 100%;

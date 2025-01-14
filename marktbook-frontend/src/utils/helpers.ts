@@ -11,9 +11,10 @@ export const parseZError = (error: ZodError): string =>
   error.errors.map(error => error.message).join(', ')
 
 
-export const cutName = (name: string): string => {
-  if(name.length > 10 ) {
-    return name.substring(0, 10) + '...'
+export const cutName = (name: string, amount: number=0): string => {
+  amount = amount < 1? 15 : amount
+  if(name.length > amount ) {
+    return name.substring(0, amount) + '...'
   }
   return name
 }
