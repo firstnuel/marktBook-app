@@ -45,7 +45,7 @@ export class MarktBookServer {
       cookieSession({
         name: 'session',
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
-        maxAge: 24 * 7 * 3600000,
+        maxAge: 24 * 60 * 60 * 1000,
         secure: config.NODE_ENV != 'development'
       })
     )

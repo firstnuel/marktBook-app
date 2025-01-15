@@ -21,7 +21,7 @@ export const uploads = (
         overwrite, 
         invalidate, 
         folder: 'marktBook' 
-      },
+      } ,
       (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
         if (error) {
           resolve(error)
@@ -39,11 +39,11 @@ export const uploads = (
     )
   })
 }
-
+// https://res.cloudinary.com/demo/image/upload/e_background_removal/docs/rmv_bgd/dog_couch_orig
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const constructCloudinaryURL = (uploadResult: any): string => {
-  return `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${uploadResult.version}/${uploadResult.public_id}`
+  return `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/e_background_removal/v${uploadResult.version}/${uploadResult.public_id}`
 }
 
 export async function uploadProductImages(

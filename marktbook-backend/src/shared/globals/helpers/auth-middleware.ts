@@ -21,6 +21,8 @@ class AuthMiddleware {
        */
       
   public verifyUser(req: Request, res: Response, next: NextFunction): void {
+
+    console.log(req.session)
     // Check if JWT token exists in session
     if (!req.session?.jwt) {
       return next(new NotAuthorizedError('Token not available, please login'))

@@ -4,19 +4,23 @@ import TimeBox from '@components/TimeBox'
 import CloseShop from '@components/CloseShop'
 import MenuBar from '@components/MenuBar'
 import CategoryCard from '@components/CategoryCard'
+import CustomerInfo from '@features/pos/CustomerInfo'
+import SelectCustomer from '@features/pos/SelectCustomer'
 import icons from '@assets/icons'
 import { categoryData } from './seed'
 import SearchBar from '@components/SearchBar'
 import { useField } from '@hooks/useField'
 import ProductCard from '@components/ProductCard'
+import PriceInfo from '@features/pos/PriceInfo'
 import './index.scss'
 import { useState } from 'react'
+import CartItem from '@components/CartItem'
 
 
 
 const PointOfSale = () => {
   const [selectValue, setSelectValue] = useState('SKU')
-  const { reset, ...searchProduct } = useField('searchProduct', 'text')
+  const { ...searchProduct } = useField('searchProduct', 'text')
   const eventKeys = ['SKU', 'Product Name', 'Product Tag', 'Category', 'Barcode']
 
   const handleSelect = (eventKey: string | null) => {
@@ -49,39 +53,18 @@ const PointOfSale = () => {
         </Container>
         <Container className='products'>
           <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-
-          <ProductCard />
-          
         </Container>
-        {/* <Container className='recents'></Container> */}
       </Container>
-      <Container className='sales'></Container>
+      <Container className='checkout'>
+        <CustomerInfo name='Emmanuel Ikwunna' salesId={1234567890}/>
+        <SelectCustomer />
+        <div className="cart-div">
+          <CartItem name='Macbook laptop' price={2} />
+        </div>
+        <div className="price-breakdown">
+          <PriceInfo />
+        </div>
+      </Container>
     </div>
   )
 }

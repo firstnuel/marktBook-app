@@ -8,9 +8,9 @@ Accept: application/json
 withCredentials: true
 
 {
- "email": "loveth@example.com",
- "adminFullName": "loveth Doe",
- "username": "loveth",
+ "email": "esoo@example.com",
+ "adminFullName": "Esso Doe",
+ "username": "esso",
  "password": "SecurePass123!",
  "businessName": "LoveTech Innovations LLC",
  "businessType": "Retail",
@@ -24,9 +24,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "email": "johndoe@example.com",
+  "email": "esoo@example.com",
   "password":  "SecurePass123!",
-  "username": "johnd"
+  "username": "esso"
 }
 
 ###  logout
@@ -40,7 +40,6 @@ GET {{baseUrl}}/{{urlpath}}/me
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
-
 
 ### Add a new product
 POST {{baseUrl}}/{{urlpath}}/products
@@ -70,7 +69,7 @@ withCredentials: true
 {
     "sku": "PRD47281",
     "productName": "Airforce one",
-    "businessId": "676857bfb27b2f69708674d9",
+    "businessId": "6787ded914642d8d031c57a8",
     "longDescription": "Nice air force shoes.",
     "shortDescription": "Airforce one",
     "currency": "USD",
@@ -164,7 +163,7 @@ withCredentials: true
 
 
 ### edit product by id
-PATCH {{baseUrl}}/{{urlpath}}/products/6762043417bc539e53cc9bb1
+PATCH {{baseUrl}}/{{urlpath}}/products/6787f27a66cf073ebcd11188
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -174,7 +173,7 @@ withCredentials: true
     "sku": "PRD35890",
     "productName": " Ear Phones",
     "currency": "USD",
-    "businessId": "675ef731a57d646944022a92",
+    "businessId": "6787ded914642d8d031c57a8",
     "longDescription": "Noise cancelling earphones with microphone.",
     "shortDescription": "Noise cancelling earphones",
     "productCategory": "Electronics",
@@ -183,7 +182,8 @@ withCredentials: true
     "basePrice": 120,
     "salePrice": 130,
     "discount": 20,
-    "unit": "piece"
+    "unit": "piece",
+    "attributes": {}
   }
 
 ### delete product by id
@@ -205,8 +205,8 @@ Accept: application/json
 withCredentials: true
 
 {
-  "businessId": "6761f56d9f1141f4f2a48de5",
-  "productId": "67644278e86c081b85339b87",
+  "businessId": "6787ded914642d8d031c57a8",
+  "productId": "6787f27a66cf073ebcd11188",
   "unitsAvailable": 50,
   "maxQuantity": 250,
   "minQuantity": 20,
