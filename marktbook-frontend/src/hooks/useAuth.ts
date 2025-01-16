@@ -1,11 +1,10 @@
 import { useAppDispatch, useAppSelector } from '../store'
-import { login, clearError, register, passwordReset, passwordUpdate } from '../reducers/authReducer'
+import { login, clearError, register, passwordReset, passwordUpdate } from '@reducers/authReducer'
 import { LoginData, RegisterData, passwordData } from '@typess/auth'
-
 
 export const useAuth = () => {
   const dispatch = useAppDispatch()
-  const { user, error, reset, loading, registered, updated } = useAppSelector(state => state.auth)
+  const { user, error, reset, loading, registered, updated, userToken } = useAppSelector(state => state.auth)
 
   if (error) {
     setTimeout(() => {
@@ -17,6 +16,7 @@ export const useAuth = () => {
     user,
     error,
     loading,
+    userToken,
     reset,
     updated,
     registered,
@@ -25,7 +25,7 @@ export const useAuth = () => {
     isAuthenticated: !!user,
     login: (userData: LoginData) => dispatch(login(userData)),
     register: (registerData: RegisterData) => dispatch(register(registerData)),
-    clearError:  () => dispatch(clearError())
+    clearError:  () => dispatch(clearError()),
   }
 }
 

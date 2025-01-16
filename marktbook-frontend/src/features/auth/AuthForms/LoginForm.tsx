@@ -7,7 +7,7 @@ import { useField } from '@hooks/useField'
 import Form from 'react-bootstrap/Form'
 import { LoginFormSchema } from '@auth/auth.schema'
 import { parseZError, validationErrorFn } from '@utils/helpers'
-import { NavLink } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
 import { LoginData } from '@typess/auth'
 import { useAuth } from '@hooks/useAuth'
@@ -21,15 +21,17 @@ const LoginForm = () => {
   const { reset: nameReset, ...username } = useField('username', 'text')
   const { reset: passwordReset, ...password } = useField('password', 'password')
   const [validationError, setValidationError] = useState<string | null>(null)
-  const { login, user, loading, error } = useAuth()
+  const { login, userToken, loading, error } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if (user) {
+    if (userToken) {
       emailReset()
       nameReset()
       passwordReset()
+      navigate('/pos')
     }
-  }, [emailReset, user, nameReset, passwordReset])
+  }, [emailReset, userToken, nameReset, passwordReset])
 
 
   const handleSubmit = async (e: React.FormEvent) => {

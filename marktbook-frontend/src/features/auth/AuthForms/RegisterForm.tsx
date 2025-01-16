@@ -87,7 +87,7 @@ const RegisterForm = () => {
           <InputGroup className="mb-3">
             <InputGroup.Text> <img src={icons.email} alt="email icon" className="icon" />
             </InputGroup.Text>
-            <Form.Control size="lg" {...email} placeholder="Business email" autoComplete='current-email'/>
+            <Form.Control size="lg" {...email} placeholder="Business Email" autoComplete='current-email'/>
           </InputGroup>
 
           <InputGroup className="mb-3">
@@ -101,7 +101,7 @@ const RegisterForm = () => {
             <InputGroup.Text>
               <img src={icons.user} alt="name icon" className="icon" />
             </InputGroup.Text>
-            <Form.Control size="lg"  {...name} placeholder="Full name" autoComplete='current-name' />
+            <Form.Control size="lg"  {...name} placeholder="Full Name" autoComplete='current-name' />
           </InputGroup>
 
           <InputGroup className="mb-3">

@@ -22,6 +22,7 @@ export interface AuthState {
   user: User | null;
   loading: boolean;
   error: string | null;
+  userToken: string | null;
   registered: boolean | null;
   reset: boolean;
   updated: boolean | null;

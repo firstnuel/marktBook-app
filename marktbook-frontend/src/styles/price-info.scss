@@ -1,0 +1,94 @@
+.payment-option {
+    display: flex;
+    gap: .5em;
+    select {
+        width: 60%;
+        border-radius: 1em;
+    }
+    button {
+        width: 40%;
+        border: none;
+        border-radius: 1em;
+        cursor: pointer;
+    }
+}
+
+.pay-btn {
+    button {
+        width: 100%;
+        border-radius: 1em;
+    }
+}
+
+
+.subtotal-info, .tax-info, .discount-info, .total-info {
+    height: 2em;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+
+    .total{
+        font-weight: 500;
+        font-size: 1em;
+
+        .amount-info {
+            align-items: center;
+            .currency {
+                font-weight: 500;
+                font-size: 1em;
+            }
+            .text {
+                font-weight: 500;
+                font-size: 1em;
+            }
+        }
+    }
+    .discount, .dc-currency {
+        color: var(--tertiary-color);
+        align-self: center;
+    }
+    .amount-info {
+        display: flex;
+        justify-content: space-between;
+        width: 35%;
+
+        .tx-price, .sb-price, .tt-price {
+            align-self: center;
+            padding-right: 0.8em;
+
+        }
+        .tx-price {
+            padding-right: 0.9em;
+        }
+
+        input {
+            width: 70% !important;
+            height: 1.8em !important;
+            text-align: right;
+            margin-bottom: .3em;
+        }
+    }
+
+    .tax-percent, .tax-info, .tx-price, .tx-currency {
+        font-weight: 300;
+        font-size: 0.8em;
+    }
+    .tx-price, .sb-price {
+        font-weight: 400;
+        font-size: 0.9em;
+    }
+
+    .subtotal, .discount {
+        font-weight: 400;
+        font-size: 0.9em;   
+        .currency {
+            font-weight: 400;
+            font-size: 0.9em;
+        }  
+    }
+}
+.discount-info {
+    border-bottom: 2px dashed var(--light-gray);
+ }

@@ -15,9 +15,7 @@ interface SearchProps {
 }
 
 
-
-
-const SearchBar = ({ value='', onSelect, eventKeys, useField }: SearchProps) => (
+const SearchBar = ({ value='Select', onSelect, eventKeys, useField }: SearchProps) => (
   <InputGroup className="mb-3">
     <Form.Control aria-label="Text input with dropdown button"
       placeholder={`Search by ${value}...`} autoFocus

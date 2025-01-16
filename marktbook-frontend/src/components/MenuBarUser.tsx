@@ -26,7 +26,7 @@ export const MenuBarUser = ({ name, role, closeFn, dropDownFn }: MBUProps) => (
       <IconBox src={icons.arrowDropDown} clName="user-menu" onClick={dropDownFn}
         imgClName='usr-icon'/>
     </div>
-    <IconBox src={icons.close} clName="close-bar" onClick={closeFn} />
+    <IconBox src={icons.close} clName="close-bar" title='Close Bar' onClick={closeFn} />
   </div>
 )
 

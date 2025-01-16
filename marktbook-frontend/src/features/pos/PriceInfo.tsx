@@ -1,9 +1,12 @@
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import { usePos } from '@hooks/usePos'
 import '@styles/price-info.scss'
+import { useState } from 'react'
 
 const PriceInfo = () => {
-
+  const { clearCart, priceInfo, updateDiscount } = usePos()
+  const [discount, setDiscount] = useState(priceInfo.discount.toFixed(2))
 
 
   return(
@@ -12,28 +15,36 @@ const PriceInfo = () => {
         <div className="subtotal">Subtotal</div>
         <div className="amount-info">
           <div className="currency">$</div>
-          <div className="sb-price">5.00</div>
+          <div className="sb-price">{`${priceInfo.subtotal.toFixed(2)}`}</div>
         </div>
       </div>
       <div className="tax-info">
         <div className="tax-percent">Tax (10%)</div>
         <div className="amount-info">
           <div className="tx-currency">$</div>
-          <div className="tx-price">2.00</div>
+          <div className="tx-price">{`${priceInfo.tax.toFixed(2)}`}</div>
         </div>
       </div>
       <div className="discount-info">
         <div className="discount">Discount</div>
         <div className="amount-info">
           <div className="dc-currency">-</div>
-          <Form.Control type="text" value={'2.00'} />
+          <Form.Control
+            value={discount}
+            type='text'
+            onChange={(e) => setDiscount(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                updateDiscount(parseFloat(discount))}
+            }}
+          />
         </div>
       </div>
       <div className="total-info">
         <div className="total">Total</div>
         <div className="amount-info">
           <div className="currency">$</div>
-          <div className="tt-price">5.00</div>
+          <div className="tt-price">{`${priceInfo.total.toFixed(2)}`}</div>
 
         </div>
       </div>
@@ -41,10 +52,12 @@ const PriceInfo = () => {
         <Form.Select>
           <option>Payment method</option>
         </Form.Select>
-        <Button variant="danger">Cancel</Button>
+        <Button variant="danger" onClick={() => clearCart()}>Cancel</Button>
       </div>
       <div className="pay-btn">
-        <Button variant="success">Payment</Button>
+        <Button variant="success">
+          {priceInfo.total? `Payment - ${priceInfo.total.toFixed(2)}`: 'Payment'}
+        </Button>
       </div>
     </>
   )

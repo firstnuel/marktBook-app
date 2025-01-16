@@ -21,6 +21,9 @@ import timeIcon from '@assets/icons/time-icon.svg'
 import allCatIcon from '@assets/icons/cat-icon.svg'
 import catOtherIcon from '@assets/icons/cat-search-icon.svg'
 import powerIcon from '@assets/icons/power-icon.svg'
+import receiptIcon from '@assets/icons/receipt-icon.svg'
+import addPersonIcon from '@assets/icons/add-person-icon.svg'
+import editIcon from '@assets/icons/edit-icon.svg'
 
 
 const icons = {
@@ -46,7 +49,10 @@ const icons = {
   time: timeIcon,
   allCategories: allCatIcon,
   categories: catOtherIcon,
-  power: powerIcon
+  power: powerIcon,
+  edit: editIcon,
+  receipt: receiptIcon,
+  addPerson: addPersonIcon
 }
 
 export default icons
