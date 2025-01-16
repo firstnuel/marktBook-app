@@ -46,7 +46,9 @@ export class MarktBookServer {
         name: 'session',
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
         maxAge: 24 * 60 * 60 * 1000,
-        secure: config.NODE_ENV != 'development'
+        secure: config.NODE_ENV != 'development',
+        sameSite: 'lax',
+        httpOnly: true   
       })
     )
     app.use(helmet())

@@ -50,7 +50,7 @@ withCredentials: true
 # {
 #     "sku": "PRD35890",
 #     "productName": "Ear Phones",
-#     "businessId": "6761f56d9f1141f4f2a48de5",
+#     "businessId": "6788191f8593d3b390631e6f",
 #     "longDescription": "Noise cancelling earphones with microphone.",
 #     "shortDescription": "Noise cancelling earphones",
 #     "currency": "USD",
@@ -62,14 +62,14 @@ withCredentials: true
 #     "discount": 20.0,
 #     "unit": "piece",
 #     "tags": ["accessories", "sound", "wearable"],
-#     "isActive": true
-# FIX SKU BUG IN SKU
+#     "isActive": true,
+#     "attributes": {},
 # }
 
 {
     "sku": "PRD47281",
     "productName": "Airforce one",
-    "businessId": "6787ded914642d8d031c57a8",
+    "businessId": "6788191f8593d3b390631e6f",
     "longDescription": "Nice air force shoes.",
     "shortDescription": "Airforce one",
     "currency": "USD",
@@ -85,7 +85,8 @@ withCredentials: true
     "discount": 5.0,
     "unit": "piece",
     "tags": ["computer", "accessories", "wireless", "ergonomic"],
-    "isActive": true
+    "isActive": true,
+    "productImage" : ""
 }
 
 
@@ -163,27 +164,27 @@ withCredentials: true
 
 
 ### edit product by id
-PATCH {{baseUrl}}/{{urlpath}}/products/6787f27a66cf073ebcd11188
+PATCH {{baseUrl}}/{{urlpath}}/products/6789359e884ad36596f42a64
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-    "stockId": null,
-    "sku": "PRD35890",
-    "productName": " Ear Phones",
+    "productName": "Airforce one",
+      "productCategory": "Clothing",
+      "productType": "Physical",
+    "businessId": "6788191f8593d3b390631e6f",
+         "stockId": null,
+    "sku": "PRD47281",
     "currency": "USD",
-    "businessId": "6787ded914642d8d031c57a8",
-    "longDescription": "Noise cancelling earphones with microphone.",
-    "shortDescription": "Noise cancelling earphones",
-    "productCategory": "Electronics",
-    "productType": "Physical",
-    "barcode": "9876543234987",
-    "basePrice": 120,
-    "salePrice": 130,
+    "basePrice": 170,
+    "salePrice": 150,
     "discount": 20,
-    "unit": "piece",
-    "attributes": {}
+    "unit": "pair",
+    "attributes": {
+        "color": "Black",
+        "brand": "nike"
+    }
   }
 
 ### delete product by id
@@ -205,9 +206,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "businessId": "6787ded914642d8d031c57a8",
-  "productId": "6787f27a66cf073ebcd11188",
-  "unitsAvailable": 50,
+  "businessId": "6788191f8593d3b390631e6f",
+  "productId": "6789359e884ad36596f42a64",
+  "unitsAvailable": 100,
   "maxQuantity": 250,
   "minQuantity": 20,
   "thresholdAlert": false,

@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from 'express'
 import { ZodValidationError, BadRequestError, NotFoundError, NotAuthorizedError, ServerError } from '@root/shared/globals/helpers/error-handlers'
 import { productSchema, categorySchema, searchSchema } from '@inventory/schemes/productValidation'
 import { IProductDocument, IProductData, IFilterData } from '@inventory/interfaces/products.interface'
-import { uploadProductImages } from '@root/shared/globals/helpers/cloudinary-upload'
+import { singleImageUpload } from '@root/shared/globals/helpers/cloudinary-upload'
 import { productQueue } from '@service/queues/product.queue'
 import { config } from '@root/config'
 import { Utils } from '@root/shared/globals/helpers/utils'
@@ -17,6 +17,7 @@ import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 import { IBusinessDocument } from '@business/interfaces/business.interface'
 import { productService } from '@service/db/product.service'
 import { Schema } from 'zod'
+import { omit } from 'lodash'
 import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
 
@@ -59,12 +60,12 @@ export class Product {
       const productObjectId: ObjectId = new ObjectId()
 
       // Upload Product Images if provided
-      if (body.productImages) {
-        const result = await uploadProductImages(body.productImages)
-        if (result instanceof Error) {
-          return next(new BadRequestError('File Error: Failed to upload product images. Please try again.'))
+      if (body.productImage) {
+        const result = await singleImageUpload(body.productImage, productObjectId.toString())
+        if (!result) {
+          return next(new BadRequestError('File Error: Failed to upload product image. Please try again.'))
         } else {
-          body.productImages = result
+          body.productImage = result
         }
       }
 
@@ -185,7 +186,7 @@ export class Product {
       longDescription: data.longDescription ?? null,
       shortDescription: data.shortDescription ?? null,
       productCategory: data.productCategory,
-      productImages: data.productImages ?? [],
+      productImage: data.productImage,
       productType: data.productType,
       barcode: data.barcode ?? null,
       productVariants: data.productVariants ?? [],
@@ -208,9 +209,34 @@ export class Product {
 
       // fetch products
       const products = await productService.fetchAll(`${existingUser.associatedBusinessesId}`)
+      let transformedProducts
+      if (products) {
+        transformedProducts = products.map((product) => {
+          const productData = product.toJSON()
+          // Rename stockId to stock
+          if (productData.stockId) {
+            productData.stock = productData.stockId 
+            delete productData.stockId 
+          } else {
+            productData.stock = null
+            delete productData.stockId 
+          }
+      
+          // Omit unnecessary fields
+          return omit(productData, [
+            'isActive',
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+            '__v',
+          ])
+        })
+      }
+      
 
       const message = products.length? 'Products data fetched successfully' : 'No product found'
-      res.status(HTTP_STATUS.OK).json({ message, data: products })
+      res.status(HTTP_STATUS.OK).json({ message, data: transformedProducts })
 
     } catch(error) {
       // Log and forward the error to a centralized error handler

@@ -10,12 +10,12 @@ import { filterProductFields,
   ALLOWED_ALL_FIELDS, 
   ALLOWED_STAFF_FIELDS } from '@inventory/interfaces/products.interface'
 import { BadRequestError, NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
-import { uploadProductImages } from '@global/helpers/cloudinary-upload'
 import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
 import { stockService } from '@service/db/stock.service'
 import { ObjectId } from 'mongodb'
 import { locationService } from '@service/db/location.service'
+import { singleImageUpload } from '@global/helpers/cloudinary-upload'
 
 
 const log = config.createLogger('productMangementController')
@@ -89,12 +89,12 @@ class ProductManagement extends Product {
       const filteredData = filterProductFields(body, filterKeys)
 
       // Upload Product Images if provided
-      if (filteredData.productImages){
-        const result = await uploadProductImages(filteredData.productImages)
-        if (result instanceof Error) {
-          return next(new BadRequestError('File Error: Failed to upload product images. Please try again.'))
+      if (filteredData.productImage){
+        const result = await singleImageUpload(filteredData.productImage, productId)
+        if (!result) {
+          return next(new BadRequestError('File Error: Failed to upload product image. Please try again.'))
         } else {
-          filteredData.productImages = result
+          filteredData.productImage = result
         }
       }
 

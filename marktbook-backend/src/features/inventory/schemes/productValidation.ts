@@ -2,11 +2,6 @@ import { z } from  'zod'
 import { ProductType, ProductCategory, Unit, Currency, } from '@inventory/interfaces/products.interface'
 
 
-const ProductImage = z.object({
-  url: z.string(),
-  isPrimary: z.boolean()
-})
-
 const DimensionsSchema = z.object({
   length: z.number().optional(),
   width: z.number().optional(),
@@ -30,7 +25,7 @@ const ProductVariant = z.object({
   barcode: z.string(),
   attributes: ProductAttributesSchema,
   priceAdjustment: z.number().min(0, {message: 'Price adjustment must be non-negative'}),
-  images: z.array(ProductImage).min(1, {message: 'At least one product image is required'}),
+  image:  z.string().optional(),
   stockId: z.string()
 })
 
@@ -51,7 +46,7 @@ export const productSchema = z.object({
   salePrice: z.number().optional(),
   unit: z.nativeEnum(Unit),
   discount: z.number().default(0),
-  productImages: z.array(ProductImage).optional(), //.min(1, {message: 'At least one product image is required'}),
+  productImage: z.string().optional(),
   tags: z.array(z.string()).optional(),
   supplierId: z.string().optional(),
   isActive: z.boolean().default(false),
@@ -88,10 +83,7 @@ export const editProductSchema = z.object({
   basePrice: z.number().optional(),
   salePrice: z.number().optional(),
   unit: z.string().optional(),
-  productImages: z.array(z.object({
-    url: z.string(),
-    altText: z.string().optional(),
-  })).optional(),
+  productImage: z.string().optional(),
   tags: z.array(z.string()).optional(),
   supplierId: z.union([z.string(), z.instanceof(Object)]).optional(),
   isActive: z.boolean().optional(),

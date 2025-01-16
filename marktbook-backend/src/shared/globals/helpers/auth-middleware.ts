@@ -21,18 +21,19 @@ class AuthMiddleware {
        */
       
   public verifyUser(req: Request, res: Response, next: NextFunction): void {
+    const authHeader = req.headers.authorization
 
-    console.log(req.session)
     // Check if JWT token exists in session
-    if (!req.session?.jwt) {
+    if (!authHeader?.startsWith('Bearer ') && !req.session?.jwt) {
       return next(new NotAuthorizedError('Token not available, please login'))
     }
-        
+
+    const Token = req.session!.jwt?? authHeader!.split(' ')[1]
     try {
       // Verify the JWT token
       const payload: AuthPayload = JWT.verify(
-                req.session!.jwt, 
-                config.JWT_SECRET!
+        Token, 
+        config.JWT_SECRET!
       ) as AuthPayload
 
       // Attach the payload to the request object

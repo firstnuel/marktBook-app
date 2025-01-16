@@ -18,7 +18,7 @@ export interface IProductDocument extends Document {
     basePrice: number;
     salePrice: number;
     unit: Unit;
-    productImages: ProductImage[];
+    productImage: string;
     tags?: string[];
     supplierId: ObjectId | string;
     isActive: boolean;
@@ -42,7 +42,7 @@ export interface ProductVariants {
     barcode?: string;
     priceAdjustment: number;
     attributes: ProductAttributes;
-    images: ProductImage[];
+    image: string;
     stockId: ObjectId | string;
 }
 
@@ -57,11 +57,6 @@ export interface ProductAttributes {
     height?: number;   
     weight?: number;
   }
-}
-
-export interface ProductImage {
-    url: string;
-    isPrimary: boolean;
 }
 
 export enum ProductCategory {
@@ -146,7 +141,7 @@ export interface IProductData {
     salePrice?: number;
     discount?: number;
     unit: Unit;
-    productImages?: ProductImage[];
+    productImage?: string;
     tags?: string[];
     supplierId?: ObjectId | string;
     isActive: boolean;
@@ -179,7 +174,7 @@ export const ALLOWED_ALL_FIELDS: (keyof IProductDocument)[] = [
   'basePrice',
   'salePrice',
   'unit',
-  'productImages',
+  'productImage',
   'tags',
   'supplierId',
   'isActive',
@@ -191,7 +186,7 @@ export const ALLOWED_STAFF_FIELDS: (keyof IProductDocument)[] = [
   'longDescription',
   'shortDescription',
   'tags',
-  'productImages',
+  'productImage',
 ]
 
 

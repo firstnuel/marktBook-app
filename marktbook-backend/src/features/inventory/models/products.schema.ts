@@ -6,7 +6,7 @@ const Dimensions = new Schema({
   width: { type: Number, required: false },
   height: { type: Number, required: false },
   weight: { type: Number, required: false },
-})
+}, { _id: false })
 
 const Attributes: Schema<ProductAttributes> = new Schema({
   color: { type: String, required: false },
@@ -14,7 +14,7 @@ const Attributes: Schema<ProductAttributes> = new Schema({
   brand: { type: String, required: false },
   manufacturer: { type: String, required: false },
   dimensions: { type: Dimensions, required: false },
-})
+}, { _id: false })
 
 const ProductSchema: Schema<IProductDocument> = new Schema(
   {
@@ -70,20 +70,14 @@ const ProductSchema: Schema<IProductDocument> = new Schema(
       barcode: { type: String },
       priceAdjustment: { type: Number, default: 0 },
       attributes: { type: Attributes, required: true },
-      images: [{
-        url: { type: String, match: /^https?:\/\// }, 
-        isPrimary: { type: Boolean, default: false }
-      }],
+      images: { type: String, match: /^https?:\/\// },
       stockId: { type: Schema.Types.ObjectId, ref: 'Stock' }
     }],
     basePrice: { type: Number, required: true, min: 0 },
     salePrice: { type: Number, min: 0 },
     discount: { type: Number, min: 0 },
     unit: { type: String, enum: Object.values(Unit), required: true },
-    productImages: [{
-      url: { type: String, match: /^https?:\/\// },
-      isPrimary: { type: Boolean, default: false }
-    }],
+    productImage: { type: String, match: /^https?:\/\// },
     tags: [{ type: String, trim: true }],
     isActive: { type: Boolean, default: true },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
