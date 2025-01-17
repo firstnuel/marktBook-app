@@ -1,12 +1,14 @@
 export interface PosState {
     products: Product[];
+    filteredProducts: Product[];
     cartItems: CartItemProps[];
     category: 'ALL' | (keyof typeof ProductCategory);
     searchKey: (keyof typeof SearchKeys);
     searchPhrase: string;
-    loading: boolean,
-    error: string | null,
-    priceInfo: PriceInfo
+    loading: boolean;
+    error: string | null;
+    priceInfo: PriceInfo;
+    // selectValue: (keyof typeof ProductCategory);
 }
 interface Stock {
     _id: string;
@@ -61,7 +63,7 @@ export enum ProductType {
     Service = 'Service',
     Subscription = 'Subscription',
     CustomOrder = 'Custom Order',
-    Other = 'Other',      // For categories not explicitly defined
+    Other = 'Other',
 }
 
 export interface ProductVariants {
@@ -93,6 +95,7 @@ export enum ProductCategory {
     Textiles = 'Textiles',
     Other = 'Other',
 }
+
 export interface Product {
     _id: string;
     businessId: string;

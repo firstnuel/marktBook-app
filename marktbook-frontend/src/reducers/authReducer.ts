@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { AuthState, LoginData, RegisterData, passwordData } from '../types/auth'
 import { authService } from '@services/authService'
 import { setToken } from '@services/inventoryService'
+import { persistor, RESET_ALL } from '../store'
 
 const initialState: AuthState = {
   user: null,
@@ -13,6 +14,14 @@ const initialState: AuthState = {
   updated: null
 }
 
+export const fetchUser = createAsyncThunk( 'auth/fetchUser', async () => {
+  const response = await authService.getUser()
+  if (response.status !== 200) {
+    throw new Error(response.data.message)
+  }
+  return response.data.user
+}
+)
 
 export const login = createAsyncThunk('auth/loginUser', async (userData: LoginData) => {
   const response = await authService.login(userData)
@@ -21,15 +30,19 @@ export const login = createAsyncThunk('auth/loginUser', async (userData: LoginDa
   }
   const userToken = response.data.token
   setToken(userToken)
-  localStorage.setItem('usrToken', userToken)
   return userToken
 })
 
-export const logout = createAsyncThunk('auth/logoutUser', async () => {
+
+export const logout = createAsyncThunk('auth/logoutUser', async (_, { dispatch }) => {
   const response = await authService.logout()
   if (response.status !== 200) {
     throw new Error(response.data.message)
   }
+  dispatch({ type: RESET_ALL })
+  await persistor.purge()
+
+  return response.data
 })
 
 export const register = createAsyncThunk('auth/register', async (registerData: RegisterData) => {
@@ -55,6 +68,7 @@ export const passwordUpdate = createAsyncThunk('auth/passwordUpdate', async (pas
     throw new Error(response.data.message)
   }
 })
+
 
 const authSlice = createSlice({
   name: 'auth',
@@ -137,8 +151,26 @@ const authSlice = createSlice({
       state.error = action.error.message ||'Password update failed, Try again later'
       state.updated = false
     })
+
+    // Add cases for fetchUser
+    builder.addCase(fetchUser.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    builder.addCase(fetchUser.fulfilled, (state, action) => {
+      state.loading = false
+      state.user = action.payload
+      state.error = null
+    })
+    builder.addCase(fetchUser.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.error.message || 'Failed to fetch user data'
+    })
   }
 })
+
+
+
 
 
 export const { clearError } = authSlice.actions

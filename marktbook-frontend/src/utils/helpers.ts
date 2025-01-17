@@ -1,5 +1,5 @@
 import { ZodError } from 'zod'
-import { PriceInfo, CartItemProps } from '@typess/pos'
+import { PriceInfo, CartItemProps, Product } from '@typess/pos'
 
 
 export const validationErrorFn = (msg: string , fn: (value: React.SetStateAction<string | null>) => void): void => {
@@ -44,7 +44,24 @@ export const updateDiscount = (priceinfo: PriceInfo, newDiscount: number, tx: nu
   return {
     subtotal: priceinfo.subtotal,
     discount: newDiscount,
-    total: newTotal,
+    total: newTotal + (newTotal * (tx/100)),
     tax: Math.max(0, Math.round(newTotal * (tx/100)))
   }
+}
+
+export const countByCategoryList = (products: Product[]) => {
+  const counts = products.reduce((acc: { [key: string]: number }, product) => {
+    const category = product.productCategory
+    acc[category] = (acc[category] || 0) + 1
+    return acc
+  }, {})
+
+  return Object.entries(counts)
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => {
+    // Primary sort by count (descending)
+      if (b.count !== a.count) return b.count - a.count
+      // Secondary sort by category (alphabetical ascending)
+      return a.category.localeCompare(b.category)
+    })
 }

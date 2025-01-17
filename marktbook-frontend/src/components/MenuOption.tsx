@@ -1,19 +1,29 @@
 import IconBox from '@components/IconBox'
+import { useNavigate } from 'react-router'
 
 interface MenuOptionProps {
     icon: string;
     option: string;
     className?: string;
-    onClick?: ()=> void;
+    to: string;
 }
 
-const MenuOption = ({ className, icon, option, onClick }: MenuOptionProps) => (
-  <div className={`${className} menu-option`} onClick={onClick}>
-    <IconBox src={icon} clName="opt-img" imgClName='opt-icons'/>
-    <div className='option-text'> {option} </div>
-  </div>
+const MenuOption = ({ className, icon, option, to }: MenuOptionProps) => {
 
-)
+  const navigate = useNavigate()
+  const handleNavigate = () => {
+    navigate(to)
+  }
+
+
+  return (
+    <div className={`${className} menu-option`} onClick={handleNavigate}>
+      <IconBox src={icon} clName="opt-img" imgClName='opt-icons'/>
+      <div className='option-text'> {option} </div>
+    </div>
+
+  )
+}
 
 
 export default MenuOption

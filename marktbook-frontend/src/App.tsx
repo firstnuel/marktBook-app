@@ -1,5 +1,4 @@
 import AppRoutes from './AppRoutes'
-// import ProductCard from '@components/ProductCard'
 import './App.scss'
 
 

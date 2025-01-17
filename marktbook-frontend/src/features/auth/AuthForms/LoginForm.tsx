@@ -29,9 +29,9 @@ const LoginForm = () => {
       emailReset()
       nameReset()
       passwordReset()
-      navigate('/pos')
+      navigate('/')
     }
-  }, [emailReset, userToken, nameReset, passwordReset])
+  }, [emailReset, userToken, nameReset, passwordReset, navigate])
 
 
   const handleSubmit = async (e: React.FormEvent) => {

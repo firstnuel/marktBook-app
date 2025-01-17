@@ -21,7 +21,7 @@ class InventoryService {
     })
 
     this.axios.interceptors.request.use((config) => {
-      const token = Token || localStorage.getItem('usrToken')
+      const token = Token
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
       }

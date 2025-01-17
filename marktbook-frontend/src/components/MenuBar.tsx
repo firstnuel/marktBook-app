@@ -4,14 +4,22 @@ import MenuOption from '@components/MenuOption'
 import MenuBarUser from '@components/MenuBarUser'
 import icons from '@assets/icons'
 import '@styles/menu-bar.scss'
+import { useAuth } from '@hooks/useAuth'
+import { useNavigate } from 'react-router'
 
 const MenuBar = () => {
   const [showBar, setShowBar] = useState(false)
-  const [logout, setLogout] = useState(false)
+  const navigate = useNavigate()
+  const { logout, user } = useAuth()
 
   const handleClose = () => setShowBar(false)
   const handleShow = () => setShowBar(true)
-  const handleLogout = () => setLogout(!logout)
+  const handleLogout = () => {
+    logout()
+    handleClose()
+    navigate('/login')
+
+  }
 
   return (
     <>
@@ -29,16 +37,16 @@ const MenuBar = () => {
 
       {/* Menu Bar */}
       <div className={`menu-bar ${showBar ? 'open' : ''}`}>
-        <MenuBarUser name="Emmanuel Okechukwu" role="Owner" closeFn={handleClose} />
+        <MenuBarUser name={user?.name || 'Unknown'} role={user?.role || 'Unknown'} closeFn={handleClose} />
         <div className="menu-options">
-          <MenuOption option="Point of Sales" icon={icons.pos} />
-          <MenuOption option="Inventory" icon={icons.inventory} />
-          <MenuOption option="Transactions" icon={icons.transactions} />
-          <MenuOption option="Reports" icon={icons.reports} />
-          <MenuOption option="Stock" icon={icons.stock} />
-          <MenuOption option="Contacts" icon={icons.contacts} />
-          <MenuOption option="Manage Accounts" icon={icons.accounts} />
-          <MenuOption option="Settings" icon={icons.settings} />
+          <MenuOption option="Point of Sales" icon={icons.pos} to='/pos' />
+          <MenuOption option="Inventory" icon={icons.inventory} to='/inventory'/>
+          <MenuOption option="Transactions" icon={icons.transactions} to='/transactions' />
+          <MenuOption option="Reports" icon={icons.reports} to='/reports' />
+          <MenuOption option="Stock" icon={icons.stock} to='/stock' />
+          <MenuOption option="Contacts" icon={icons.contacts} to='/contacts' />
+          <MenuOption option="Manage Accounts" icon={icons.accounts} to='/accounts'/>
+          <MenuOption option="Settings" icon={icons.settings} to='/settings' />
         </div>
         <div className="log-out-div">
           <div className="log-out" onClick={handleLogout}>

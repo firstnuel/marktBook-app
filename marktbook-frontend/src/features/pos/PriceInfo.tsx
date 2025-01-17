@@ -1,13 +1,33 @@
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { usePos } from '@hooks/usePos'
-import '@styles/price-info.scss'
 import { useState } from 'react'
+import { usePos } from '@hooks/usePos'
+import ConfirmAction from '@components/ConfimAction'
+import '@styles/price-info.scss'
+
 
 const PriceInfo = () => {
-  const { clearCart, priceInfo, updateDiscount } = usePos()
-  const [discount, setDiscount] = useState(priceInfo.discount.toFixed(2))
+  const { cartItems, priceInfo, updateDiscount } = usePos()
+  const [show, setShow] = useState(false)
+  const [payInfo, setpayInfo] = useState({})
 
+  const clearPay = () => {
+    setShow(false)
+    setpayInfo({})
+  }
+
+  const payinfo = {
+    amount: priceInfo.total,
+    method: 'Cash',
+    payment: true,
+    salesId: 1234567,
+    clearPay
+  }
+
+  const handlePay = () => {
+    setpayInfo(payinfo)
+    setShow(true)
+  }
 
   return(
     <>
@@ -30,13 +50,9 @@ const PriceInfo = () => {
         <div className="amount-info">
           <div className="dc-currency">-</div>
           <Form.Control
-            value={discount}
+            value={priceInfo.discount.toFixed(2)}
             type='text'
-            onChange={(e) => setDiscount(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                updateDiscount(parseFloat(discount))}
-            }}
+            onChange={(e) =>  updateDiscount(parseFloat(e.target.value))}
           />
         </div>
       </div>
@@ -45,23 +61,35 @@ const PriceInfo = () => {
         <div className="amount-info">
           <div className="currency">$</div>
           <div className="tt-price">{`${priceInfo.total.toFixed(2)}`}</div>
-
         </div>
       </div>
       <div className="payment-option">
         <Form.Select>
           <option>Payment method</option>
+          <option value="Card">Card</option>
+          <option value="BankTransfer">Bank Transfer</option>
+          <option value="Cash">Cash</option>
+          <option value="Credit">Credit</option>
         </Form.Select>
-        <Button variant="danger" onClick={() => clearCart()}>Cancel</Button>
+        <Button variant="danger"
+          disabled={cartItems.length===0}
+          onClick={() => setShow(true)}>Cancel</Button>
       </div>
       <div className="pay-btn">
-        <Button variant="success">
+        <Button variant="success"
+          disabled={cartItems.length===0}
+          onClick={handlePay}>
           {priceInfo.total? `Payment - ${priceInfo.total.toFixed(2)}`: 'Payment'}
         </Button>
       </div>
+      <ConfirmAction
+        handleClose={() => setShow(false)}
+        show={show}
+        message='This action will clear the cart'
+        {...payInfo}
+      />
     </>
   )
 }
-
 
 export default PriceInfo

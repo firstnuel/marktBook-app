@@ -16,7 +16,8 @@ interface ProductBoxPrpos {
 const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
   const [quantity, setQuantity] = useState(1)
   const { addToCart } = usePos()
-  const incrementQuantity = () => setQuantity(quantity + 1)
+  const incrementQuantity = () => {
+    if ((product.stock?.unitsAvailable ?? 0) > quantity) setQuantity(quantity + 1)}
   const decrementQuantity = () => {
     if (quantity > 0) setQuantity(quantity - 1)
   }
@@ -90,15 +91,23 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
       </Modal.Body>
       <Modal.Footer>
         <div className="item-quantity">
-          <button className="quantity-btn" onClick={decrementQuantity}>
+          <button
+            disabled={(product.stock?.unitsAvailable ?? 0) < 1}
+            className="quantity-btn" onClick={decrementQuantity}>
           -
           </button>
           <span className="quantity-display">{quantity}</span>
-          <button className="quantity-btn" onClick={incrementQuantity}>
+          <button
+            disabled={(product.stock?.unitsAvailable ?? 0) < 1}
+            className="quantity-btn" onClick={incrementQuantity}>
           +
           </button>
         </div>
-        <Button onClick={handleCart}>{`Add to cart $${product.salePrice.toFixed(2)}`}</Button>
+        <Button
+          onClick={handleCart}
+          disabled={(product.stock?.unitsAvailable ?? 0) < 1}
+        >
+          {`Add to cart $${product.salePrice.toFixed(2)}`}</Button>
       </Modal.Footer>
     </Modal>
   )

@@ -1,15 +1,21 @@
 export interface User {
-    id: string;
-    name: string;
-    email: string;
-    mobileNumber: string | null,
-    role: 'Owner' | 'Manager' | 'Staff';
-    status: 'active' | 'inactive';
-    address: string;
-    username: string;
-    associatedBusinessesId: string;
-    languagePreference: string;
-    profilePicture: string;
+  _id: string;
+  name: string;
+  email: string;
+  mobileNumber: string | null;
+  role: 'Owner' | 'Manager' | 'Staff';
+  status: 'active' | 'inactive';
+  address: string;
+  username: string;
+  associatedBusinessesId: string;
+  lastLogin: string;
+  languagePreference: string;
+  isVerified: boolean;
+  profilePicture: string;
+  notificationPreferences: {
+      emailNotifications: boolean;
+      smsNotifications: boolean;
+  };
 }
 
 export interface LoginData {

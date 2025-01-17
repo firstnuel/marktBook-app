@@ -1,5 +1,5 @@
-import { CartItemProps } from '@typess/pos'
-import { useCallback, useEffect } from 'react'
+import { CartItemProps, ProductCategory, SearchKeys } from '@typess/pos'
+import {  useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../store'
 import {
   clearCart,
@@ -9,6 +9,8 @@ import {
   addQuantity,
   subQuantity,
   updatePrice,
+  searchByCategory,
+  searchByKeyandPhrase,
 } from '@reducers/posReducers'
 
 export const usePos = () => {
@@ -17,10 +19,12 @@ export const usePos = () => {
     products,
     cartItems,
     searchPhrase,
+    filteredProducts,
     searchKey,
     loading,
     error,
-    priceInfo
+    category,
+    priceInfo,
   } = useAppSelector(state => state.pos)
 
   useEffect(() => {
@@ -34,12 +38,10 @@ export const usePos = () => {
   }, [error, dispatch])
 
   useEffect(() => {
-    dispatch(fetchProducts())
-  }, [dispatch])
-
-  const memoizedFetchProducts = useCallback(() => {
-    dispatch(fetchProducts())
-  }, [dispatch])
+    if (!products.length) {
+      dispatch(fetchProducts())
+    }
+  }, [dispatch, products.length])
 
   return {
     products,
@@ -47,12 +49,16 @@ export const usePos = () => {
     searchPhrase,
     searchKey,
     loading,
+    filteredProducts,
+    category,
     error,
     priceInfo,
+    searchByCategory: (category: ProductCategory | 'ALL') => dispatch(searchByCategory({ category })),
+    searchByKeyandPhrase: (searchKey: (keyof typeof SearchKeys), searchPhrase: string) =>
+      dispatch(searchByKeyandPhrase({ searchKey, searchPhrase })),
     updateDiscount: ( discount: number) => dispatch(updatePrice({ discount })),
     clearCart: () => dispatch(clearCart()),
     addToCart: (cartItem: CartItemProps) => dispatch(addToCart({ cartItem })),
-    fetchProducts: memoizedFetchProducts,
     addQuantity: (productId: string) => dispatch(addQuantity({ productId })),
     subQuantity: (productId: string) => dispatch(subQuantity({ productId })),
   }
