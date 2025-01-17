@@ -24,18 +24,12 @@ class CurrentUser {
     if (existingUser && Object.keys(existingUser).length) {
       isUser = true
       token = req.session?.jwt
-      user = omit(existingUser, [
+      user = omit(existingUser.toJSON(), [
         'authId',
         '__v',
         'createdAt',
         'updatedAt',
         'emergencyContact',
-        'notificationPreferences',
-        'address',
-        'mobileNumber',
-        'profilePicture',
-        'status',
-        'isVerified'
       ])
     }
 

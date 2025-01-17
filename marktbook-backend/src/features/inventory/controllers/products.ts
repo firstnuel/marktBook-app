@@ -29,6 +29,7 @@ export class Product {
     this.read = this.read.bind(this)
     this.categories = this.categories.bind(this)
     this.search = this.search.bind(this)
+    this.batch =     this.batch.bind(this)
   }
 
   /**
@@ -312,6 +313,74 @@ export class Product {
       next(error)
     }
   }
+
+  /**
+ * Handles batch creation of products.
+ * @param req Express Request object
+ * @param res Express Response object
+ * @param next Express NextFunction for error handling
+ */
+  public async batch(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      log.info('Batch product creation attempt initiated.')
+
+      // Validate incoming data
+      if (!Array.isArray(req.body) || req.body.length === 0) {
+        throw new BadRequestError('Invalid input: An array of products is required.')
+      }
+      req.body.forEach((product) => this.validateInput(productSchema, product))
+
+      // Validate user
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+
+      // Sanitize input
+      const sanitizedProducts = req.body.map((product) => Utils.sanitizeInput(product))
+
+      // Validate business
+      const businessId = sanitizedProducts[0].businessId // Assuming all products belong to the same business
+      await this.validateBusiness(businessId, existingUser)
+
+      // Check product uniqueness by SKU
+      await Promise.all(
+        sanitizedProducts.map((product) => this.validateProduct(product.sku, new ObjectId(businessId)))
+      )
+
+      // Generate product data and queue jobs
+      const productDataArray = sanitizedProducts.map((product) => {
+        const productObjectId = new ObjectId()
+        if (product.productImage) {
+          product.productImage = singleImageUpload(product.productImage, productObjectId.toString())
+        }
+        return this.productData(product, productObjectId, existingUser._id)
+      })
+
+      // Add jobs to the queue
+      productDataArray.forEach((productData) => {
+        productQueue.addProductJob('addProductToDb', { value: productData })
+      })
+
+      // Log the batch creation
+      const logData = createActivityLog(
+        existingUser._id,
+        existingUser.username,
+        existingUser.associatedBusinessesId,
+      'BATCH_CREATE' as ActionType,
+      'PRODUCT' as EntityType,
+      `Batch creation of ${productDataArray.length} products`,
+      `Created ${productDataArray.length} products`
+      )
+      await logService.createLog(logData)
+
+      res.status(HTTP_STATUS.CREATED).json({
+        message: `Batch creation of ${productDataArray.length} products was successful.`,
+        status: 'success',
+      })
+    } catch (error: any) {
+      log.error(`Batch product creation failed: ${error.message}`)
+      next(error)
+    }
+  }
+
 
 }
 

@@ -14,6 +14,7 @@ class ProductRoutes {
   public productRoutes(): Router {
     this.router.post('/products', authMiddleware.checkAuthentication, product.create)
     this.router.get('/products', authMiddleware.checkAuthentication, product.read)
+    this.router.post('/products/batch', authMiddleware.checkAuthentication, product.batch)
     this.router.get('/products/categories/:category', authMiddleware.checkAuthentication, product.categories)
     this.router.get('/products/search', authMiddleware.checkAuthentication, product.search)
     this.router.get('/products/:productId', authMiddleware.checkAuthentication, productManagement.fetch)
