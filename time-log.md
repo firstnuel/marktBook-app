@@ -42,7 +42,12 @@
 |   | 2  | Extended auth functionalities on the frontend to handle password reset and update |
 |  **11.01.** | 2  | Extended auth on the frontend to handle registration, minor auth controller refactoring |
 |  **11-12.01.** | 5 | Researched, designed, and implemented menu bar |
-|  **12-13.01.** | 4 | Implement point of sales page, made resuable UI components |
-| **Total**  | **97** | |
+|  **12-13.01.** | 4 | Implemented point of sales page, made some resuable UI components |
+|  **13-14.01.** | 3 | Implemented product cards and search bar on point of sales page |
+|  **14.01.** | 4 | Extended POS page UI to to include cart, implemented custom hooks to manage state |
+|  **15.01.** | 4 | Implemented services for data fetching, implemented advanced state management using redux |
+|  **16-17.01.** | 2 | Implemented batch controller and route to add products in batch |
+|   | 4  | Implement filtering product by search keys, search phrase and categories on POS page |
+| **Total**  | **116** | |
 
 
