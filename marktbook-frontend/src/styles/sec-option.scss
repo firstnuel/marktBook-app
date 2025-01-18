@@ -1,0 +1,20 @@
+.section-opt {
+    height: 4em;
+    background-color: var(--white-color);
+    border-radius: 1em;
+    display: flex;
+    align-items: center;
+    padding-left: 1em;
+
+    .sec-opt-name {
+        font-size: 1.2em;
+        font-weight: 500;
+    }
+
+    &:hover {
+        background-color: var(--primary-color);
+        .sec-opt-name {
+            color: var(--white-color);
+        }
+    }
+}

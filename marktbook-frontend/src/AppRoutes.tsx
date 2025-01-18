@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router'
+import Inventory from '@features/inventory/Inventory'
 import LoginForm from '@auth/AuthForms/LoginForm'
 import RegisterForm from '@auth/AuthForms/RegisterForm'
 import PasswordResetForm from '@auth/AuthForms/PasswordReset'
@@ -27,9 +28,9 @@ const AppRoutes = () => {
       <Route path="/reset-password" element={<PasswordUpdateForm />} />
 
 
-
-        <Route path="/pos" element={<PointOfSale />} />
-        <Route path="/" element={<Home />} />
+      <Route path='/inventory' element={<Inventory />} />
+      <Route path="/pos" element={<PointOfSale />} />
+      <Route path="/" element={<Home />} />
 
 
 

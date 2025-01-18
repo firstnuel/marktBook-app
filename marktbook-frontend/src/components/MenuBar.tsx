@@ -29,7 +29,6 @@ const MenuBar = () => {
         clName="menu-icon-div"
         imgClName="menu-icon"
         onClick={handleShow}
-        title='Menu'
       />
 
       {/* Overlay */}
@@ -39,14 +38,14 @@ const MenuBar = () => {
       <div className={`menu-bar ${showBar ? 'open' : ''}`}>
         <MenuBarUser name={user?.name || 'Unknown'} role={user?.role || 'Unknown'} closeFn={handleClose} />
         <div className="menu-options">
-          <MenuOption option="Point of Sales" icon={icons.pos} to='/pos' />
-          <MenuOption option="Inventory" icon={icons.inventory} to='/inventory'/>
-          <MenuOption option="Transactions" icon={icons.transactions} to='/transactions' />
-          <MenuOption option="Reports" icon={icons.reports} to='/reports' />
-          <MenuOption option="Stock" icon={icons.stock} to='/stock' />
-          <MenuOption option="Contacts" icon={icons.contacts} to='/contacts' />
-          <MenuOption option="Manage Accounts" icon={icons.accounts} to='/accounts'/>
-          <MenuOption option="Settings" icon={icons.settings} to='/settings' />
+          <MenuOption handleClose={handleClose} option="Point of Sales" icon={icons.pos} to='/pos' />
+          <MenuOption handleClose={handleClose} option="Inventory" icon={icons.inventory} to='/inventory'/>
+          <MenuOption handleClose={handleClose} option="Transactions" icon={icons.transactions} to='/transactions' />
+          <MenuOption handleClose={handleClose} option="Reports" icon={icons.reports} to='/reports' />
+          <MenuOption handleClose={handleClose} option="Stock" icon={icons.stock} to='/stock' />
+          <MenuOption handleClose={handleClose} option="Contacts" icon={icons.contacts} to='/contacts' />
+          <MenuOption handleClose={handleClose} option="Manage Accounts" icon={icons.accounts} to='/accounts'/>
+          <MenuOption handleClose={handleClose} option="Settings" icon={icons.settings} to='/settings' />
         </div>
         <div className="log-out-div">
           <div className="log-out" onClick={handleLogout}>

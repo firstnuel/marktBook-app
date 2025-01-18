@@ -24,6 +24,12 @@ import powerIcon from '@assets/icons/power-icon.svg'
 import receiptIcon from '@assets/icons/receipt-icon.svg'
 import addPersonIcon from '@assets/icons/add-person-icon.svg'
 import editIcon from '@assets/icons/edit-icon.svg'
+import pdfIcon from '@assets/icons/pdf-icon.svg'
+import excelIcon from '@assets/icons/excel-icon.svg'
+import uploadicon from '@assets/icons/upload-icon.svg'
+import addNewIcon from '@assets/icons/add-nwe-icon.svg'
+import refreshIcon from '@assets/icons/refresh.icon.svg'
+import printIcon from '@assets/icons/print-icon.svg'
 
 
 const icons = {
@@ -52,7 +58,13 @@ const icons = {
   power: powerIcon,
   edit: editIcon,
   receipt: receiptIcon,
-  addPerson: addPersonIcon
+  addPerson: addPersonIcon,
+  pdf: pdfIcon,
+  excel: excelIcon,
+  upload: uploadicon,
+  addNew: addNewIcon,
+  refresh: refreshIcon,
+  print: printIcon
 }
 
 export default icons

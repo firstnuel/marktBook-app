@@ -33,7 +33,8 @@ const authPersistConfig = {
 
 const posPersistConfig = {
   key: 'pos',
-  storage
+  storage,
+  whitelist: ['cartItems']
 }
 
 // the base reducer combination

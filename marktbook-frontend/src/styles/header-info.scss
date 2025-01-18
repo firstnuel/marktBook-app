@@ -1,0 +1,37 @@
+.header-info {
+    display: flex;
+    height: 7.2%;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.5em 1em;
+
+    .date-time {
+        width:fit-content;
+        display: flex;
+        gap: 0.3em;
+        align-items: center;
+    }
+    .menu-section {
+        display: flex;
+        gap: 1em;
+        align-items: center;
+        justify-content: center;
+        .sec-name-div{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2em;
+            .sec-name {
+                font-size: 1.4em;
+                font-weight: 500;
+            }
+            .sub-sec-name {
+                font-size: 1em;
+                color: var(--dark-gray);
+                padding-top: .2em;
+            }
+        }
+
+    }
+}

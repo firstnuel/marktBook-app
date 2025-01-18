@@ -6,12 +6,14 @@ interface MenuOptionProps {
     option: string;
     className?: string;
     to: string;
+    handleClose: () => void
 }
 
-const MenuOption = ({ className, icon, option, to }: MenuOptionProps) => {
+const MenuOption = ({ className, icon, option, to, handleClose }: MenuOptionProps) => {
 
   const navigate = useNavigate()
   const handleNavigate = () => {
+    handleClose()
     navigate(to)
   }
 

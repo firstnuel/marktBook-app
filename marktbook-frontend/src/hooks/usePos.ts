@@ -53,6 +53,7 @@ export const usePos = () => {
     category,
     error,
     priceInfo,
+    fetchProducts: () => dispatch(fetchProducts()),
     searchByCategory: (category: ProductCategory | 'ALL') => dispatch(searchByCategory({ category })),
     searchByKeyandPhrase: (searchKey: (keyof typeof SearchKeys), searchPhrase: string) =>
       dispatch(searchByKeyandPhrase({ searchKey, searchPhrase })),
