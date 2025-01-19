@@ -48,6 +48,8 @@
 |  **15.01.** | 4 | Implemented services for data fetching, implemented advanced state management using redux |
 |  **16-17.01.** | 2 | Implemented batch controller and route to add products in batch |
 |   | 4  | Implement filtering product by search keys, search phrase and categories on POS page |
-| **Total**  | **116** | |
+| **18.01.**  | 4 | Implemented Product list table in inventory page, including state management and data filtering |
+| **19.01.**  | 4 | Implemented forms, services and UI components to facilitaed product edit and update |
+| **Total**  | **124** | |
 
 

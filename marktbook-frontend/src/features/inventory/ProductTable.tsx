@@ -31,7 +31,7 @@ const ProductTable = () => {
     setSearch((e.target as HTMLInputElement).value)
   }
   useEffect(() => {
-    if (search.length > 3) {
+    if (search.length > 2) {
       setFilteredProducts(products.filter(product =>
         product.productName.toLowerCase().includes(search.toLowerCase())))
     } else {
