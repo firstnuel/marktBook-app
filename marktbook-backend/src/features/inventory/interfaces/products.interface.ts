@@ -163,7 +163,6 @@ export interface IFilterData {
 export const ALLOWED_ALL_FIELDS: (keyof IProductDocument)[] = [
   'stockId',
   'currency',
-  'sku',
   'productName',
   'longDescription',
   'shortDescription',
@@ -173,6 +172,7 @@ export const ALLOWED_ALL_FIELDS: (keyof IProductDocument)[] = [
   'productVariants',
   'basePrice',
   'salePrice',
+  'attributes',
   'unit',
   'productImage',
   'tags',

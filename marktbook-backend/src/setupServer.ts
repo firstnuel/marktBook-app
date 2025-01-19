@@ -58,7 +58,7 @@ export class MarktBookServer {
         origin: config.CLIENT_URL,
         credentials: true,
         optionsSuccessStatus: 200,
-        methods: ['GET', 'PUT', 'DELETE', 'POST', 'OPTIONS']
+        methods: ['GET', 'PUT', 'DELETE', 'POST', 'PATCH','OPTIONS']
       })
     )
   }

@@ -157,7 +157,7 @@ withCredentials: true
 
 
 ### fetch product by id
-GET {{baseUrl}}/{{urlpath}}/products/67644278e86c081b85339b87
+GET {{baseUrl}}/{{urlpath}}/products/67882f550d9f6b5ba3387e59
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
