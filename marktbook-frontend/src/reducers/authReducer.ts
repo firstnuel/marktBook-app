@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { AuthState, LoginData, RegisterData, passwordData } from '../types/auth'
 import { authService } from '@services/authService'
-import { setToken } from '@services/inventoryService'
+import { setToken } from '@services/authService'
 import { persistor, RESET_ALL } from '../store'
 
 const initialState: AuthState = {

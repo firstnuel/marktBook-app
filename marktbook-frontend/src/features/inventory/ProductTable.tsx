@@ -9,13 +9,22 @@ import { CSVLink } from 'react-csv'
 import { useEffect, useState } from 'react'
 import Caret from '@components/Caret'
 import { usePos } from '@hooks/usePos'
-
+import { useInv } from '@hooks/useInv'
 
 const ProductTable = () => {
   const { products, fetchProducts } = usePos()
+  const { setSubOpt, fetchProduct, product } = useInv()
   const [sort, setSort] = useState({ key: 'Name', dir: 'asc' })
   const [search, setSearch] = useState('')
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products)
+
+  const handleProduct = (productId: string) => {
+    fetchProduct(productId)
+  }
+
+  useEffect(() => {
+    if (product)  setSubOpt('Edit Product')
+  }, [product, setSubOpt])
 
   const handleSearch = (e: React.ChangeEvent) => {
     e.preventDefault()
@@ -145,8 +154,8 @@ const ProductTable = () => {
           </thead>
           <tbody>
             {sortedProducts.map((product) => (
-              <tr key={product.id}>
-                <td>{product.productName}</td>
+              <tr key={product.id} onClick={() => handleProduct(product.id)}>
+                <td className='prod-name'>{product.productName}</td>
                 <td>{product.sku}</td>
                 <td>{product.productCategory}</td>
                 <td>{`$ ${product.basePrice.toFixed(2)}`}</td>

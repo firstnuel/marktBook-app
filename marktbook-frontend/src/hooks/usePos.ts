@@ -1,5 +1,5 @@
 import { CartItemProps, ProductCategory, SearchKeys } from '@typess/pos'
-import {  useEffect } from 'react'
+import {  useEffect, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from '../store'
 import {
   clearCart,
@@ -15,6 +15,7 @@ import {
 
 export const usePos = () => {
   const dispatch = useAppDispatch()
+  const hasLoaded = useRef(false)
   const {
     products,
     cartItems,
@@ -38,10 +39,12 @@ export const usePos = () => {
   }, [error, dispatch])
 
   useEffect(() => {
-    if (!products.length) {
+    if (!hasLoaded.current && !products.length) {
       dispatch(fetchProducts())
+      hasLoaded.current = true
     }
   }, [dispatch, products.length])
+
 
   return {
     products,

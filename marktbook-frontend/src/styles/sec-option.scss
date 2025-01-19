@@ -5,6 +5,7 @@
     display: flex;
     align-items: center;
     padding-left: 1em;
+    cursor: pointer;
 
     .sec-opt-name {
         font-size: 1.2em;
@@ -16,5 +17,11 @@
         .sec-opt-name {
             color: var(--white-color);
         }
+    }
+}
+.active {
+    background-color: var(--primary-color) ;
+    .sec-opt-name {
+        color: var(--white-color);
     }
 }

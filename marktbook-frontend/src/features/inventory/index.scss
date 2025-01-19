@@ -67,6 +67,16 @@
                             }
                         }
                     }
+                    tbody {
+                        tr {
+                            cursor: pointer;
+                            .prod-name {
+                                &:hover {
+                                    color: var(--primary-color);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

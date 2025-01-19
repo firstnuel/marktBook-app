@@ -1,6 +1,10 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { LoginData, RegisterData, passwordData } from '../types/auth'
 
+export let Token: string
+export const setToken = (token: string) => {
+  Token = token
+}
 
 class AuthService {
   private readonly BASE_PATH = import.meta.env.VITE_API_URL

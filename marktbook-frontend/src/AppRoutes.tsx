@@ -27,7 +27,6 @@ const AppRoutes = () => {
       <Route path='forgot-password' element={<PasswordResetForm />} />
       <Route path="/reset-password" element={<PasswordUpdateForm />} />
 
-
       <Route path='/inventory' element={<Inventory />} />
       <Route path="/pos" element={<PointOfSale />} />
       <Route path="/" element={<Home />} />

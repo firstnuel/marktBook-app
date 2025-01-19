@@ -14,6 +14,7 @@ import storage from 'redux-persist/lib/storage'
 import { encryptTransform } from 'redux-persist-transform-encrypt'
 import posReducer from '@reducers/posReducers'
 import authReducer from '@reducers/authReducer'
+import invReducer from '@reducers/invReducer'
 
 // Add RESET_ALL action type
 export const RESET_ALL = 'RESET_ALL'
@@ -41,6 +42,7 @@ const posPersistConfig = {
 const combinedReducer = combineReducers({
   'auth': persistReducer(authPersistConfig, authReducer),
   'pos': persistReducer(posPersistConfig, posReducer),
+  'inv': invReducer
 })
 
 // root reducer with reset capability
