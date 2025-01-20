@@ -1,4 +1,3 @@
-
 import { Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
 import { BusinessCategory, BusinessType } from '@auth/interfaces/auth.interface'
@@ -24,6 +23,17 @@ export interface IBusinessDocument extends Document {
   bgImageId: string;
   createdAt?: Date;
 }
+
+export const EDIT_BUSINESS_FIELDS: (keyof IBusinessDocument)[] = [
+  'businessLogo',
+  'businessAddress',
+  'businessBio',
+  'businessAccount',
+  'social',
+  'bgImageVersion',
+  'bgImageId',
+  'notifications'
+] 
 
 export interface IBusinessBankAccount {
   accountName: string;
@@ -69,4 +79,21 @@ export interface IBusinessAdmin {
 
 export interface IBusinessJob {
   value?: string | IBusinessDocument | { admin: IBusinessAdmin, id: string | ObjectId };
+}
+
+
+
+export function filterFields<T>(
+  data: Partial<T>,
+  filterKeys: (keyof T)[]
+): Partial<T> {
+  const filteredData: Partial<T> = {}
+
+  for (const key in data) {
+    if (filterKeys.includes(key as keyof T)) {
+      filteredData[key as keyof T] = data[key as keyof T]
+    }
+  }
+
+  return filteredData
 }

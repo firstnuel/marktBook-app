@@ -64,7 +64,8 @@ class Login {
     )
     req.session = { jwt: userToken }
 
-    const nonSensitiveData = omit(authUser.toObject(), ['authId', '__v', 'createdAt', 'updatedAt', 'lastLogin', 'emergencyContact', 'notificationPreferences'])
+    const nonSensitiveData = omit({ ...authUser.toObject(), id: authUser._id }, 
+      ['authId', '__v', 'createdAt', 'updatedAt', 'lastLogin', 'emergencyContact', 'notificationPreferences', 'isVerified', '_id'])
 
     // Respond to client
     res.status(HTTP_STATUS.OK).json({

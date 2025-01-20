@@ -33,10 +33,24 @@
 | **19.12.**  | 2  | Extended stock router, controllers, interfaces.|
 | **20.12.**  | 2  | Extended stock router, controllers, interfaces to fetch low stock. Updated API Docs|
 |             | 2  | Implemented location controllers and routes to create, fetch and edit locations|
-| **21.12.**  | 3  | Implemented sales router, schema, controllers and interfaces, munor refactoring of product Contoller|
+| **21.12.**  | 3  | Implemented sales router, schema, controllers and interfaces, minor refactoring of product Contoller|
 | **22.12.**  | 2  | Extended sales router, schema, controllers and interface to handle refund |
-| **Total**  | **75** | |
-
+| **04.01.**  | 3  | Implemented business router, schema, controllers and interface to handle business |
+| **05.01.**  | 1  | Implemented customer router, schema, controllers and interface to handle customer |
+| **09.01.** | 2  | refactored auth and product router, schema, controllers  |
+| **10.01.**  | 3  | Implemented login functionality on the frontend |
+|   | 2  | Extended auth functionalities on the frontend to handle password reset and update |
+|  **11.01.** | 2  | Extended auth on the frontend to handle registration, minor auth controller refactoring |
+|  **11-12.01.** | 5 | Researched, designed, and implemented menu bar |
+|  **12-13.01.** | 4 | Implemented point of sales page, made some resuable UI components |
+|  **13-14.01.** | 3 | Implemented product cards and search bar on point of sales page |
+|  **14.01.** | 4 | Extended POS page UI to to include cart, implemented custom hooks to manage state |
+|  **15.01.** | 4 | Implemented services for data fetching, implemented advanced state management using redux |
+|  **16-17.01.** | 2 | Implemented batch controller and route to add products in batch |
+|   | 4  | Implement filtering product by search keys, search phrase and categories on POS page |
+| **18.01.**  | 4 | Implemented Product list table in inventory page, including state management and data filtering |
+| **19.01.**  | 4 | Implemented forms, services and UI components to facilitaed product edit and update |
+| **Total**  | **124** | |
 
 
 

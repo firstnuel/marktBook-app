@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from 'express'
 import { ZodValidationError, BadRequestError, NotFoundError, NotAuthorizedError, ServerError } from '@root/shared/globals/helpers/error-handlers'
 import { productSchema, categorySchema, searchSchema } from '@inventory/schemes/productValidation'
 import { IProductDocument, IProductData, IFilterData } from '@inventory/interfaces/products.interface'
-import { uploadProductImages } from '@root/shared/globals/helpers/cloudinary-upload'
+import { singleImageUpload } from '@root/shared/globals/helpers/cloudinary-upload'
 import { productQueue } from '@service/queues/product.queue'
 import { config } from '@root/config'
 import { Utils } from '@root/shared/globals/helpers/utils'
@@ -17,6 +17,7 @@ import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 import { IBusinessDocument } from '@business/interfaces/business.interface'
 import { productService } from '@service/db/product.service'
 import { Schema } from 'zod'
+import { omit } from 'lodash'
 import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
 
@@ -28,6 +29,7 @@ export class Product {
     this.read = this.read.bind(this)
     this.categories = this.categories.bind(this)
     this.search = this.search.bind(this)
+    this.batch =     this.batch.bind(this)
   }
 
   /**
@@ -59,12 +61,12 @@ export class Product {
       const productObjectId: ObjectId = new ObjectId()
 
       // Upload Product Images if provided
-      if (body.productImages) {
-        const result = await uploadProductImages(body.productImages)
-        if (result instanceof Error) {
-          return next(new BadRequestError('File Error: Failed to upload product images. Please try again.'))
+      if (body.productImage) {
+        const result = await singleImageUpload(body.productImage, productObjectId.toString())
+        if (!result) {
+          return next(new BadRequestError('File Error: Failed to upload product image. Please try again.'))
         } else {
-          body.productImages = result
+          body.productImage = result
         }
       }
 
@@ -174,53 +176,33 @@ export class Product {
      * @returns product document conforming to IProductDocument interface
      */
   private productData(data: IProductData, productId: ObjectId, userId: ObjectId | string): IProductDocument {
-    const {
-      sku,
-      productName,
-      currency,
-      businessId,
-      longDescription,
-      shortDescription,
-      productCategory,
-      productType,
-      barcode,
-      productVariants,
-      basePrice,
-      salePrice,
-      discount,
-      unit,
-      tags,
-      supplierId,
-      productImages,
-      isActive
-    } = data
-
     return {
       _id: productId,
       stockId: null,
-      sku,
-      currency,
-      productName: Utils.firstLetterToUpperCase(productName),
-      businessId: new ObjectId(businessId),
-      longDescription: longDescription || null,
-      shortDescription: shortDescription || null,
-      productCategory,
-      productImages: productImages || [],
-      productType,
-      barcode: barcode || null,
-      productVariants: productVariants || [],
-      basePrice,
-      salePrice: salePrice ?? 0,
-      unit,
-      tags: tags || [],
-      discount: discount ?? 0,
-      isActive: isActive || false,
-      supplierId: supplierId || null,
+      sku: data.sku,
+      currency: data.currency,
+      productName: Utils.firstLetterToUpperCase(data.productName),
+      businessId: new ObjectId(data.businessId),
+      attributes: data.attributes,
+      longDescription: data.longDescription ?? null,
+      shortDescription: data.shortDescription ?? null,
+      productCategory: data.productCategory,
+      productImage: data.productImage,
+      productType: data.productType,
+      barcode: data.barcode ?? null,
+      productVariants: data.productVariants ?? [],
+      basePrice: data.basePrice,
+      salePrice: data.salePrice ?? 0,
+      unit: data.unit,
+      tags: data.tags ?? [],
+      discount: data.discount ?? 0,
+      isActive: data.isActive ?? false,
+      supplierId: data.supplierId ?? null,
       createdBy: new ObjectId(userId),
       updatedBy: new ObjectId(userId),
     } as unknown as IProductDocument
   }
-
+  
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
       // validate user 
@@ -228,9 +210,34 @@ export class Product {
 
       // fetch products
       const products = await productService.fetchAll(`${existingUser.associatedBusinessesId}`)
+      let transformedProducts
+      if (products) {
+        transformedProducts = products.map((product) => {
+          const productData = product.toJSON()
+          // Rename stockId to stock
+          if (productData.stockId) {
+            productData.stock = productData.stockId 
+            delete productData.stockId 
+          } else {
+            productData.stock = null
+            delete productData.stockId 
+          }
+      
+          // Omit unnecessary fields
+          return omit(productData, [
+            'isActive',
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+            '__v',
+          ])
+        })
+      }
+      
 
       const message = products.length? 'Products data fetched successfully' : 'No product found'
-      res.status(HTTP_STATUS.OK).json({ message, data: products })
+      res.status(HTTP_STATUS.OK).json({ message, data: transformedProducts })
 
     } catch(error) {
       // Log and forward the error to a centralized error handler
@@ -306,6 +313,74 @@ export class Product {
       next(error)
     }
   }
+
+  /**
+ * Handles batch creation of products.
+ * @param req Express Request object
+ * @param res Express Response object
+ * @param next Express NextFunction for error handling
+ */
+  public async batch(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      log.info('Batch product creation attempt initiated.')
+
+      // Validate incoming data
+      if (!Array.isArray(req.body) || req.body.length === 0) {
+        throw new BadRequestError('Invalid input: An array of products is required.')
+      }
+      req.body.forEach((product) => this.validateInput(productSchema, product))
+
+      // Validate user
+      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+
+      // Sanitize input
+      const sanitizedProducts = req.body.map((product) => Utils.sanitizeInput(product))
+
+      // Validate business
+      const businessId = sanitizedProducts[0].businessId // Assuming all products belong to the same business
+      await this.validateBusiness(businessId, existingUser)
+
+      // Check product uniqueness by SKU
+      await Promise.all(
+        sanitizedProducts.map((product) => this.validateProduct(product.sku, new ObjectId(businessId)))
+      )
+
+      // Generate product data and queue jobs
+      const productDataArray = sanitizedProducts.map((product) => {
+        const productObjectId = new ObjectId()
+        if (product.productImage) {
+          product.productImage = singleImageUpload(product.productImage, productObjectId.toString())
+        }
+        return this.productData(product, productObjectId, existingUser._id)
+      })
+
+      // Add jobs to the queue
+      productDataArray.forEach((productData) => {
+        productQueue.addProductJob('addProductToDb', { value: productData })
+      })
+
+      // Log the batch creation
+      const logData = createActivityLog(
+        existingUser._id,
+        existingUser.username,
+        existingUser.associatedBusinessesId,
+      'BATCH_CREATE' as ActionType,
+      'PRODUCT' as EntityType,
+      `Batch creation of ${productDataArray.length} products`,
+      `Created ${productDataArray.length} products`
+      )
+      await logService.createLog(logData)
+
+      res.status(HTTP_STATUS.CREATED).json({
+        message: `Batch creation of ${productDataArray.length} products was successful.`,
+        status: 'success',
+      })
+    } catch (error: any) {
+      log.error(`Batch product creation failed: ${error.message}`)
+      next(error)
+    }
+  }
+
 
 }
 

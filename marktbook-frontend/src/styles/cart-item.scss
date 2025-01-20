@@ -1,0 +1,114 @@
+.item-container {
+    display: flex;
+    margin: 0;
+    height: 6em;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+    border-bottom: 1px dashed var(--dark-gray);
+
+    &:last-child {
+        border-bottom: none;
+    }
+    &:hover {
+        background-color: var(--light-blue);
+        .cart-item-details{
+            .item-details {
+                .item-name {
+                    color: var(--primary-color);
+                }
+            }
+        }
+    }
+
+    .item-quantity {
+        width: 7em;
+        height: 2.5em;
+        border-radius: 1em;
+        padding: .3em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-self: self-end;
+        background-color: var(--light-gray);
+        font-size: 0.8em;
+        font-weight: 500;
+
+        .quantity-btn {
+            width: 2em;
+            height: 2em;
+            display: flex;
+            border-radius: 50%;
+            background-color: var(--white-color);
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+
+            &:hover {
+                background-color: var(--primary-color);
+            }
+        }
+    }
+
+    .cart-item-details{
+        display: flex;
+        align-items: center;
+        gap: 0.6em;
+
+        .item-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2em;
+
+            .item-name {
+                font-size: 0.9em;
+                font-weight: 400;
+            }
+            .item-price {
+                font-size: 0.7em;
+                color: var(--dark-gray);
+            }
+            .edit-item {
+                width: 1.8em;
+                height: 1.8em;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--light-blue);
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--primary-color);
+                }
+
+                img {
+                    width: .8em;
+                    height: .8em;
+                }
+            }
+        }
+
+        .img-div{
+            width: 6em;
+            height: 4.5em;
+            border-radius: 0.6em;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            img{
+                width: 4em;
+                height: 3em;
+            }
+
+        }
+
+
+        
+    }
+
+}

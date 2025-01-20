@@ -1,0 +1,155 @@
+.container-fluid {
+    background-image: 
+    linear-gradient(to right, 
+    rgba(45, 113, 248, 1) 0%,
+    rgba(45, 113, 248, 0.95) 30%,
+    rgba(45, 113, 248, 0.6) 60%
+    ),
+        url('@assets/images/loginFormImg.jpg');
+    background-size: cover;  
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-color: var(--primary-color);
+    min-height: 100dvh;
+    width: 100%;
+    padding: 30px 20px;
+}
+.back-home {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 20px;
+    padding: 0;
+
+    .home-link {
+        text-decoration: none;
+        p {
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+            margin: 0;
+        }
+        img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+    }
+
+}
+.form-container, .registerform-container {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Error and Info messages */
+.error, .info, .success {
+    font-size: 0.875rem;
+    margin-bottom: 12px;
+}
+.success {
+    color: var(--tertiary-color);
+}
+
+.error {
+    color: var(--secondary-color);
+}
+
+/* App name */
+.app-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 24px;
+}
+
+/* Summary Section */
+.summary {
+    margin-bottom: 24px;
+}
+
+.catch-phrase {
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+/* Icon */
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Register and Links */
+.register {
+    margin-bottom: 16px;
+}
+
+.login {
+    margin: 5px 5px;
+
+}
+
+.register-link {
+    color: var(--primary-color);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+/* Forgot password */
+.forgot-password {
+    margin: 12px 0 20px;
+}
+
+
+
+/* Small screens (mobile) */
+@media screen  and (max-width: 576px) {
+    .container-fluid {
+        padding: 15px;
+
+        .form-container, .registerform-container {
+            padding: 20px;
+            height: 100%;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .registerform-container {
+           .summary {
+               margin-bottom: 6px;
+           }
+        }
+    }    
+}
+
+/* Medium screens (tablet) */
+@media screen and (min-width: 577px) and (max-width: 768px) {
+    .back-home {
+        margin: 20px !important;
+    }
+    .form-container, .registerform-container  {
+        max-width: 500px;
+        height: 100%;
+    }
+}
+
+/* Screens larger than 10 inches (approximately 960px at 96dpi) */
+@media screen and (min-width: 960px) {
+
+    .registerform-container, .form-container {
+        width: 35% !important;
+        position: relative;
+        right: 25%;
+        padding: 25px !important;
+    }
+}

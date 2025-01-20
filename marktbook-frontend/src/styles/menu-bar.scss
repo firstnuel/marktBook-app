@@ -1,0 +1,282 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 999; 
+  }
+  
+  /* Adjust the menu-bar z-index */
+  .menu-bar {
+    z-index: 1000; /* Place it above the overlay */
+    transition: transform 0.3s ease-in-out;
+  
+    &.open {
+      transform: translateX(0);
+    }
+  }
+
+
+.menu-icon-div {
+    width: 3em;
+    height: 3em;
+    background-color: var(--white-color);
+    border-radius: 50%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer;
+}
+
+.menu-icon {
+    width: 2em;
+    height: 2em;
+    cursor: pointer;
+}
+
+.menu-bar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    justify-content: space-between;
+    background-color: var(--white-color);
+    top: 0;
+    left: 0;
+    width: 25%;
+    min-height: 100dvh;
+    transform: translateX(-100%); 
+    transition: transform 0.3s ease-in-out; 
+    overflow: scroll;
+    opacity: 1;
+    z-index: 1000;
+
+    .log-out-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 4em;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        .log-out {
+            height: 3em;
+            width:  90%;
+            border-radius: 2em;
+            background-color: var(--light-gray);
+            display: flex;
+            padding: 4px;
+            cursor: pointer;
+            justify-content: space-between;
+
+            .logout-bar {
+                width: 2.5em;
+                height: 2.5em;
+                display: flex;
+                justify-content: center; 
+                align-items: center; 
+                border-radius: 50%;
+                background-color: var(--secondary-color);
+                img {
+                    width: 1.3em;
+                    height: 1.3em;
+                    filter: invert(100%) brightness(100%);
+                }
+            }   
+            .logout-text {
+                align-self: center;
+                margin-right: 7rem;
+            }
+        }
+    }
+          
+    .menu-options {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .menu-option {
+            display: flex;
+            height: 4em;
+            align-items: center;
+            cursor: pointer;
+            gap: 10px;
+            padding: 20px;
+            font-weight: 500;
+            transition: background-color 0.3s ease-in-out;
+
+            .opt-img {
+                width: 2.2em;
+                height: 2.2em;
+                background-color: var(--light-gray);
+                border-radius: 50%;
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+            }
+            .opt-icons {
+                width: 1.2em;
+                height: 1.2em;
+            }
+
+
+            &:hover {
+                background-color: var(--light-blue);
+
+                .option-text {
+                    color: var(--primary-color);
+                }
+                .opt-img {
+                    background-color: var(--primary-color);
+                }
+                img {
+                    filter: invert(100%) brightness(100%);
+                }
+            }
+
+        }
+    }
+    .user-info-div {
+        display: flex;
+        align-items: center;
+        height: 4em;
+        padding: 0 10px;
+        gap: 10px;
+        width: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        .user-info {
+            height: 3em;
+            width:  80%;
+            border-radius: 2em;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+
+
+            .user-details{
+                display: flex;
+                width: 80%;
+                gap: 10px;
+                align-items: center;
+
+                .user-name-role{
+                    display: flex;
+                    padding: 12px 0;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    .user-name {
+                        font-weight: 500;
+                        font-size: 0.8em;
+                    }
+                    .user-role {
+                        font-size: 0.7rem;
+                        color: var(--tertiary-color);
+                    }
+                }
+            }
+
+            .user-img, .user-menu {
+                width: 2.4em;
+                height: 2.4em;
+                display: flex;
+                justify-content: center; 
+                align-items: center; 
+                border-radius: 50%;
+                background-color: var(--white-color);
+
+                .usr-icon {
+                    width: 1.3em;
+                    height: 1.3em;
+                }
+            }
+
+            .user-menu {
+                width: 1.5em;
+                height: 1.5em;
+            }
+
+        }
+        .close-bar {
+            width: 3em;
+            height: 3em;
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            border-radius: 50%;
+            background-color: var(--secondary-red);
+            cursor: pointer;
+
+            svg {
+                fill: var(--secondary-color) !important;
+            }
+        }
+    }
+}
+
+.menu-bar.open {
+    transform: translateX(0);
+}
+
+/* Small screens (mobile) */
+@media screen and (max-width: 576px) {
+    .menu-bar {
+        width: 85%;
+        
+        .menu-options {
+            .menu-option {
+                padding: 15px;
+                height: 3.5em;
+                
+                .opt-img {
+                    width: 2em;
+                    height: 2em;
+                }
+            }
+        }
+        
+        .user-info-div {
+            padding: 0 8px;
+            height: 3.5em;
+            
+            .user-info {
+                width: 85%;
+                
+                .user-details {
+                    .user-name-role {
+                        .user-name {
+                            font-size: 0.75em;
+                        }
+                        .user-role {
+                            font-size: 0.65rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Medium screens (tablet) */
+@media screen and (min-width: 577px) and (max-width: 768px) {
+    .menu-bar {
+        width: 50%;
+    }
+}
+
+/* Large screens (desktop) */
+@media screen and (min-width: 769px) and (max-width: 959px) {
+    .menu-bar {
+        width: 35%;
+    }
+}
+
+/* Extra large screens */
+@media screen and (min-width: 960px) {
+    .menu-bar {
+        width: 25%;
+    }
+}

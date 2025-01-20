@@ -15,7 +15,9 @@ class ProductService {
   }
 
   public async fetchAll(id: string | ObjectId): Promise<IProductDocument[] | []> {
-    const result =  await ProductModel.find({ businessId: id }).exec()
+    const result =  await ProductModel.find({ businessId: id })
+      .populate('stockId', ['compartment', 'unitsAvailable', 'minQuantity', ])
+      .exec()
     return result
   }
 

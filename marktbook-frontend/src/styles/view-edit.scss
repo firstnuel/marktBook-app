@@ -1,0 +1,112 @@
+.whole {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 !important;
+    padding: .5em 0;
+
+    .form-content {
+        height: 83dvh;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        display: flex;
+        flex-direction: column;
+        scroll-snap-type: y mandatory;
+        .form {
+            gap: 1em !important;
+            display: flex;
+            flex-direction: column;
+            .form-btns-div {
+                display: flex;
+                gap: 1em;
+                justify-content: flex-end;
+            }
+        }
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        .tags {
+            display: flex;
+            gap: 1em;
+            align-items: center;
+            .tags-select {
+                width: 60;
+            }
+        } 
+
+        .sku-barcode, .type-cat, 
+        .price, .product-img, 
+        .attributes, .dimensions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .base-price, .price-discount {
+                width: 49%;
+            }
+            .product-barcode, .product-unit {
+                width: 30%;
+            }
+            .product-cat, .product-type {
+                width: 49%;
+            }
+        }
+        .product-img {
+            display: flex;
+            .file {
+                width: 94%;
+                input {
+                    width: 100%;
+                }
+            }
+            .img-div {
+                width: 5%;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+        .product-name {
+            display: flex;
+            flex-direction: column;
+            .name {
+                width: max-content;
+            }
+        }
+
+    }
+
+    .head-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 2em;
+        padding: 0 .8em;
+        margin-bottom: 1em;
+
+        .head-name {
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+        .action-btns {
+            display: flex;
+            gap: 1em;
+            .back {
+                display: flex;
+                align-items: center;
+                gap: .1em;
+                cursor: pointer;
+                img {
+                    width: 1.5em;
+                    height: 1.5em;
+                    filter: invert(100%) brightness(0%)
+                }
+            }
+        }
+
+    }
+}

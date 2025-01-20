@@ -8,11 +8,11 @@ Accept: application/json
 withCredentials: true
 
 {
- "email": "johndoe@example.com",
- "adminFullName": "John Doe",
- "username": "johnd",
+ "email": "esoo@example.com",
+ "adminFullName": "Esso Doe",
+ "username": "esso",
  "password": "SecurePass123!",
- "businessName": "Tech Innovations LLC",
+ "businessName": "LoveTech Innovations LLC",
  "businessType": "Retail",
  "businessCategory": "Technology"
 }
@@ -24,9 +24,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "email": "johndoe@example.com",
+  "email": "esoo@example.com",
   "password":  "SecurePass123!",
-  "username": "johnd"
+  "username": "esso"
 }
 
 ###  logout
@@ -41,7 +41,6 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-
 ### Add a new product
 POST {{baseUrl}}/{{urlpath}}/products
 Content-Type: application/json
@@ -51,7 +50,7 @@ withCredentials: true
 # {
 #     "sku": "PRD35890",
 #     "productName": "Ear Phones",
-#     "businessId": "6761f56d9f1141f4f2a48de5",
+#     "businessId": "6788191f8593d3b390631e6f",
 #     "longDescription": "Noise cancelling earphones with microphone.",
 #     "shortDescription": "Noise cancelling earphones",
 #     "currency": "USD",
@@ -63,26 +62,31 @@ withCredentials: true
 #     "discount": 20.0,
 #     "unit": "piece",
 #     "tags": ["accessories", "sound", "wearable"],
-#     "isActive": true
-# FIX SKU BUG IN SKU
+#     "isActive": true,
+#     "attributes": {},
 # }
 
 {
-    "sku": "PRD49281",
-    "productName": "Wireless Mouse",
-    "businessId": "676857bfb27b2f69708674d9",
-    "longDescription": "Ergonomic wireless mouse with adjustable DPI settings and long battery life.",
-    "shortDescription": "Ergonomic wireless mouse",
+    "sku": "PRD47281",
+    "productName": "Airforce one",
+    "businessId": "6788191f8593d3b390631e6f",
+    "longDescription": "Nice air force shoes.",
+    "shortDescription": "Airforce one",
     "currency": "USD",
     "productCategory": "Electronics",
     "productType": "Physical",
     "barcode": "1234567890123",
+    "attributes": {
+        "color": "Black",
+        "brand": "nike"
+    },
     "basePrice": 25.0,
     "salePrice": 20.0,
     "discount": 5.0,
     "unit": "piece",
     "tags": ["computer", "accessories", "wireless", "ergonomic"],
-    "isActive": true
+    "isActive": true,
+    "productImage" : ""
 }
 
 
@@ -153,33 +157,34 @@ withCredentials: true
 
 
 ### fetch product by id
-GET {{baseUrl}}/{{urlpath}}/products/67644278e86c081b85339b87
+GET {{baseUrl}}/{{urlpath}}/products/67882f550d9f6b5ba3387e59
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 
 ### edit product by id
-PATCH {{baseUrl}}/{{urlpath}}/products/6762043417bc539e53cc9bb1
+PATCH {{baseUrl}}/{{urlpath}}/products/6789359e884ad36596f42a64
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-    "stockId": null,
-    "sku": "PRD35890",
-    "productName": " Ear Phones",
+    "productName": "Airforce one",
+      "productCategory": "Clothing",
+      "productType": "Physical",
+    "businessId": "6788191f8593d3b390631e6f",
+         "stockId": null,
+    "sku": "PRD47281",
     "currency": "USD",
-    "businessId": "675ef731a57d646944022a92",
-    "longDescription": "Noise cancelling earphones with microphone.",
-    "shortDescription": "Noise cancelling earphones",
-    "productCategory": "Electronics",
-    "productType": "Physical",
-    "barcode": "9876543234987",
-    "basePrice": 120,
-    "salePrice": 130,
+    "basePrice": 170,
+    "salePrice": 150,
     "discount": 20,
-    "unit": "piece"
+    "unit": "pair",
+    "attributes": {
+        "color": "Black",
+        "brand": "nike"
+    }
   }
 
 ### delete product by id
@@ -201,9 +206,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "businessId": "6761f56d9f1141f4f2a48de5",
-  "productId": "67644278e86c081b85339b87",
-  "unitsAvailable": 50,
+  "businessId": "6788191f8593d3b390631e6f",
+  "productId": "6789359e884ad36596f42a64",
+  "unitsAvailable": 100,
   "maxQuantity": 250,
   "minQuantity": 20,
   "thresholdAlert": false,
@@ -264,9 +269,51 @@ withCredentials: true
 }
 
 
-
 ### fetch all low  stocks
 GET {{baseUrl}}/{{urlpath}}/stocks/low-stock
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
+
+### edit business data
+PATCH  {{baseUrl}}/{{urlpath}}/business/676857bfb27b2f69708674d9
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "businessAddress": "123 Main Street, Springfield",
+  "businessAccount": {
+      "accountName": "Emmanuel Ikwunnaya",
+      "accountNumber": "0876543210",
+      "bankName": "Access Bank Plc Nigeria",
+      "accountType": "Business"
+    },
+  "social": {
+      "facebook": "facebook.com/firstnuel",
+      "instagram": "instagram.com/firstnuel",
+      "twitter": "twitter.com/firstnuel"
+    }
+}
+
+### FETCH business data
+GET  {{baseUrl}}/{{urlpath}}/business/676857bfb27b2f69708674d9
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### Create a new customer
+POST  {{baseUrl}}/{{urlpath}}/customers
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "name": "Jane Smith",
+  "businessId": "6761f56d9f1141f4f2a48de5",
+  "customerType": "Business",
+  "businessName": "Jane's Bakery",
+  "phone": "987-654-3210",
+  "address": "456 Elm St, Metropolis, NY",
+  "marketingOptIn": false
+}

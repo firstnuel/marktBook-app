@@ -134,7 +134,11 @@ export class Register {
       res.status(HTTP_STATUS.CREATED).json({
         status: 'success',
         message: 'Business account and user created successfully',
-        data: omit(businessDataForCache, ['uId', 'verifyData']), // Exclude sensitive fields
+        data: {
+          businessName: businessDataForCache.businessName,
+          businessId: businessDataForCache._id,
+          businessLogo: businessDataForCache.businessLogo
+        },
         token: userJwt,
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

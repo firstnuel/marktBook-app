@@ -5,13 +5,12 @@ import { Request, Response } from 'express'
 import { userCache } from '@service/redis/user.cache'
 import { omit } from 'lodash'
 
-class CurrentUser{
-
+class CurrentUser {
   /**
      * Handles reurning current authenticated user
      * @param req Express Request object
      * @param res Express Response object
-     */
+    */
   public async read(req: Request, res: Response): Promise<void> {
     let isUser = false
     let token = null 
@@ -25,18 +24,12 @@ class CurrentUser{
     if (existingUser && Object.keys(existingUser).length) {
       isUser = true
       token = req.session?.jwt
-      user = omit(existingUser, [
+      user = omit(existingUser.toJSON(), [
         'authId',
         '__v',
         'createdAt',
         'updatedAt',
         'emergencyContact',
-        'notificationPreferences',
-        'address',
-        'mobileNumber',
-        'profilePicture',
-        'status',
-        'isVerified'
       ])
     }
 

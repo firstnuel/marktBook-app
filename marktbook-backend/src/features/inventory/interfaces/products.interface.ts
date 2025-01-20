@@ -14,10 +14,11 @@ export interface IProductDocument extends Document {
     productType: ProductType;
     barcode?: string;
     productVariants: ProductVariants[];
+    attributes: ProductAttributes;
     basePrice: number;
     salePrice: number;
     unit: Unit;
-    productImages: ProductImage[];
+    productImage: string;
     tags?: string[];
     supplierId: ObjectId | string;
     isActive: boolean;
@@ -40,14 +41,22 @@ export interface ProductVariants {
     sku: string;
     barcode?: string;
     priceAdjustment: number;
-    attributes: { name: string; value: string }[];
-    images: ProductImage[];
+    attributes: ProductAttributes;
+    image: string;
     stockId: ObjectId | string;
 }
 
-export interface ProductImage {
-    url: string;
-    isPrimary: boolean;
+export interface ProductAttributes {
+  color?: string;
+  size?: number;
+  brand?: string;
+  manufacturer?: string;
+  dimensions?: {                 
+    length?: number;          
+    width?: number;         
+    height?: number;   
+    weight?: number;
+  }
 }
 
 export enum ProductCategory {
@@ -91,7 +100,8 @@ export enum Unit {
     Dozen = 'dozen',              
     Pack = 'pack',              
     Bundle = 'bundle',   
-    Meter = 'm',               
+    Meter = 'm',    
+    Pair = 'pair',    
     Centimeter = 'cm',           
     Millimeter = 'mm',            
     Feet = 'ft',             
@@ -122,6 +132,7 @@ export interface IProductData {
     businessId: string | ObjectId;
     longDescription?: string;
     shortDescription?: string;
+    attributes: ProductAttributes;
     productCategory: ProductCategory;
     productType: ProductType;
     barcode?: string;
@@ -130,7 +141,7 @@ export interface IProductData {
     salePrice?: number;
     discount?: number;
     unit: Unit;
-    productImages?: ProductImage[];
+    productImage?: string;
     tags?: string[];
     supplierId?: ObjectId | string;
     isActive: boolean;
@@ -152,7 +163,6 @@ export interface IFilterData {
 export const ALLOWED_ALL_FIELDS: (keyof IProductDocument)[] = [
   'stockId',
   'currency',
-  'sku',
   'productName',
   'longDescription',
   'shortDescription',
@@ -162,8 +172,9 @@ export const ALLOWED_ALL_FIELDS: (keyof IProductDocument)[] = [
   'productVariants',
   'basePrice',
   'salePrice',
+  'attributes',
   'unit',
-  'productImages',
+  'productImage',
   'tags',
   'supplierId',
   'isActive',
@@ -175,7 +186,7 @@ export const ALLOWED_STAFF_FIELDS: (keyof IProductDocument)[] = [
   'longDescription',
   'shortDescription',
   'tags',
-  'productImages',
+  'productImage',
 ]
 
 

@@ -24,7 +24,6 @@ class MailTransport {
     }
   }
 
-
   private async developmentEmailSender(receiverEmail: string, subject: string, body: string): Promise<void> {
     const transporter: Mail = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
@@ -57,7 +56,7 @@ class MailTransport {
   private async productionEmailSender(receiverEmail: string, subject: string, body: string): Promise<void> {
 
     const mailOptions: IMailOptions = {
-      from: `marktBook <${config.SENDER_EMAIL}>`,
+      from: config.SENDGRID_SENDER_EMAIL!,
       to: receiverEmail,
       subject,
       html: body

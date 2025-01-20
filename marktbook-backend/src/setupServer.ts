@@ -45,8 +45,10 @@ export class MarktBookServer {
       cookieSession({
         name: 'session',
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
-        maxAge: 24 * 7 * 3600000,
-        secure: config.NODE_ENV != 'development'
+        maxAge: 24 * 60 * 60 * 1000,
+        secure: config.NODE_ENV != 'development',
+        sameSite: 'lax',
+        httpOnly: true   
       })
     )
     app.use(helmet())
@@ -56,7 +58,7 @@ export class MarktBookServer {
         origin: config.CLIENT_URL,
         credentials: true,
         optionsSuccessStatus: 200,
-        methods: ['GET', 'PUT', 'DELETE', 'POST', 'OPTIONS']
+        methods: ['GET', 'PUT', 'DELETE', 'POST', 'PATCH','OPTIONS']
       })
     )
   }

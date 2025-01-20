@@ -1,0 +1,27 @@
+.tooltip-text, .tt {
+    position: absolute;
+    width: max-content; 
+    padding: .2em .5em;
+    top: 7%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: .3em;
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 100%; /* Position above the tooltip */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%);
+        border-width: 0.5em;
+        border-style: solid;
+        border-color: transparent transparent var(--primary-color) transparent;
+    }
+}
+
+.tt {
+    top: 13%;
+}

@@ -1,5 +1,20 @@
-import { Currency, IProductDocument, ProductCategory, ProductType, Unit } from '@inventory/interfaces/products.interface'
+import { Currency, IProductDocument, ProductCategory, ProductType, Unit, ProductAttributes } from '@inventory/interfaces/products.interface'
 import { model, Model, Schema } from 'mongoose'
+
+const Dimensions = new Schema({
+  length: { type: Number, required: false },
+  width: { type: Number, required: false },
+  height: { type: Number, required: false },
+  weight: { type: Number, required: false },
+}, { _id: false })
+
+const Attributes: Schema<ProductAttributes> = new Schema({
+  color: { type: String, required: false },
+  size: { type: Number, required: false },
+  brand: { type: String, required: false },
+  manufacturer: { type: String, required: false },
+  dimensions: { type: Dimensions, required: false },
+}, { _id: false })
 
 const ProductSchema: Schema<IProductDocument> = new Schema(
   {
@@ -15,6 +30,10 @@ const ProductSchema: Schema<IProductDocument> = new Schema(
     supplierId: { 
       type: Schema.Types.ObjectId,
       ref: 'Supplier'
+    },
+    attributes: { 
+      type: Attributes, 
+      required: true 
     },
     sku: { 
       type: String, 
@@ -50,21 +69,15 @@ const ProductSchema: Schema<IProductDocument> = new Schema(
       sku: { type: String, sparse: true, default: null },
       barcode: { type: String },
       priceAdjustment: { type: Number, default: 0 },
-      attributes: [{ name: String, value: String }],
-      images: [{
-        url: { type: String, match: /^https?:\/\// }, 
-        isPrimary: { type: Boolean, default: false }
-      }],
+      attributes: { type: Attributes, required: true },
+      images: { type: String, match: /^https?:\/\// },
       stockId: { type: Schema.Types.ObjectId, ref: 'Stock' }
     }],
     basePrice: { type: Number, required: true, min: 0 },
     salePrice: { type: Number, min: 0 },
     discount: { type: Number, min: 0 },
     unit: { type: String, enum: Object.values(Unit), required: true },
-    productImages: [{
-      url: { type: String, match: /^https?:\/\// },
-      isPrimary: { type: Boolean, default: false }
-    }],
+    productImage: { type: String, match: /^https?:\/\// },
     tags: [{ type: String, trim: true }],
     isActive: { type: Boolean, default: true },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
