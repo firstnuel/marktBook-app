@@ -65,6 +65,20 @@ class InventoryService {
       throw error
     }
   }
+
+  public async createProduct(data: IProduct): Promise<any> {
+    try {
+      const response = await this.axios.post('/products', data)
+      return response.data
+
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errMsg = error.response?.data?.message || 'An error occurred while creating product.'
+        throw new Error(errMsg)
+      }
+      throw error
+    }
+  }
 }
 
 export const inventoryService = new InventoryService()

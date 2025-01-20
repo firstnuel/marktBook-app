@@ -17,7 +17,7 @@ const Inventory = () => {
       <div className='main-con'>
         <Container className='sec'>
           <SecOption name='Products' mainOpt={mainOpt}/>
-          <SecOption name='Create Products'/>
+          <SecOption name='Create Products'mainOpt={mainOpt}/>
           <SecOption name='Add Stock Data'/>
           <SecOption name='Products Variants'/>
           <SecOption name='Categories'/>
@@ -29,6 +29,9 @@ const Inventory = () => {
           }
           {mainOpt === 'Products' &&  subOpt === 'Edit Product' &&
           <ProductForm product={product!} error={error!}/>
+          }
+          { mainOpt === 'Create Products' &&
+          <ProductForm error={error!} />
           }
         </Container>
       </div>

@@ -30,6 +30,14 @@ export const updateProduct = createAsyncThunk('inv/updateProduct', async ({ prod
   return { product: response.data }
 })
 
+export const createProduct = createAsyncThunk('inv/createProduct', async ({ data }:  { data: IProduct }) => {
+  const response = await inventoryService.createProduct(data)
+  if (!response.data) {
+    throw new Error(response.data.message)
+  }
+
+  return { product: response.data }
+})
 
 const invSlice = createSlice({
   name: 'inv',
@@ -83,6 +91,22 @@ const invSlice = createSlice({
       state.success = false
       state.error = action.error.message as string ||
           'Product data could not be updated, try again later'
+    })
+    builder.addCase(createProduct.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    builder.addCase(createProduct.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+      state.product = action.payload.product
+      state.success = true
+    })
+    builder.addCase(createProduct.rejected, (state, action) => {
+      state.loading = false
+      state.success = false
+      state.error = action.error.message as string ||
+          'Product data could not be created, try again later'
     })
   }
 })

@@ -39,7 +39,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
   const [selectedCat, setSelectedCat] = useState<string>(product?.productCategory?? '')
   const [tags, setTags] = useState(product?.tags?? [])
   const [image, setImage] = useState<string | ArrayBuffer | null>(null)
-  const { resetOpt, updateProduct, success, loading } = useInv()
+  const { resetOpt, updateProduct, success, loading, createProduct } = useInv()
 
 
   const clearForm = () => {
@@ -106,6 +106,8 @@ const ProductForm = ({ product, error }: ProductForm) => {
       console.log(err)
     }
   }
+
+  // const handleNewDataAubmit =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFileChange = (event: any) => {
     const file = event.target.files[0]
