@@ -67,26 +67,27 @@ withCredentials: true
 # }
 
 {
-    "sku": "PRD47281",
-    "productName": "Airforce one",
+    "productName": "Galaxy S23 Ultra",
     "businessId": "6788191f8593d3b390631e6f",
-    "longDescription": "Nice air force shoes.",
-    "shortDescription": "Airforce one",
+    "longDescription": "Latest flagship smartphone with cutting-edge features and premium design.",
+    "shortDescription": "Galaxy S23 Ultra",
     "currency": "USD",
     "productCategory": "Electronics",
     "productType": "Physical",
-    "barcode": "1234567890123",
+    "barcode": "9876543210987",
     "attributes": {
-        "color": "Black",
-        "brand": "nike"
+        "color": "Phantom Black",
+        "brand": "Samsung",
+        "storage": "512GB",
+        "RAM": "12GB"
     },
-    "basePrice": 25.0,
-    "salePrice": 20.0,
-    "discount": 5.0,
+    "basePrice": 1199.99,
+    "salePrice": 1099.99,
+    "discount": 100.0,
     "unit": "piece",
-    "tags": ["computer", "accessories", "wireless", "ergonomic"],
+    "tags": ["smartphone", "5G", "flagship", "Android"],
     "isActive": true,
-    "productImage" : ""
+    "productImage": "https://example.com/images/galaxy-s23-ultra.png"
 }
 
 

@@ -126,7 +126,6 @@ export enum Unit {
 }
 
 export interface IProductData {
-    sku: string;
     currency: Currency;
     productName: string;
     businessId: string | ObjectId;

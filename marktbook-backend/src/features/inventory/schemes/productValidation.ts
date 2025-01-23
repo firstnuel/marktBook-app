@@ -31,7 +31,6 @@ const ProductVariant = z.object({
 
 
 export const productSchema = z.object({
-  sku: z.string(),
   currency: z.nativeEnum(Currency),
   productName: z.string({required_error: 'product name is required'}),
   businessId: z.string({required_error: 'business Id is required'}),

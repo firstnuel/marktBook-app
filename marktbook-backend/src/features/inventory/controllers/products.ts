@@ -51,9 +51,6 @@ export class Product {
       // Sanitize input
       const body = Utils.sanitizeInput(req.body) as IProductData
 
-      // Validate product uniqueness by SKU
-      await this.validateProduct(body.sku, new ObjectId(body.businessId))
-
       // Validate business
       await this.validateBusiness(body.businessId as string, existingUser)
 
@@ -61,7 +58,7 @@ export class Product {
       const productObjectId: ObjectId = new ObjectId()
 
       // Upload Product Images if provided
-      if (body.productImage) {
+      if (body.productImage && !body.productImage.startsWith('https')) {
         const result = await singleImageUpload(body.productImage, productObjectId.toString())
         if (!result) {
           return next(new BadRequestError('File Error: Failed to upload product image. Please try again.'))
@@ -140,14 +137,15 @@ export class Product {
      * Protected method to validate product uniqueness by SKU
      * @param sku string
      */
-  protected async validateProduct(sku: string, businessId: ObjectId): Promise<void> {
-    const checkIfProductExist: IProductDocument | null = await productService.getBySku(sku, businessId)
-    if (checkIfProductExist) {
-      log.warn(`Product creation failed: Product with unique sku '${sku}' already exists for this business.`)
-      throw new BadRequestError(`Product creation failed: Product with unique sku '${sku}' already exists for this business.`)
-    }
+  protected generateSku(productName: string, businessId: string): string {
+    const timestamp = Date.now().toString(36)
+    const randomSegment = Math.random().toString(36).substring(2, 6) // Random 4-character string
+    const nameSegment = productName.substring(0, 3).toUpperCase()
+    const businessSegment = businessId.substring(0, 3).toUpperCase()
+  
+    return `${nameSegment}-${businessSegment}-${timestamp}-${randomSegment}`
   }
-
+  
   /**
      * Protected method to validate business and user authorization for it.
      * @param businessId string
@@ -179,7 +177,7 @@ export class Product {
     return {
       _id: productId,
       stockId: null,
-      sku: data.sku,
+      sku: this.generateSku(data.productName, data.businessId as string),
       currency: data.currency,
       productName: Utils.firstLetterToUpperCase(data.productName),
       businessId: new ObjectId(data.businessId),
@@ -340,15 +338,10 @@ export class Product {
       const businessId = sanitizedProducts[0].businessId // Assuming all products belong to the same business
       await this.validateBusiness(businessId, existingUser)
 
-      // Check product uniqueness by SKU
-      await Promise.all(
-        sanitizedProducts.map((product) => this.validateProduct(product.sku, new ObjectId(businessId)))
-      )
-
       // Generate product data and queue jobs
       const productDataArray = sanitizedProducts.map((product) => {
         const productObjectId = new ObjectId()
-        if (product.productImage) {
+        if (product.productImage && !product.productImage.startsWith('https')) {
           product.productImage = singleImageUpload(product.productImage, productObjectId.toString())
         }
         return this.productData(product, productObjectId, existingUser._id)
