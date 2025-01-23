@@ -50,6 +50,7 @@
 |   | 4  | Implement filtering product by search keys, search phrase and categories on POS page |
 | **18.01.**  | 4 | Implemented Product list table in inventory page, including state management and data filtering |
 | **19.01.**  | 4 | Implemented forms, services and UI components to facilitaed product edit and update |
-| **Total**  | **124** | |
+| **23.01.**  | 3 | Implemented forms, services and UI components for adding stock data |
+| **Total**  | **127** | |
 
 
