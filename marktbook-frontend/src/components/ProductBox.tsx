@@ -60,7 +60,7 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
         <div className="name">{product.productName}</div>
         <div className="short-description">{product.shortDescription}</div>
         <div className="price">{`$${product.salePrice.toFixed(2)}`}
-          <span className='base-price'>{`$${product.basePrice.toFixed(2)}`}</span>
+          {product.salePrice !== product.basePrice && <span className='base-price'>{`$${product.basePrice.toFixed(2)}`}</span>}
         </div>
         <div className="location">Location: {product.stock?.compartment ? product.stock?.compartment : 'Unknown'}</div>
         <div className="category">Category: {product.productCategory}</div>

@@ -1,4 +1,4 @@
-import { invState, IProduct } from '@typess/inv'
+import { invState, IProduct, IStockData } from '@typess/inv'
 import { inventoryService } from '@services/inventoryService'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
@@ -38,6 +38,16 @@ export const createProduct = createAsyncThunk('inv/createProduct', async ({ data
 
   return { product: response.data }
 })
+
+export const addStock = createAsyncThunk('inv/addStock', async ({ data }:  { data: IStockData }) => {
+  const response = await inventoryService.addStock(data)
+  if (!response.data) {
+    throw new Error(response.data.message)
+  }
+
+  return { stock: response.data }
+})
+
 
 const invSlice = createSlice({
   name: 'inv',
@@ -107,6 +117,22 @@ const invSlice = createSlice({
       state.success = false
       state.error = action.error.message as string ||
           'Product data could not be created, try again later'
+    })
+    builder.addCase(addStock.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    builder.addCase(addStock.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+      state.stock = action.payload.stock
+      state.success = true
+    })
+    builder.addCase(addStock.rejected, (state, action) => {
+      state.loading = false
+      state.success = false
+      state.error = action.error.message as string ||
+          'Stock data could not be added to product, try again later'
     })
   }
 })

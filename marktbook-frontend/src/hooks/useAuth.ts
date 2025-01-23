@@ -18,10 +18,10 @@ export const useAuth = () => {
 
 
   useEffect(() => {
-    if(userToken && !user) {
+    if(!user) {
       dispatch(fetchUser())
     }
-  }, [dispatch, user, userToken])
+  }, [dispatch, user])
 
   return {
     user,

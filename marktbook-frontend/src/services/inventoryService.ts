@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance } from 'axios'
 import { Token } from './authService'
-import { IProduct } from '@typess/inv'
+import { IProduct, IStockData } from '@typess/inv'
 
 class InventoryService {
   private readonly BASE_PATH: string = import.meta.env.VITE_API_URL
@@ -74,6 +74,20 @@ class InventoryService {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errMsg = error.response?.data?.message || 'An error occurred while creating product.'
+        throw new Error(errMsg)
+      }
+      throw error
+    }
+  }
+
+  public async addStock(data: IStockData): Promise<any> {
+    try {
+      const response = await this.axios.post('/stocks', data)
+      return response.data
+
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errMsg = error.response?.data?.message || 'An error occurred while adding stock data to product.'
         throw new Error(errMsg)
       }
       throw error

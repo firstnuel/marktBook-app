@@ -3,7 +3,7 @@ import { ProductAttributes, ProductCategory, ProductType, ProductVariants } from
 type MainOption =
     | 'Products'
     | 'Create Products'
-    | 'Add Stock Data'
+    | 'Stock Data'
     | 'Products Variants'
     | 'Categories'
     | 'Print QR codes'
@@ -95,7 +95,6 @@ export enum Unit {
 }
 
 export interface IStock {
-    _id: string;
     businessId: string;
     productId: string;
     locationId?: string;
@@ -114,7 +113,6 @@ export interface IStock {
     createdBy: string;
     updatedBy?: string;
 }
-
 
 export interface IStockData {
     businessId: string;
@@ -135,7 +133,6 @@ export interface IStockData {
     locationStatus: Status;
     capacity?: number;
 }
-
 
 export interface ILocation {
     _id: string;

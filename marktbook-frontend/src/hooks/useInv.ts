@@ -1,6 +1,6 @@
-import { fetchProduct, setMainOpt, setSubOpt, resetOpt, updateProduct, createProduct } from '@reducers/invReducer'
+import { fetchProduct, setMainOpt, setSubOpt, resetOpt, updateProduct, createProduct, addStock } from '@reducers/invReducer'
 import { useAppDispatch, useAppSelector } from '../store'
-import { IProduct } from '@typess/inv'
+import { IProduct, IStockData } from '@typess/inv'
 
 export const useInv = () => {
   const dispatch = useAppDispatch()
@@ -25,6 +25,7 @@ export const useInv = () => {
     loading,
     fetchProduct: (productId: string) => dispatch(fetchProduct(productId)),
     createProduct: (data: IProduct) => dispatch(createProduct({ data })),
+    addStock: (data: IStockData) => dispatch(addStock({ data })),
     updateProduct: (productId: string, data: IProduct ) => dispatch(updateProduct({ productId, data })),
     setMainOpt: (option: string) => dispatch(setMainOpt({ option })),
     setSubOpt: (option: string) => dispatch(setSubOpt({ option })),

@@ -5,6 +5,7 @@ import ProductTable from './ProductTable'
 import { useInv } from '@hooks/useInv'
 import ProductForm from './ProductForm'
 import './index.scss'
+import StockForm from './StockForm'
 
 
 const Inventory = () => {
@@ -17,8 +18,8 @@ const Inventory = () => {
       <div className='main-con'>
         <Container className='sec'>
           <SecOption name='Products' mainOpt={mainOpt}/>
-          <SecOption name='Create Products'mainOpt={mainOpt}/>
-          <SecOption name='Add Stock Data'/>
+          <SecOption name='Create Products' mainOpt={mainOpt}/>
+          <SecOption name='Stock Data' mainOpt={mainOpt}/>
           <SecOption name='Products Variants'/>
           <SecOption name='Categories'/>
           <SecOption name='Print QR codes'/>
@@ -32,6 +33,9 @@ const Inventory = () => {
           }
           { mainOpt === 'Create Products' &&
           <ProductForm error={error!} />
+          }
+          {
+            mainOpt === 'Stock Data' && <StockForm />
           }
         </Container>
       </div>

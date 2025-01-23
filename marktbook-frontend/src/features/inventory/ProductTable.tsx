@@ -18,6 +18,7 @@ const ProductTable = () => {
   const [search, setSearch] = useState('')
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products)
 
+
   const handleProduct = (productId: string) => {
     fetchProduct(productId)
   }

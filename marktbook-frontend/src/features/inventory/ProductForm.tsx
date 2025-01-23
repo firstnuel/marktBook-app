@@ -2,15 +2,15 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import '@styles/view-edit.scss'
-import InputGroup from 'react-bootstrap/InputGroup'
 import { IProduct } from '@typess/inv'
 import { useField } from '@hooks/useField'
 import { Unit } from '@typess/inv'
 import { ProductCategory, ProductType } from '@typess/pos'
-import {  useState } from 'react'
+import {  useEffect, useState } from 'react'
 import IconBox from '@components/IconBox'
 import icons from '@assets/icons'
 import { useInv } from '@hooks/useInv'
+import { useAuth } from '@hooks/useAuth'
 
 interface ProductForm {
   product?: IProduct
@@ -39,7 +39,16 @@ const ProductForm = ({ product, error }: ProductForm) => {
   const [selectedCat, setSelectedCat] = useState<string>(product?.productCategory?? '')
   const [tags, setTags] = useState(product?.tags?? [])
   const [image, setImage] = useState<string | ArrayBuffer | null>(null)
-  const { resetOpt, updateProduct, success, loading, createProduct } = useInv()
+  const { resetOpt, updateProduct, success, loading, createProduct, setMainOpt, setSubOpt, subOpt, mainOpt } = useInv()
+  const { user } = useAuth()
+
+
+  useEffect(() => {
+    if (success && (subOpt !== 'Edit Product' && mainOpt !== 'Products')) {
+      setMainOpt('Products')
+      setSubOpt('Edit Product')
+    }
+  }, [setMainOpt, setSubOpt, subOpt, success, mainOpt])
 
 
   const clearForm = () => {
@@ -72,7 +81,6 @@ const ProductForm = ({ product, error }: ProductForm) => {
   const productData = {
     productName: productName.value,
     productCategory: selectedCat,
-    sku: product?.sku,
     currency: product?.currency,
     productType: selectedType,
     businessId: product?.businessId,
@@ -100,14 +108,25 @@ const ProductForm = ({ product, error }: ProductForm) => {
   }
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    try {
-      updateProduct(product!._id, productData as unknown as IProduct)
-    } catch (err) {
-      console.log(err)
-    }
+    updateProduct(product!._id, productData as unknown as IProduct)
+
   }
 
-  // const handleNewDataAubmit =
+  const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const newProductData = {
+      ...productData,
+      currency: 'USD',
+      businessId: user?.associatedBusinessesId
+    }
+
+    createProduct(newProductData as unknown as IProduct)
+    if (success) {
+      resetOpt()
+    }
+
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFileChange = (event: any) => {
     const file = event.target.files[0]
@@ -141,7 +160,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
         </div>
       </div>
       <Container className='form-content'>
-        <Form className='form' onSubmit={handleEditSubmit} >
+        <Form className='form' onSubmit={product? handleEditSubmit : handleCreateSubmit} >
           <div className="product-name">
             <div className='name'> Product Name:</div>
             <Form.Control {...productName} />
@@ -151,12 +170,8 @@ const ProductForm = ({ product, error }: ProductForm) => {
               { product?.sku?
                 <><div>SKU: </div><div>{product.sku}</div></>
                 :
-                <><div>SKU: </div><InputGroup className="mb-3">
-                  <Form.Control />
-                  <Button variant="outline-secondary" id="button-addon2">
-                  Generate SKU
-                  </Button>
-                </InputGroup></>
+                <><div>SKU: </div>
+                  <Form.Control placeholder={'We\'ll take care of the SKU for you!'} readOnly/></>
               }
             </div>
             <div className="product-barcode">

@@ -6,7 +6,7 @@ interface SearchProps {
   eventKeys: string[];
   useField: {
     name: string;
-    value: string;
+    value: string | number;
     type: string;
     onChange: (event: React.FormEvent) => void;
     required: boolean;
