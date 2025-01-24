@@ -55,6 +55,7 @@ export const ALLOWED_STOCK_FIELDS: (keyof IStockDocument)[] = [
   'lastRestocked',
   'costPerUnit',
   'totalValue',
+  'compartment',
   'notes'
 ]
 
