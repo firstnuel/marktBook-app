@@ -10,9 +10,10 @@ import { useEffect, useState } from 'react'
 import Caret from '@components/Caret'
 import { usePos } from '@hooks/usePos'
 import { useInv } from '@hooks/useInv'
+import Loading from '@components/Spinner'
 
 const ProductTable = () => {
-  const { products, fetchProducts } = usePos()
+  const { products, fetchProducts, loading: pLoading } = usePos()
   const { setSubOpt, fetchProduct, product } = useInv()
   const [sort, setSort] = useState({ key: 'Name', dir: 'asc' })
   const [search, setSearch] = useState('')
@@ -140,6 +141,7 @@ const ProductTable = () => {
         </div>
       </div>
       <div className="main-content">
+        {pLoading && <Loading />}
         <Table striped bordered hover>
           <thead>
             <tr>

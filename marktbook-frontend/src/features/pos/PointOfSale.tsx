@@ -29,7 +29,8 @@ const PointOfSale = () => {
     cartItems,
     filteredProducts,
     searchByCategory,
-    searchByKeyandPhrase
+    searchByKeyandPhrase,
+    loading
   } = usePos()
   const categoryData = countByCategoryList(products)
 
@@ -88,7 +89,7 @@ const PointOfSale = () => {
             ))}
           </Container>
         ) : (
-          <p className="text-center">No products found.</p>
+          <p className="text-center">{loading ? 'Loading Products ...':'No products found.'}</p>
         )}
       </Container>
       <Container className="checkout">

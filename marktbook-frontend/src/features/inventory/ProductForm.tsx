@@ -12,6 +12,7 @@ import icons from '@assets/icons'
 import { useInv } from '@hooks/useInv'
 import { useAuth } from '@hooks/useAuth'
 
+
 interface ProductForm {
   product?: IProduct
   error: string
@@ -39,8 +40,15 @@ const ProductForm = ({ product, error }: ProductForm) => {
   const [selectedCat, setSelectedCat] = useState<string>(product?.productCategory?? '')
   const [tags, setTags] = useState(product?.tags?? [])
   const [image, setImage] = useState<string | ArrayBuffer | null>(null)
-  const { resetOpt, updateProduct, success, loading, createProduct, setMainOpt, setSubOpt, subOpt, mainOpt } = useInv()
+  const { resetOpt,
+    updateProduct,
+    success, fetchStock,
+    deleteProduct, clearError,
+    loading, createProduct,
+    setMainOpt, setSubOpt,
+    subOpt, mainOpt } = useInv()
   const { user } = useAuth()
+
 
 
   useEffect(() => {
@@ -49,6 +57,12 @@ const ProductForm = ({ product, error }: ProductForm) => {
       setSubOpt('Edit Product')
     }
   }, [setMainOpt, setSubOpt, subOpt, success, mainOpt])
+
+  const handleStock = async (productID: string) => {
+    await fetchStock(productID)
+    setMainOpt('Stock Data')
+    clearError()
+  }
 
 
   const clearForm = () => {
@@ -91,7 +105,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
     longDescription: longDes.value,
     shortDescription: shortDes.value,
     barcode: barcode.value,
-    productImage: product?.productImage ? product?.productImage  : image || '',
+    productImage: image? image : product?.productImage?? '' ,
     tags,
     attributes: {
       color: color.value,
@@ -110,6 +124,10 @@ const ProductForm = ({ product, error }: ProductForm) => {
     e.preventDefault()
     updateProduct(product!._id, productData as unknown as IProduct)
 
+  }
+
+  const handleDelete = (productID: string) => {
+    deleteProduct(productID)
   }
 
   const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -155,7 +173,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
             <span className="text">Back</span>
           </div>
           { product &&
-            <Button variant="secondary">Stock Data</Button>
+            <Button onClick={() => handleStock(product._id)} variant="secondary">Stock Data</Button>
           }
         </div>
       </div>
@@ -311,7 +329,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
                 Clear Form
             </Button>}
             { product &&
-            <Button variant="danger">Delete</Button>
+            <Button onClick={() => handleDelete(product._id)} variant="danger">Delete</Button>
             }
           </div>
         </Form>

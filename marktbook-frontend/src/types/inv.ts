@@ -112,6 +112,7 @@ export interface IStock {
     updatedAt?: Date;
     createdBy: string;
     updatedBy?: string;
+    locationData? : ILocationData
 }
 
 export interface IStockData {
@@ -181,9 +182,19 @@ export interface StockMovement {
 export interface ILocationData {
     locationName: string;
     locationType: LocationTypes;
-    address: string;
+    address?: string;
     capacity?: number;
     manager?: string;
     currentLoad?: number;
     locationStatus?: Status;
+}
+
+export interface EditStockData {
+    compartment?: string;
+    unitsAvailable?: number;
+    maxQuantity?: number;
+    minQuantity?: number;
+    thresholdAlert?: boolean;
+    costPerUnit: number;
+    notes?: string;
 }

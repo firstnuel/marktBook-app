@@ -3,23 +3,27 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import '@styles/view-edit.scss'
-import { IStockData, IStock, LocationTypes, Status } from '@typess/inv'
+import { EditStockData, IStockData, LocationTypes, Status } from '@typess/inv'
 import IconBox from '@components/IconBox'
 import icons from '@assets/icons'
 import { useInv } from '@hooks/useInv'
 import { useState } from 'react'
 import { useField } from '@hooks/useField'
+import { usePos } from '@hooks/usePos'
+import Loading from '@components/Spinner'
 
-interface StockForm {
-  stock?: IStock
-}
-
-const StockForm = ({ stock }: StockForm) => {
+const StockForm = () => {
+  const { success,
+    error, loading, addStock,
+    product, updateStock, stock,
+    setMainOpt, fetchProduct, fetchStock,
+    rmPrdStck } = useInv()
+  const { products } = usePos()
   const [showLForm, setShowLForm] = useState(true)
-  const [isChecked, setIsChecked] = useState(false)
-  const [selectedLtype, setSelectedLtyped] = useState('')
+  const [isChecked, setIsChecked] = useState(stock?.thresholdAlert?? false)
+  const [selectedPId, setSelectedPId] = useState('')
+  const [selectedLtype, setSelectedLtyped] = useState(stock?.locationData?.locationType?? '')
   const [selectedStatus, setSelectedStatus] = useState('Active')
-  const { success, error, loading, addStock, product } = useInv()
   const { reset: unitsReset, ...unitsAvailable } = useField('unitsAvailable', 'number', stock?.unitsAvailable?? '')
   const { reset: maxReset, ...maxQuantity } = useField('maxQuantity', 'number', stock?.maxQuantity?? '')
   const { reset: minReset, ...minQuantity } = useField('minQuantity', 'number', stock?.minQuantity?? '')
@@ -27,9 +31,17 @@ const StockForm = ({ stock }: StockForm) => {
   const { reset: totalReset, ...totalValue } = useField('totalValue', 'number', stock?.totalValue?? '')
   const { reset: compReset, ...compartment } = useField('compartment', 'text', stock?.compartment?? '')
   const { reset: notesReset, ...notes } = useField('notes', 'text', stock?.notes?? '')
-  const { reset: locationReset, ...locationName } = useField('locationName', 'text', '')
-  const { reset: addressReset, ...address } = useField('address', 'text', '')
-  const { reset: capacityReset, ...capacity } = useField('capacity', 'number', '')
+  const { reset: locationReset, ...locationName } = useField('locationName', 'text', stock?.locationData?.locationName?? '')
+  const { reset: addressReset, ...address } = useField('address', 'text', stock?.locationData?.address?? '')
+  const { reset: capacityReset, ...capacity } = useField('capacity', 'number',  stock?.locationData?.capacity?? '')
+
+
+  const handleSelectProduct = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const productId = e.target.value
+    setSelectedPId(productId)
+    fetchProduct(productId)
+    fetchStock(productId)
+  }
 
   const clearForm = () => {
     unitsReset()
@@ -44,7 +56,7 @@ const StockForm = ({ stock }: StockForm) => {
     capacityReset()
   }
 
-  const stockData: IStockData = {
+  const stockData =  product?  {
     productId: product!._id,
     businessId: product!.businessId,
     unitsAvailable: parseInt(unitsAvailable.value as string),
@@ -60,34 +72,57 @@ const StockForm = ({ stock }: StockForm) => {
     compartment: compartment.value as string,
     locationStatus: selectedStatus as Status
 
-  }
+  } : {}
 
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const editData: EditStockData = {
+      unitsAvailable: parseInt(unitsAvailable.value as string),
+      maxQuantity: parseInt(maxQuantity.value as string),
+      minQuantity: parseInt(minQuantity.value as string),
+      thresholdAlert: isChecked,
+      compartment: compartment.value as string,
+      costPerUnit: parseInt(costPerUnit.value as string),
+      notes: notes.value as string?? '',
+    }
+    if(product) updateStock(product?._id, editData)
   }
 
   const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    addStock(stockData)
+    if (stockData)
+      addStock(stockData as IStockData)
   }
 
   return (
     <Container className="whole">
       <div className="head-info">
         <div className="head-name">
-          {stock ? 'Add Stock Data' : 'Create Stock Data'}
+          {stock ? 'Edit Stock Data' : 'Create Stock Data'}
         </div>
         {error && <div className="error">{error}</div>}
         {success && <div className="success">Success</div>}
         <div className="action-btns">
-          <div className="back">
+        {product &&   <div className="back">
             <IconBox src={icons.arrowback} clName="img-div" />
-            <span className="text">Back</span>
-          </div>
-          {stock && <Button variant="secondary">Product Data</Button>}
+           <span className="text" onClick={() => rmPrdStck()}>Back</span>
+          </div>}
+          {stock && <Button onClick={() => setMainOpt('Products')} variant="secondary">Product Data</Button>}
         </div>
       </div>
       <Container className="form-content">
+        {loading && <Loading/>}
+      {!stock && !product?._id ? (
+        <Form.Select size="lg"
+        value={selectedPId}
+        onChange={handleSelectProduct}
+        >
+          <option>Select Product</option>
+          {products.map((product, idx) => (
+            <option key={idx} value={product._id}>{product.productName}</option>
+          ))}
+        </Form.Select>
+      ) : (
         <Form
           className="form"
           onSubmit={stock ? handleEditSubmit : handleCreateSubmit}
@@ -145,13 +180,15 @@ const StockForm = ({ stock }: StockForm) => {
             />
           </div>
           <div className="section-two">
-            <div className="sec-text">Location Info</div>
-            <Button
+            <div className="sec-text">Location Info
+            {stock && <span className="optional">location data cannot be edited here.</span>}
+            </div>
+            {!stock && <Button
               variant="secondary"
               onClick={() => setShowLForm(!showLForm)}
             >
               {!showLForm ? 'New Location' : 'Select Location'}
-            </Button>
+            </Button>}
           </div>
           <div className="location">
             {showLForm ? (
@@ -159,13 +196,13 @@ const StockForm = ({ stock }: StockForm) => {
                 <div className="name-type">
                   <div className="lname">
                     <div>Location Name:</div>
-                    <Form.Control {...locationName} />
+                    <Form.Control {...locationName} readOnly={stock? true : false}/>
                   </div>
                   <div className="ltype">
                     <div>Location Type:</div>
                     <Form.Select
                     value={selectedLtype}
-                    onChange={(e) => setSelectedLtyped(e.target.value)}
+                    onChange={stock? () => {} : (e) => setSelectedLtyped(e.target.value)}
                     className="select-location">
                       <option>Choose Location Type</option>
                       {Object.values(LocationTypes).map(location => (
@@ -176,14 +213,14 @@ const StockForm = ({ stock }: StockForm) => {
                 </div>
                 <div className="address">
                   <div>Location Address:</div>
-                  <Form.Control {...address} />
+                  <Form.Control {...address} readOnly={stock? true : false}/>
                 </div>
                 <div className="status-capac">
                   <div className="status">
                     <div>Location Status:</div>
                     <Form.Select
                     value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    onChange={stock? () => {} : (e) => setSelectedStatus(e.target.value)}
                      className="select-location">
                       <option value={'Active'}>Active</option>
                       <option value={'Inactive'}>Inactive</option>
@@ -193,7 +230,7 @@ const StockForm = ({ stock }: StockForm) => {
                     <div>
                       Location Capacity:<span className="optional">optional</span>
                     </div>
-                    <Form.Control {...capacity} />
+                    <Form.Control {...capacity} readOnly={stock? true : false}/>
                   </div>
                 </div>
               </div>
@@ -216,9 +253,9 @@ const StockForm = ({ stock }: StockForm) => {
             {!stock && (
               <Button variant="danger" onClick={clearForm}>Clear Form</Button>
             )}
-            {stock && <Button variant="danger">Delete</Button>}
           </div>
         </Form>
+        )}
       </Container>
     </Container>
   )
