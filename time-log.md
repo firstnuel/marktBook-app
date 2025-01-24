@@ -51,6 +51,7 @@
 | **18.01.**  | 4 | Implemented Product list table in inventory page, including state management and data filtering |
 | **19.01.**  | 4 | Implemented forms, services and UI components to facilitaed product edit and update |
 | **23.01.**  | 3 | Implemented forms, services and UI components for adding stock data |
-| **Total**  | **127** | |
+| **24.01.**  | 3 | Implemented forms, services and UI components for editing stock data |
+| **Total**  | **130** | |
 
 
