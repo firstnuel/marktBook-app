@@ -20,6 +20,7 @@ export interface invState {
     error: string | null
     loading: boolean
     success: boolean
+    successMsg: string | null
 }
 
 export interface IProduct {

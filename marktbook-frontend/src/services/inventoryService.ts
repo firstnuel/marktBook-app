@@ -62,6 +62,7 @@ class InventoryService {
   }
 
   public async updateProduct(productId: string, data: IProduct): Promise<any> {
+
     try {
       const response = await this.axios.patch(`/products/${productId}`, data)
       return response.data
@@ -71,7 +72,9 @@ class InventoryService {
   }
 
   public async updateStock(productId: string, data: EditStockData): Promise<any> {
+
     try {
+      await new Promise(resolve => setTimeout(resolve, 3000))
       const response = await this.axios.patch(`/stocks/${productId}`, data)
       return response.data
     } catch (error) {

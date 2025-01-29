@@ -8,7 +8,7 @@ export interface PosState {
     loading: boolean;
     error: string | null;
     priceInfo: PriceInfo;
-    // selectValue: (keyof typeof ProductCategory);
+    successMsg: string | null;
 }
 interface Stock {
     _id: string;

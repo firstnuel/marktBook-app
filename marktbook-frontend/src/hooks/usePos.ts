@@ -26,6 +26,7 @@ export const usePos = () => {
     error,
     category,
     priceInfo,
+    successMsg,
   } = useAppSelector(state => state.pos)
 
   useEffect(() => {
@@ -45,7 +46,6 @@ export const usePos = () => {
     }
   }, [dispatch, products.length])
 
-
   return {
     products,
     cartItems,
@@ -56,6 +56,8 @@ export const usePos = () => {
     category,
     error,
     priceInfo,
+    successMsg,
+    clearError: () => dispatch(clearError()),
     fetchProducts: () => dispatch(fetchProducts()),
     searchByCategory: (category: ProductCategory | 'ALL') => dispatch(searchByCategory({ category })),
     searchByKeyandPhrase: (searchKey: (keyof typeof SearchKeys), searchPhrase: string) =>

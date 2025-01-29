@@ -11,9 +11,10 @@ import { useState } from 'react'
 import { useField } from '@hooks/useField'
 import { usePos } from '@hooks/usePos'
 import Loading from '@components/Spinner'
+import Notify from '@components/Notify'
 
 const StockForm = () => {
-  const { success,
+  const { clearError, successMsg,
     error, loading, addStock,
     product, updateStock, stock,
     setMainOpt, fetchProduct, fetchStock,
@@ -34,7 +35,6 @@ const StockForm = () => {
   const { reset: locationReset, ...locationName } = useField('locationName', 'text', stock?.locationData?.locationName?? '')
   const { reset: addressReset, ...address } = useField('address', 'text', stock?.locationData?.address?? '')
   const { reset: capacityReset, ...capacity } = useField('capacity', 'number',  stock?.locationData?.capacity?? '')
-
 
   const handleSelectProduct = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const productId = e.target.value
@@ -96,14 +96,13 @@ const StockForm = () => {
 
   return (
     <Container className="whole">
+      <Notify error={error} success={successMsg} clearErrFn={clearError} />
       <div className="head-info">
         <div className="head-name">
           {stock ? 'Edit Stock Data' : 'Create Stock Data'}
         </div>
-        {error && <div className="error">{error}</div>}
-        {success && <div className="success">Success</div>}
         <div className="action-btns">
-        {product &&   <div className="back">
+        {product &&  <div className="back">
             <IconBox src={icons.arrowback} clName="img-div" />
            <span className="text" onClick={() => rmPrdStck()}>Back</span>
           </div>}

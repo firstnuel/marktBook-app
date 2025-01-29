@@ -10,6 +10,7 @@ const initialState: invState = {
   error: null,
   loading: false,
   success: false,
+  successMsg: null
 }
 
 export const fetchProduct = createAsyncThunk('inv/getProduct', async (productId: string) => {
@@ -18,7 +19,7 @@ export const fetchProduct = createAsyncThunk('inv/getProduct', async (productId:
     throw new Error(response.data.message)
   }
 
-  return { product: response.data }
+  return { product: response.data, successMsg: response.message }
 })
 
 export const fetchStock = createAsyncThunk('inv/getStockData', async (productId: string) => {
@@ -27,7 +28,7 @@ export const fetchStock = createAsyncThunk('inv/getStockData', async (productId:
     throw new Error(response.data.message)
   }
 
-  return { stock: response.data }
+  return { stock: response.data,  successMsg: response.message }
 })
 
 export const updateProduct = createAsyncThunk('inv/updateProduct', async ({ productId, data }: { productId: string, data: IProduct }) => {
@@ -36,7 +37,7 @@ export const updateProduct = createAsyncThunk('inv/updateProduct', async ({ prod
     throw new Error(response.data.message)
   }
 
-  return { product: response.data }
+  return { product: response.data,  successMsg: response.message }
 })
 
 export const updateStock = createAsyncThunk('inv/updateStock', async ({ productId, data }: { productId: string, data: EditStockData }) => {
@@ -45,7 +46,7 @@ export const updateStock = createAsyncThunk('inv/updateStock', async ({ productI
     throw new Error(response.data.message)
   }
 
-  return { stock: response.data }
+  return { stock: response.data,  successMsg: response.message }
 })
 
 export const deleteProduct = createAsyncThunk('inv/deleteProduct', async (productId: string) => {
@@ -54,7 +55,7 @@ export const deleteProduct = createAsyncThunk('inv/deleteProduct', async (produc
     throw new Error(response.error)
   }
 
-  return { product: response.data }
+  return { product: response.data, successMsg: response.message }
 })
 
 export const createProduct = createAsyncThunk('inv/createProduct', async ({ data }:  { data: IProduct }) => {
@@ -63,7 +64,7 @@ export const createProduct = createAsyncThunk('inv/createProduct', async ({ data
     throw new Error(response.data.message)
   }
 
-  return { product: response.data }
+  return { product: response.data,  successMsg: response.message }
 })
 
 export const addStock = createAsyncThunk('inv/addStock', async ({ data }:  { data: IStockData }) => {
@@ -72,7 +73,7 @@ export const addStock = createAsyncThunk('inv/addStock', async ({ data }:  { dat
     throw new Error(response.data.message)
   }
 
-  return { stock: response.data }
+  return { stock: response.data,  successMsg: response.message }
 })
 
 
@@ -84,6 +85,7 @@ const invSlice = createSlice({
       state.error = null
       state.success = false
       state.loading = false
+      state.successMsg = null
     },
     setLoading: (state) => {
       state.loading = true
@@ -92,6 +94,9 @@ const invSlice = createSlice({
       state.product = null
       state.stock = null
       state.subOpt = 'Product List'
+      state.loading = false
+      state.success = false
+      state.successMsg = null
     },
     resetOpt: (state) => {
       state.mainOpt = 'Products'
@@ -118,6 +123,7 @@ const invSlice = createSlice({
       state.loading = false
       state.error = null
       state.product = action.payload.product
+      state.successMsg = action.payload.successMsg
       state.success = true
     })
     builder.addCase(fetchProduct.rejected, (state, action) => {
@@ -133,6 +139,7 @@ const invSlice = createSlice({
       state.loading = false
       state.error = null
       state.stock = action.payload.stock
+      state.successMsg = action.payload.successMsg
       state.success = true
     })
     builder.addCase(fetchStock.rejected, (state, action) => {
@@ -148,6 +155,7 @@ const invSlice = createSlice({
       state.loading = false
       state.error = null
       state.product = action.payload.product
+      state.successMsg = action.payload.successMsg
       state.success = true
     })
     builder.addCase(updateProduct.rejected, (state, action) => {
@@ -164,6 +172,7 @@ const invSlice = createSlice({
       state.loading = false
       state.error = null
       state.product = action.payload.product
+      state.successMsg = action.payload.successMsg
       state.success = true
     })
     builder.addCase(createProduct.rejected, (state, action) => {
@@ -180,6 +189,7 @@ const invSlice = createSlice({
       state.loading = false
       state.error = null
       state.stock = action.payload.stock
+      state.successMsg = action.payload.successMsg
       state.success = true
     })
     builder.addCase(addStock.rejected, (state, action) => {
@@ -191,11 +201,13 @@ const invSlice = createSlice({
     builder.addCase(updateStock.pending, (state) => {
       state.loading = true
       state.error = null
+      state.success = false
     })
     builder.addCase(updateStock.fulfilled, (state, action) => {
       state.loading = false
       state.error = null
       state.stock = action.payload.stock
+      state.successMsg = action.payload.successMsg
       state.success = true
     })
     builder.addCase(updateStock.rejected, (state, action) => {
@@ -208,9 +220,10 @@ const invSlice = createSlice({
       state.loading = true
       state.error = null
     })
-    builder.addCase(deleteProduct.fulfilled, (state) => {
+    builder.addCase(deleteProduct.fulfilled, (state, action) => {
       state.loading = false
       state.error = null
+      state.successMsg = action.payload.successMsg
       state.product = null
       state.success = true
     })

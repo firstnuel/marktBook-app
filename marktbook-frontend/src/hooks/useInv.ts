@@ -14,7 +14,6 @@ import {
 } from '@reducers/invReducer'
 import { useAppDispatch, useAppSelector } from '../store'
 import { EditStockData, IProduct, IStockData } from '@typess/inv'
-import { useEffect } from 'react'
 
 export const useInv = () => {
   const dispatch = useAppDispatch()
@@ -25,17 +24,9 @@ export const useInv = () => {
     stock,
     error,
     loading,
-    success
+    success,
+    successMsg
   } = useAppSelector(state => state.inv)
-
-  useEffect(() => {
-    if (error || success) {
-      const timer = setTimeout(() => {
-        dispatch(clearError())
-      }, 2000)
-      return () => clearTimeout(timer)
-    }
-  }, [error, success, dispatch])
 
 
   return {
@@ -46,6 +37,7 @@ export const useInv = () => {
     success,
     error,
     loading,
+    successMsg,
     clearError: () => dispatch(clearError()),
     rmPrdStck: () => dispatch(rmPrdStck()),
     updateStock: (productId: string, data: EditStockData ) => dispatch(updateStock({ productId, data })),

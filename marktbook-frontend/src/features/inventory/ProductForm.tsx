@@ -11,6 +11,7 @@ import IconBox from '@components/IconBox'
 import icons from '@assets/icons'
 import { useInv } from '@hooks/useInv'
 import { useAuth } from '@hooks/useAuth'
+import Notify from '@components/Notify'
 
 
 interface ProductForm {
@@ -41,7 +42,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
   const [tags, setTags] = useState(product?.tags?? [])
   const [image, setImage] = useState<string | ArrayBuffer | null>(null)
   const { resetOpt,
-    updateProduct,
+    updateProduct, successMsg,
     success, fetchStock,
     deleteProduct, clearError,
     loading, createProduct,
@@ -61,7 +62,6 @@ const ProductForm = ({ product, error }: ProductForm) => {
   const handleStock = async (productID: string) => {
     await fetchStock(productID)
     setMainOpt('Stock Data')
-    clearError()
   }
 
 
@@ -162,11 +162,10 @@ const ProductForm = ({ product, error }: ProductForm) => {
 
   return(
     <Container className='whole'>
+      <Notify error={error} success={successMsg} clearErrFn={clearError} />
       <div className="head-info">
         <div className="head-name">{
           product ? 'Edit Product' : 'Create Product'}</div>
-        {error && <div className="error">{error}</div>}
-        {success && <div className="success">{'Success'}</div>}
         <div className="action-btns">
           <div className="back" onClick={() => resetOpt()}>
             <IconBox src={icons.arrowback} clName='img-div'/>

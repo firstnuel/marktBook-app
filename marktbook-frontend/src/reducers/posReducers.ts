@@ -4,7 +4,6 @@ import { PosState } from '@typess/pos'
 import { calculatePrice, updateDiscount } from '@utils/helpers'
 import { ProductCategory } from '@typess/pos'
 
-
 const initialState: PosState = {
   products: [],
   cartItems: [],
@@ -13,6 +12,7 @@ const initialState: PosState = {
   searchPhrase: '',
   searchKey: 'SKU',
   loading: false,
+  successMsg: null,
   error: null,
   priceInfo: {
     subtotal: 0,
@@ -28,7 +28,7 @@ export const fetchProducts = createAsyncThunk('pos/products', async() => {
     throw new Error(response.data.message)
   }
 
-  return { products: response.data }
+  return { products: response.data, successMsg: response.message }
 })
 
 const posSlice = createSlice({
@@ -131,6 +131,7 @@ const posSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null
+      state.successMsg = null
     },
     clearCart: (state) => {
       state.cartItems = []
@@ -148,6 +149,7 @@ const posSlice = createSlice({
       state.error = null
       state.products = action.payload.products
       state.filteredProducts = action.payload.products
+      state.successMsg = action.payload.successMsg
     })
     builder.addCase(fetchProducts.rejected, (state, action) => {
       state.loading = false

@@ -11,14 +11,14 @@ import Caret from '@components/Caret'
 import { usePos } from '@hooks/usePos'
 import { useInv } from '@hooks/useInv'
 import Loading from '@components/Spinner'
+import Notify from '@components/Notify'
 
 const ProductTable = () => {
-  const { products, fetchProducts, loading: pLoading } = usePos()
+  const { products, fetchProducts, loading: pLoading, error, clearError, successMsg } = usePos()
   const { setSubOpt, fetchProduct, product } = useInv()
   const [sort, setSort] = useState({ key: 'Name', dir: 'asc' })
   const [search, setSearch] = useState('')
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products)
-
 
   const handleProduct = (productId: string) => {
     fetchProduct(productId)
@@ -122,6 +122,7 @@ const ProductTable = () => {
 
   return (
     <>
+      <Notify clearErrFn={clearError} success={successMsg} error={error} />
       <div className="topper">
         <div className="top-menu">
           <div className="title-box">Product List</div>
