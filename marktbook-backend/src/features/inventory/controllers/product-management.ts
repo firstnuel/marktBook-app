@@ -47,7 +47,7 @@ class ProductManagement extends Product {
       // fetch product
       const product = await productService.getById(`${productId}`, `${existingUser?.associatedBusinessesId}`)
       const filterdProduct = omit(product?.toJSON(), ['createdBy', 'updatedBy', '_v'])
-      const message = product? 'Products data fetched successfully' : 'No product found'
+      const message = product? 'Product data fetched successfully' : 'No product found'
       res.status(HTTP_STATUS.OK).json({ message, data: filterdProduct })
 
 
@@ -180,8 +180,6 @@ class ProductManagement extends Product {
   }
 
 }
-
-
 
 
 export const productManagement = new ProductManagement()

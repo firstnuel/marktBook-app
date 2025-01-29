@@ -90,8 +90,6 @@ withCredentials: true
     "productImage": "https://example.com/images/galaxy-s23-ultra.png"
 }
 
-
-
 ### Add a new user
 POST {{baseUrl}}/{{urlpath}}/users
 Content-Type: application/json
@@ -254,7 +252,6 @@ withCredentials: true
   "totalValue": 980
 }
 
-
 ### Move stock to another location
 POST {{baseUrl}}/{{urlpath}}/stocks/movements
 Content-Type: application/json
@@ -268,7 +265,6 @@ withCredentials: true
   "destination":  "67644278e86c081b85339b92",
   "reason": "Damaged goods"
 }
-
 
 ### fetch all low  stocks
 GET {{baseUrl}}/{{urlpath}}/stocks/low-stock
