@@ -52,6 +52,7 @@
 | **19.01.**  | 4 | Implemented forms, services and UI components to facilitaed product edit and update |
 | **23.01.**  | 3 | Implemented forms, services and UI components for adding stock data |
 | **24.01.**  | 3 | Implemented forms, services and UI components for editing stock data |
-| **Total**  | **130** | |
+| **24.01.**  | 2 | Implemented notification UI component to handle errors and success |
+| **Total**  | **132** | |
 
 
