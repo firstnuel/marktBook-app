@@ -68,6 +68,7 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
         <ul className="attribute">
           { product.attributes.brand && (<li className="attr-item">Brand: {product.attributes.brand}</li>)}
           {product.attributes.color && (<li className="attr-item">Color: {product.attributes.color}</li>)}
+          {product.attributes.size && (<li className="attr-item">Size: {product.attributes.size}</li>)}
           {product.attributes.manufacturer && (<li className="attr-item">Manufacturer: {product.attributes.manufacturer}</li>)}
           { product.attributes.dimensions &&
          <li className="attr-item">Dimensions:

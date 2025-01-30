@@ -30,14 +30,14 @@ export const usePos = () => {
   } = useAppSelector(state => state.pos)
 
   useEffect(() => {
-    if (error) {
+    if (error || successMsg) {
       const timer = setTimeout(() => {
         dispatch(clearError())
       }, 5000)
 
       return () => clearTimeout(timer)
     }
-  }, [error, dispatch])
+  }, [error, dispatch, successMsg])
 
   useEffect(() => {
     if (!hasLoaded.current && !products.length) {
