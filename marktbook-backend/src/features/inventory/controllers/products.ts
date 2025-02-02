@@ -137,13 +137,13 @@ export class Product {
      * Protected method to validate product uniqueness by SKU
      * @param sku string
      */
-  protected generateSku(productName: string, businessId: string): string {
+  protected generateSku(productName: string): string {
     const timestamp = Date.now().toString(36)
     const randomSegment = Math.random().toString(36).substring(2, 6) // Random 4-character string
     const nameSegment = productName.substring(0, 3).toUpperCase()
-    const businessSegment = businessId.substring(0, 3).toUpperCase()
+
   
-    return `${nameSegment}-${businessSegment}-${timestamp}-${randomSegment}`
+    return `${nameSegment}${timestamp}${randomSegment}`.toUpperCase()
   }
   
   /**
@@ -177,7 +177,7 @@ export class Product {
     return {
       _id: productId,
       stockId: null,
-      sku: this.generateSku(data.productName, data.businessId as string),
+      sku: this.generateSku(data.productName),
       currency: data.currency,
       productName: Utils.firstLetterToUpperCase(data.productName),
       businessId: new ObjectId(data.businessId),
