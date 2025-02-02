@@ -26,8 +26,6 @@ export const editBusinessSchema = z.object({
   businessLogo: z.string().trim().optional(),
   businessAddress: z.string().trim().optional(),
   businessBio: z.string().trim().optional(),
-  bgImageVersion:z.string().trim().optional(),
-  bgImageId: z.string().trim().optional(),
   businessAccount,
   notifications,
   social

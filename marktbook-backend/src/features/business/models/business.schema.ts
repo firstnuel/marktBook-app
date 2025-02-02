@@ -20,6 +20,9 @@ const businessSchema: Schema = new Schema(
         username: { type: String, required: true }
       }
     ],
+    customCategories: { type: [String], default: [] },
+    businessImg: { type: String, required: false },
+    currency: { type: String, required: false, default: 'USD' },
     
     businessLogo: { type: String, required: false },
     uId: { type: String, required: false },
@@ -54,8 +57,6 @@ const businessSchema: Schema = new Schema(
       youtube: { type: String, required: false },
       website: { type: String, required: false },
     },
-    bgImageVersion: { type: String, required: false },
-    bgImageId: { type: String, required: false },
   },
   {
     timestamps: true,

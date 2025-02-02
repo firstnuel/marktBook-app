@@ -1,6 +1,7 @@
 import { Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
 import { BusinessCategory, BusinessType } from '@auth/interfaces/auth.interface'
+import { Currency } from '@inventory/interfaces/products.interface'
 
 export interface IBusinessDocument extends Document {
   _id: string | ObjectId;
@@ -10,7 +11,10 @@ export interface IBusinessDocument extends Document {
   username: string;
   email: string;
   admins: IBusinessAdmin[];
+  currency?: Currency;
+  customCategories?: string[];
   businessLogo?: string;
+  businessImg?: string;
   uId?: string;
   businessCategory?: BusinessCategory;
   businessAddress?: string;
@@ -19,20 +23,18 @@ export interface IBusinessDocument extends Document {
   businessBio?: string;
   notifications?: INotificationSettings;
   social?: ISocialLinks;
-  bgImageVersion: string;
-  bgImageId: string;
   createdAt?: Date;
 }
 
 export const EDIT_BUSINESS_FIELDS: (keyof IBusinessDocument)[] = [
   'businessLogo',
   'businessAddress',
+  'businessImg',
   'businessBio',
   'businessAccount',
   'social',
-  'bgImageVersion',
-  'bgImageId',
-  'notifications'
+  'notifications',
+  'customCategories'
 ] 
 
 export interface IBusinessBankAccount {

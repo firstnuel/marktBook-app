@@ -33,8 +33,6 @@ class BusinessCache extends Basecache {
       businessBio,
       notifications,
       social,
-      bgImageVersion,
-      bgImageId,
     } = createdBusiness
       
     const firstList: string[] = [
@@ -59,8 +57,6 @@ class BusinessCache extends Basecache {
       'businessLogo', businessLogo || '',
       'notifications', JSON.stringify(notifications || {}),
       'social', JSON.stringify(social || {}),
-      'bgImageVersion', bgImageVersion || '',
-      'bgImageId', bgImageId || '',
       'createdAt', createdAt.toISOString(),
     ]
         
@@ -111,8 +107,6 @@ class BusinessCache extends Basecache {
         businessLogo: cacheData['businessLogo'] || undefined,
         notifications: JSON.parse(cacheData['notifications']),
         social: JSON.parse(cacheData['social']),
-        bgImageVersion: cacheData['bgImageVersion'],
-        bgImageId: cacheData['bgImageId'],
         createdAt: new Date(cacheData['createdAt']),
       } as IBusinessDocument
     

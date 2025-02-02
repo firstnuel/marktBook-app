@@ -213,15 +213,7 @@ export class Register {
    * @returns Business document conforming to IBusinessDocument interface
    */
   private BusinessData(data: IAuthDocument, businessObjectId: ObjectId, ownerId: ObjectId): IBusinessDocument {
-    const {
-      businessName,
-      email,
-      username,
-      uIds,
-      businessAddress,
-      businessType,
-      businessCategory,
-    } = data
+    const { businessName, email, username, uIds, businessAddress, businessType, businessCategory, } = data
 
     return {
       _id: businessObjectId,
@@ -241,6 +233,7 @@ export class Register {
         }
       ],
       businessLogo: '',
+      businessImg: '',
       uId: uIds?.businessUId?? '',
       businessCategory,
       businessAddress,
@@ -265,8 +258,6 @@ export class Register {
         youtube: '',
         website: '',
       },
-      bgImageVersion: '',
-      bgImageId: '',
       createdAt: new Date(),
     } as IBusinessDocument
   }

@@ -8,13 +8,40 @@ Accept: application/json
 withCredentials: true
 
 {
- "email": "esoo@example.com",
- "adminFullName": "Esso Doe",
- "username": "esso",
- "password": "SecurePass123!",
- "businessName": "LoveTech Innovations LLC",
- "businessType": "Retail",
- "businessCategory": "Technology"
+  "email": "freddie.doe@example.com",
+  "adminFullName": "freddie Doe",
+  "username": "freddiedoe",
+  "password": "StrongPass456!",
+  "businessName": "NextGen Solutions Ltd",
+  "businessType": "Retail",
+  "businessCategory": "Technology"
+}
+
+### fetch business
+GET {{baseUrl}}/{{urlpath}}/business/679f58357a4448eec7d90d04
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+### edit business
+PATCH {{baseUrl}}/{{urlpath}}/business/679f58357a4448eec7d90d04
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "businessAccount": {
+      "accountName": "Freddie Doe",
+      "accountNumber": "0876543210",
+      "bankName": "Access Bank Plc Nigeria",
+      "accountType": "Business"
+    },
+  "social": {
+      "facebook": "facebook.com/freddiedoe",
+      "instagram": "instagram.com/freddiedoe",
+      "twitter": "twitter.com/freddiedoe"
+    },
+    "customCategories" : ["Gadgets"]
 }
 
 ### login

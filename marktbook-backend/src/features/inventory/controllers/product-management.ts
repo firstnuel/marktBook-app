@@ -179,6 +179,24 @@ class ProductManagement extends Product {
     }
   }
 
+  // public async addCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
+  //   try {
+  //     // Validate requesting user
+  //     const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+  //     if (!(existingUser.role == 'Owner' || existingUser.role == 'Manager')) {
+  //       return next(new NotAuthorizedError('Invalid User'))
+  //     }
+
+  //     const { category } = Utils.sanitizeInput(req.body)
+
+
+
+  //   } catch (error: any) {
+  //     log.error(`Error adding category: ${error.message}`)
+  //     next(error)
+  //   }
+  // }
+
 }
 
 

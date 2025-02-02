@@ -46,8 +46,8 @@ class Business {
         filteredData.businessLogo = await singleImageUpload(filteredData.businessLogo, businessId)
       }
 
-      if (filteredData.bgImageId) {
-        filteredData.bgImageId = await singleImageUpload(filteredData.bgImageId, uuidv4())
+      if (filteredData.businessImg) {
+        filteredData.businessImg = await singleImageUpload(filteredData.businessImg, uuidv4())
       }
 
       const editedBusinessData = await businessService.updateBusinessData(businessId, filteredData)

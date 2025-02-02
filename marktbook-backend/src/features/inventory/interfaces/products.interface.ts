@@ -124,6 +124,7 @@ export enum Unit {
     Unit = 'unit',              
     Custom = 'custom',             
 }
+ type Custom = string
 
 export interface IProductData {
     currency: Currency;
@@ -132,7 +133,7 @@ export interface IProductData {
     longDescription?: string;
     shortDescription?: string;
     attributes: ProductAttributes;
-    productCategory: ProductCategory;
+    productCategory: ProductCategory | Custom ;
     productType: ProductType;
     barcode?: string;
     productVariants?: ProductVariants[];
