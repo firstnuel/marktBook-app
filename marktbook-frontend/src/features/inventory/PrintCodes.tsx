@@ -81,28 +81,28 @@ const PrintCodes = () => {
             </Dropdown.Item>))}
         </Container>}
       </Container>
-
-      <div className="product-info">
-        <table>
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>SKU</th>
-              <th>Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className='body-row'>
-                <img src={selectedProduct?.productImage ? selectedProduct.productImage : noImg} alt="" className="prd-img" />
-                <span className="prdname">{selectedProduct?.productName}</span>
-              </td>
-              <td>{selectedProduct?.sku?? '-'}</td>
-              <td>{selectedProduct?.stock? selectedProduct.stock.unitsAvailable?? '0' : '-'}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {selectedProduct &&
+        <div className="product-info">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>SKU</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className='body-row'>
+                  <img src={selectedProduct?.productImage ? selectedProduct.productImage : noImg} alt="" className="prd-img" />
+                  <span className="prdname">{selectedProduct?.productName}</span>
+                </td>
+                <td>{selectedProduct?.sku?? '-'}</td>
+                <td>{selectedProduct?.stock? selectedProduct.stock.unitsAvailable?? '0' : '-'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>}
       {selectedProduct &&  <div className="barcode">
         <div className="label">Barcode <span className="optional">the code is generated based on SKU</span></div>
         <div ref={contentRef}>

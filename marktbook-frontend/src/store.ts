@@ -15,6 +15,7 @@ import { encryptTransform } from 'redux-persist-transform-encrypt'
 import posReducer from '@reducers/posReducers'
 import authReducer from '@reducers/authReducer'
 import invReducer from '@reducers/invReducer'
+import businessReducer from '@reducers/businessReducer'
 
 // Add RESET_ALL action type
 export const RESET_ALL = 'RESET_ALL'
@@ -32,16 +33,12 @@ const authPersistConfig = {
   blacklist: ['loading', 'error', 'registered', 'reset', 'updated']
 }
 
-const posPersistConfig = {
-  key: 'pos',
-  storage,
-  whitelist: ['cartItems']
-}
 
 // the base reducer combination
 const combinedReducer = combineReducers({
   'auth': persistReducer(authPersistConfig, authReducer),
-  'pos': persistReducer(posPersistConfig, posReducer),
+  'pos': persistReducer({ key: 'pos', storage, whitelist: ['cartItems'] }, posReducer),
+  'business': persistReducer({ key: 'business', storage, whitelist: ['business'] }, businessReducer),
   'inv': invReducer
 })
 

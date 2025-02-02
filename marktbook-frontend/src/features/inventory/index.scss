@@ -70,6 +70,15 @@
                     tbody {
                         tr {
                             cursor: pointer;
+                            .body-row {
+                                display: flex;
+                                align-items: center;
+                                gap: .5em;
+                                img {
+                                    width: 2em;
+                                    height: 2em;
+                                }
+                            }
                             .prod-name {
                                 &:hover {
                                     color: var(--primary-color);

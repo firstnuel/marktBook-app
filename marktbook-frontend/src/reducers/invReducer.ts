@@ -16,7 +16,7 @@ const initialState: invState = {
 export const fetchProduct = createAsyncThunk('inv/getProduct', async (productId: string) => {
   const response = await inventoryService.fetchProduct(productId)
   if (!response.data) {
-    throw new Error(response.data.message)
+    throw new Error(response.message)
   }
 
   return { product: response.data, successMsg: response.message }

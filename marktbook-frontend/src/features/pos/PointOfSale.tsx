@@ -18,7 +18,6 @@ import { usePos } from '@hooks/usePos'
 import CartItem from '@components/CartItem'
 import { countByCategoryList } from '@utils/helpers'
 
-
 const PointOfSale = () => {
   const [selectValue, setSelectValue] = useState('SKU')
   const { reset, ...searchProduct } = useField('searchProduct', 'text')
@@ -31,6 +30,7 @@ const PointOfSale = () => {
     searchByKeyandPhrase,
     loading
   } = usePos()
+
   const categoryData = countByCategoryList(products)
 
   const handleSelect = (eventKey: string | null) => {

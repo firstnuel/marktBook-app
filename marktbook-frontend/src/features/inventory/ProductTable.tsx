@@ -1,4 +1,5 @@
 import { Product } from '@typess/pos'
+import noImg from '@assets/images/file.png'
 import Table from 'react-bootstrap/Table'
 import Form from 'react-bootstrap/Form'
 import IconBox from '@components/IconBox'
@@ -12,6 +13,7 @@ import { usePos } from '@hooks/usePos'
 import { useInv } from '@hooks/useInv'
 import Loading from '@components/Spinner'
 import Notify from '@components/Notify'
+import { cutName } from '@utils/helpers'
 
 const ProductTable = () => {
   const { products, fetchProducts, loading: pLoading, error, clearError, successMsg } = usePos()
@@ -159,7 +161,10 @@ const ProductTable = () => {
           <tbody>
             {sortedProducts.map((product) => (
               <tr key={product.id} onClick={() => handleProduct(product.id)}>
-                <td className='prod-name'>{product.productName}</td>
+                <td className='body-row'>
+                  <img src={product.productImage || noImg} alt="" className="prd-img" />
+                  <span className="prod-name prdname">{cutName(product.productName, 25)}</span>
+                </td>
                 <td>{product.sku}</td>
                 <td>{product.productCategory}</td>
                 <td>{`$ ${product.basePrice.toFixed(2)}`}</td>

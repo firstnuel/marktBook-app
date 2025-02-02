@@ -1,11 +1,12 @@
 import { useAppDispatch, useAppSelector } from '../store'
 import { login, clearError, register, passwordReset, passwordUpdate, fetchUser, logout } from '@reducers/authReducer'
 import { LoginData, RegisterData, passwordData,  } from '@typess/auth'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 export const useAuth = () => {
   const dispatch = useAppDispatch()
   const { user, error, reset, loading, registered, updated, userToken } = useAppSelector(state => state.auth)
+  const hasFetchedUser = useRef(false)
 
   useEffect(() => {
     if (error) {
@@ -16,12 +17,13 @@ export const useAuth = () => {
     }
   }, [error, dispatch])
 
-
   useEffect(() => {
-    if(!user && userToken) {
+    if (!user && userToken && !hasFetchedUser.current) {
+      hasFetchedUser.current = true
       dispatch(fetchUser())
     }
   }, [dispatch, user, userToken])
+
 
   return {
     user,
