@@ -53,6 +53,7 @@
 | **23.01.**  | 3 | Implemented forms, services and UI components for adding stock data |
 | **24.01.**  | 3 | Implemented forms, services and UI components for editing stock data |
 | **24.01.**  | 2 | Implemented notification UI component to handle errors and success |
-| **Total**  | **132** | |
+| **3.02.**  | 3 | Implemented barcode generator and print feature |
+| **Total**  | **135** | |
 
 
