@@ -53,7 +53,9 @@
 | **23.01.**  | 3 | Implemented forms, services and UI components for adding stock data |
 | **24.01.**  | 3 | Implemented forms, services and UI components for editing stock data |
 | **24.01.**  | 2 | Implemented notification UI component to handle errors and success |
-| **3.02.**  | 3 | Implemented barcode generator and print feature |
-| **Total**  | **135** | |
+| **2.02.**  | 3 | Implemented barcode generator and print feature |
+|  | 2 | Refactored business model, interface, controller and cache to allow creating custom product categories |
+|  | 2 |  Implemented reducers, hooks and interfaces to handle business  |
+| **Total**  | **139** | |
 
 
