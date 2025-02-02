@@ -6,7 +6,7 @@ type MainOption =
     | 'Stock Data'
     | 'Products Variants'
     | 'Categories'
-    | 'Print QR codes'
+    | 'Print Codes'
 
 type SubOption =
     | 'Product List'

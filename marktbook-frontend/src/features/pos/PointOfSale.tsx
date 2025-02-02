@@ -21,7 +21,6 @@ import { countByCategoryList } from '@utils/helpers'
 
 const PointOfSale = () => {
   const [selectValue, setSelectValue] = useState('SKU')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { reset, ...searchProduct } = useField('searchProduct', 'text')
   const eventKeys = Object.values(SearchKeys)
   const {
@@ -80,6 +79,7 @@ const PointOfSale = () => {
             eventKeys={eventKeys}
             useField={searchProduct}
             handleSearch={handleSearch}
+            reset={reset}
           />
         </Container>
         {filteredProducts.length ? (

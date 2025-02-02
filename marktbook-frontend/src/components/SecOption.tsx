@@ -14,7 +14,7 @@ const SecOption = ({ name, mainOpt }: SecOptionProps) => {
 
   return(
     <div className={name === mainOpt ? 'section-opt active' : 'section-opt'} onClick={handleClick}>
-      <span className="sec-opt-name">{name}</span>
+      <span className="sec-opt-name">{name === 'Stock Data'? `Add ${name}` : name }</span>
     </div>
   )
 }

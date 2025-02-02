@@ -10,7 +10,6 @@ interface ProductBoxPrpos {
     show: boolean;
     onHide: ()=> void;
     product: Product
-
 }
 
 const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {

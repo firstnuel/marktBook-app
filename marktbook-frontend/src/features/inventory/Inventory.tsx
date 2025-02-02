@@ -6,11 +6,11 @@ import { useInv } from '@hooks/useInv'
 import ProductForm from './ProductForm'
 import './index.scss'
 import StockForm from './StockForm'
+import PrintCodes from './PrintCodes'
 
 
 const Inventory = () => {
   const { mainOpt, subOpt, product, error } = useInv()
-
 
   return(
     <div className="main-container-inv">
@@ -22,7 +22,7 @@ const Inventory = () => {
           <SecOption name='Stock Data' mainOpt={mainOpt}/>
           <SecOption name='Products Variants'/>
           <SecOption name='Categories'/>
-          <SecOption name='Print QR codes'/>
+          <SecOption name='Print Codes'  mainOpt={mainOpt}/>
         </Container>
         <Container className='sec-show'>
           { mainOpt === 'Products' &&  subOpt === 'Product List' &&
@@ -36,6 +36,9 @@ const Inventory = () => {
           }
           {
             mainOpt === 'Stock Data' && <StockForm />
+          }
+          {
+            mainOpt === 'Print Codes' && <PrintCodes />
           }
         </Container>
       </div>

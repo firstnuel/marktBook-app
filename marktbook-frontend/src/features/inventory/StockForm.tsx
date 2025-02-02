@@ -17,7 +17,7 @@ const StockForm = () => {
   const { clearError, successMsg,
     error, loading, addStock,
     product, updateStock, stock,
-    setMainOpt, fetchProduct, fetchStock,
+    setMainOpt, fetchProduct,
     rmPrdStck } = useInv()
   const { products } = usePos()
   const [showLForm, setShowLForm] = useState(true)
@@ -40,7 +40,6 @@ const StockForm = () => {
     const productId = e.target.value
     setSelectedPId(productId)
     fetchProduct(productId)
-    fetchStock(productId)
   }
 
   const clearForm = () => {
@@ -117,7 +116,9 @@ const StockForm = () => {
         onChange={handleSelectProduct}
         >
           <option>Select Product</option>
-          {products.map((product, idx) => (
+          {products
+          .filter(product => product.stock === null)
+          .map((product, idx) => (
             <option key={idx} value={product._id}>{product.productName}</option>
           ))}
         </Form.Select>
