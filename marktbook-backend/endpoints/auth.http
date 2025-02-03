@@ -18,30 +18,19 @@ withCredentials: true
 }
 
 ### fetch business
-GET {{baseUrl}}/{{urlpath}}/business/679f58357a4448eec7d90d04
+GET {{baseUrl}}/{{urlpath}}/business/6788191f8593d3b390631e6f
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ### edit business
-PATCH {{baseUrl}}/{{urlpath}}/business/679f58357a4448eec7d90d04
+PATCH {{baseUrl}}/{{urlpath}}/business/6788191f8593d3b390631e6f
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-  "businessAccount": {
-      "accountName": "Freddie Doe",
-      "accountNumber": "0876543210",
-      "bankName": "Access Bank Plc Nigeria",
-      "accountType": "Business"
-    },
-  "social": {
-      "facebook": "facebook.com/freddiedoe",
-      "instagram": "instagram.com/freddiedoe",
-      "twitter": "twitter.com/freddiedoe"
-    },
-    "customCategories" : ["Gadgets"]
+    "customCategories" : ["Gadgets", "Fashion"]
 }
 
 ### login
