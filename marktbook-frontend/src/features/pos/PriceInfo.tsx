@@ -71,12 +71,12 @@ const PriceInfo = () => {
           <option value="Cash">Cash</option>
           <option value="Credit">Credit</option>
         </Form.Select>
-        <Button variant="danger"
+        <Button variant="secondary"
           disabled={cartItems.length===0}
-          onClick={() => setShow(true)}>Cancel</Button>
+          onClick={() => setShow(true)}>Clear</Button>
       </div>
       <div className="pay-btn">
-        <Button variant="success"
+        <Button variant="primary"
           disabled={cartItems.length===0}
           onClick={handlePay}>
           {priceInfo.total? `Payment - ${priceInfo.total.toFixed(2)}`: 'Payment'}

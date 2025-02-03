@@ -27,7 +27,6 @@ const PrintCodes = () => {
     reset()
   }
 
-
   const filteredProducts = () => {
 
     if((searchProduct.value as string).length)  {

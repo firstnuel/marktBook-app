@@ -96,6 +96,8 @@ export enum ProductCategory {
     Other = 'Other',
 }
 
+export type CustomCategory = string
+
 export interface Product {
     _id: string;
     businessId: string;
@@ -106,10 +108,10 @@ export interface Product {
     currency: Currency;
     longDescription: string;
     shortDescription: string;
-    productCategory: ProductCategory;
+    productCategory: ProductCategory | CustomCategory;
     productType: ProductType;
     barcode: string;
-    productVariants: ProductVariants;
+    productVariants: ProductVariants[];
     productImage?: string;
     basePrice: number;
     salePrice: number;

@@ -1,12 +1,5 @@
-.modal-dialog {
-    // border: 2px solid var(--primary-color);
-    padding-left: 4%;
-}
-
 
 .modal-content {
-    width: 70%  !important;
-    height: 70% !important;
     border-radius: 1em !important;
     
     .modal-header {
@@ -31,7 +24,7 @@
     .modal-body {
         display: flex;
         flex-direction: column;
-        height: 26em;
+        max-height: 26em;
         overflow-y: auto;
             scroll-behavior: smooth;
             scroll-snap-type: y mandatory;

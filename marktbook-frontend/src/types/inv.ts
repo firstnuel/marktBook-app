@@ -1,4 +1,4 @@
-import { ProductAttributes, ProductCategory, ProductType, ProductVariants } from './pos'
+import { ProductAttributes, ProductCategory, CustomCategory, ProductType, ProductVariants } from './pos'
 
 type MainOption =
     | 'Products'
@@ -32,7 +32,7 @@ export interface IProduct {
     businessId: string;
     longDescription: string;
     shortDescription: string;
-    productCategory: ProductCategory;
+    productCategory: ProductCategory | CustomCategory;
     productType: ProductType;
     barcode?: string;
     productVariants: ProductVariants[];

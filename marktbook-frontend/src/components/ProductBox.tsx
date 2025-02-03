@@ -33,7 +33,6 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
     <Modal
       show={show}
       onHide={onHide}
-      size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
       backdrop="static"
@@ -41,7 +40,7 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter" className='head.info'>
-          {`#${product.sku}`}
+          {product.sku}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

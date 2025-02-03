@@ -1,0 +1,52 @@
+.cat-input {
+    display: flex;
+    flex-direction: column;
+    gap: .5em;
+}
+
+#cat-footer {
+    display: flex;
+    flex-direction: row !important;
+    gap: 1em !important;
+    padding: .5em;
+    box-shadow: none !important;
+    button {
+        border-radius: .5em !important;
+        width: fit-content !important;
+        padding: 0em 1.5em !important;
+    }
+}
+
+.table-container {
+    height: 83dvh;
+    overflow-y: scroll;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    gap: 0.5em;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        position: sticky;
+        top: 0;
+        thead {
+            background-color: var(--light-gray);
+            th {
+                padding: .5em;
+                text-align: left;
+                font-weight: 500;
+            }
+        }
+        tbody {
+            tr {
+                height: 5em;
+                border-bottom: 1px solid var(--light-gray);
+                td {
+                    padding: .5em;
+                }
+            }
+        }
+    }
+}

@@ -2,6 +2,7 @@ import Container from 'react-bootstrap/Container'
 import HeaderInfo from '@components/HeaderInfo'
 import SecOption from '@components/SecOption'
 import ProductTable from './ProductTable'
+import Categories from './Categories'
 import { useInv } from '@hooks/useInv'
 import ProductForm from './ProductForm'
 import './index.scss'
@@ -21,26 +22,18 @@ const Inventory = () => {
           <SecOption name='Create Products' mainOpt={mainOpt}/>
           <SecOption name='Stock Data' mainOpt={mainOpt}/>
           <SecOption name='Products Variants'/>
-          <SecOption name='Categories'/>
+          <SecOption name='Categories' mainOpt={mainOpt}/>
           <SecOption name='Print Codes'  mainOpt={mainOpt}/>
         </Container>
         <Container className='sec-show'>
-          { mainOpt === 'Products' &&  subOpt === 'Product List' &&
-          <ProductTable />
-          }
-          {mainOpt === 'Products' &&  subOpt === 'Edit Product' &&
-          <ProductForm product={product!} error={error!}/>
-          }
-          { mainOpt === 'Create Products' &&
-          <ProductForm error={error!} />
-          }
-          {
-            mainOpt === 'Stock Data' && <StockForm />
-          }
-          {
-            mainOpt === 'Print Codes' && <PrintCodes />
-          }
+          { mainOpt === 'Products' && subOpt === 'Product List' && <ProductTable /> }
+          { mainOpt === 'Products' && subOpt === 'Edit Product' && <ProductForm product={product!} error={error!}/> }
+          { mainOpt === 'Create Products' && <ProductForm error={error!} /> }
+          { mainOpt === 'Stock Data' && <StockForm /> }
+          { mainOpt === 'Print Codes' && <PrintCodes /> }
+          { mainOpt === 'Categories' && <Categories /> }
         </Container>
+
       </div>
     </div>
   )

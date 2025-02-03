@@ -40,6 +40,15 @@ class BusinessService {
       this.handleAxiosError(error, 'An error occurred while fetching business data.')
     }
   }
+
+  public async updateCategory(businessId: string, data: { customCategories: string[] }): Promise<any> {
+    try {
+      const response = await this.axios.patch(`/business/${businessId}`, data)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while fetching business data.')
+    }
+  }
 }
 
 export const businessService = new BusinessService()

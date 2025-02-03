@@ -1,4 +1,4 @@
-import { clearError, fetchBusiness } from '@reducers/businessReducer'
+import { clearError, fetchBusiness, updateCategory } from '@reducers/businessReducer'
 import { useAppDispatch, useAppSelector } from '../store'
 import { useAuth } from '@hooks/useAuth'
 import { useEffect } from 'react'
@@ -29,6 +29,7 @@ export const useBusiness = () => {
     success,
     error,
     clearError: () => dispatch(clearError()),
-    fetchBusiness: (businessId: string) => dispatch(fetchBusiness(businessId))
+    fetchBusiness: (businessId: string) => dispatch(fetchBusiness(businessId)),
+    updateCategory: (businessId: string, data: { customCategories: string[] }) => dispatch(updateCategory({ businessId, data }))
   }
 }

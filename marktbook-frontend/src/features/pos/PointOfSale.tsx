@@ -33,6 +33,7 @@ const PointOfSale = () => {
 
   const categoryData = countByCategoryList(products)
 
+
   const handleSelect = (eventKey: string | null) => {
     if (eventKey !== null) {
       setSelectValue(eventKey)

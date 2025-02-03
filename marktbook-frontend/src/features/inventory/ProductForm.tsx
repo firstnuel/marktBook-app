@@ -12,6 +12,7 @@ import icons from '@assets/icons'
 import { useInv } from '@hooks/useInv'
 import { useAuth } from '@hooks/useAuth'
 import Notify from '@components/Notify'
+import { useBusiness } from '@hooks/useBusiness'
 
 
 interface ProductForm {
@@ -20,6 +21,7 @@ interface ProductForm {
 }
 
 const ProductForm = ({ product, error }: ProductForm) => {
+  const { business } = useBusiness()
   const { reset: nameReset, ...productName } = useField('productName', 'text', product?.productName?? '')
   const { reset: barcodeReset, ...barcode } = useField('barcode', 'text', product?.barcode?? '')
   const { reset: tagReset, ...productTag } = useField('productTag', 'text')
@@ -41,6 +43,9 @@ const ProductForm = ({ product, error }: ProductForm) => {
   const [selectedCat, setSelectedCat] = useState<string>(product?.productCategory?? '')
   const [tags, setTags] = useState(product?.tags?? [])
   const [image, setImage] = useState<string | ArrayBuffer | null>(null)
+  const produtCatData = business?.customCategories?.length?
+    [...business.customCategories, ...Object.values(ProductCategory)] : Object.values(ProductCategory)
+
   const { resetOpt,
     updateProduct, successMsg,
     success, fetchStock,
@@ -210,7 +215,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
               <div> Product Category:</div>
               <Form.Select onChange={handleCatChange} value={selectedCat}>
                 <option value="Cat">Select Category</option>
-                {Object.values(ProductCategory).map((category, index) => (
+                {produtCatData.map((category, index) => (
                   <option value={category} key={index}>{category}</option>
                 ))}
               </Form.Select>
