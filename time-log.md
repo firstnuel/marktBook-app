@@ -56,6 +56,8 @@
 | **2.02.**  | 3 | Implemented barcode generator and print feature |
 |  | 2 | Refactored business model, interface, controller and cache to allow creating custom product categories |
 |  | 2 |  Implemented reducers, hooks and interfaces to handle business  |
-| **Total**  | **139** | |
+| **4.02.**  | 2 | Implemented UI, reducers and services to fetch product by category |
+|  | 2 |  Major refactor of inventory UI  |
+| **Total**  | **143** | |
 
 

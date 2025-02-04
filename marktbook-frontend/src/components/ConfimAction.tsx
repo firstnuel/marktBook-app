@@ -1,6 +1,6 @@
 import { usePos } from '@hooks/usePos'
 import styles from '@styles/confirm-action.module.scss'
-import Button  from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button'
 
 interface ActionProps {
   handleClose: () => void;
@@ -11,12 +11,22 @@ interface ActionProps {
   salesId?: number;
   method?: string;
   clearPay?: () => void;
-  productId?: string
-  handleDelete?: (productID: string) => void
+  productId?: string;
+  handleDelete?: (productID: string) => void;
 }
 
-const ConfirmAction = ({ show, handleClose, clearPay, productId, handleDelete,
-  message, payment, amount, salesId, method }: ActionProps) => {
+const ConfirmAction = ({
+  show,
+  handleClose,
+  clearPay,
+  productId,
+  handleDelete,
+  message,
+  payment,
+  amount,
+  salesId,
+  method,
+}: ActionProps) => {
   const { clearCart } = usePos()
 
   const handleCart = () => {
@@ -37,28 +47,34 @@ const ConfirmAction = ({ show, handleClose, clearPay, productId, handleDelete,
         </div>
         <div className={styles.body}>
           {payment ? (
-            <p>
-              {`You are about to process a payment of $${amount} for salesID #${salesId}.`}<br />
-              {`Payment method: ${method}.`}<br />
+            <>
+              <p>
+                {`You are about to process a payment of $${amount} for salesID #${salesId}.`}<br />
+                {`Payment method: ${method}.`}<br />
+              </p>
               {method === 'Cash' && <p>Ensure you have collected the cash before confirming.</p>}
-            </p>
+            </>
           ) : (
             <p>{message}</p>
           )}
         </div>
         <div className={styles.footer}>
-          <button className={styles.secondaryButton} onClick={payment ? clearPay : handleClose}>
+          <Button variant="secondary" onClick={payment ? clearPay : handleClose}>
             Close
-          </button>
-          {productId ? <Button variant='danger' onClick={() => handleDelete && handleDelete(productId)}>Delete Product</Button>
-            : <button className={styles.primaryButton} onClick={handleCart}>
+          </Button>
+          {productId ? (
+            <Button variant="danger" onClick={() => handleDelete?.(productId)}>
+              Delete Product
+            </Button>
+          ) : (
+            <Button variant="primary" onClick={handleCart}>
               {!payment
                 ? 'Confirm'
                 : method === 'Cash'
                   ? 'Cash Collected'
                   : `Process Payment - $${amount}`}
-            </button>
-          }
+            </Button>
+          )}
         </div>
       </div>
     </div>
