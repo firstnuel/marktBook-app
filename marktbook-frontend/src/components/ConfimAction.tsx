@@ -1,5 +1,6 @@
 import { usePos } from '@hooks/usePos'
 import styles from '@styles/confirm-action.module.scss'
+import Button  from 'react-bootstrap/Button'
 
 interface ActionProps {
   handleClose: () => void;
@@ -10,9 +11,12 @@ interface ActionProps {
   salesId?: number;
   method?: string;
   clearPay?: () => void;
+  productId?: string
+  handleDelete?: (productID: string) => void
 }
 
-const ConfirmAction = ({ show, handleClose, clearPay, message, payment, amount, salesId, method }: ActionProps) => {
+const ConfirmAction = ({ show, handleClose, clearPay, productId, handleDelete,
+  message, payment, amount, salesId, method }: ActionProps) => {
   const { clearCart } = usePos()
 
   const handleCart = () => {
@@ -46,13 +50,15 @@ const ConfirmAction = ({ show, handleClose, clearPay, message, payment, amount, 
           <button className={styles.secondaryButton} onClick={payment ? clearPay : handleClose}>
             Close
           </button>
-          <button className={styles.primaryButton} onClick={handleCart}>
-            {!payment
-              ? 'Confirm'
-              : method === 'Cash'
-                ? 'Cash Collected'
-                : `Process Payment - $${amount}`}
-          </button>
+          {productId ? <Button variant='danger' onClick={() => handleDelete && handleDelete(productId)}>Delete Product</Button>
+            : <button className={styles.primaryButton} onClick={handleCart}>
+              {!payment
+                ? 'Confirm'
+                : method === 'Cash'
+                  ? 'Cash Collected'
+                  : `Process Payment - $${amount}`}
+            </button>
+          }
         </div>
       </div>
     </div>

@@ -11,8 +11,10 @@ import IconBox from '@components/IconBox'
 import icons from '@assets/icons'
 import { useInv } from '@hooks/useInv'
 import { useAuth } from '@hooks/useAuth'
+import { usePos } from '@hooks/usePos'
 import Notify from '@components/Notify'
 import { useBusiness } from '@hooks/useBusiness'
+import ConfirmAction from '@components/ConfimAction'
 
 
 interface ProductForm {
@@ -22,6 +24,7 @@ interface ProductForm {
 
 const ProductForm = ({ product, error }: ProductForm) => {
   const { business } = useBusiness()
+  const { fetchProducts } = usePos()
   const { reset: nameReset, ...productName } = useField('productName', 'text', product?.productName?? '')
   const { reset: barcodeReset, ...barcode } = useField('barcode', 'text', product?.barcode?? '')
   const { reset: tagReset, ...productTag } = useField('productTag', 'text')
@@ -41,6 +44,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
   const [selectedType, setSelectedType] = useState<string>(product?.productType?? '')
   const [selectedUnit, setSelectedUnit] = useState<string>(product?.unit?? '')
   const [selectedCat, setSelectedCat] = useState<string>(product?.productCategory?? '')
+  const [show, setShow] = useState(false)
   const [tags, setTags] = useState(product?.tags?? [])
   const [image, setImage] = useState<string | ArrayBuffer | null>(null)
   const produtCatData = business?.customCategories?.length?
@@ -53,9 +57,8 @@ const ProductForm = ({ product, error }: ProductForm) => {
     loading, createProduct,
     setMainOpt, setSubOpt,
     subOpt, mainOpt } = useInv()
+
   const { user } = useAuth()
-
-
 
   useEffect(() => {
     if (success && (subOpt !== 'Edit Product' && mainOpt !== 'Products')) {
@@ -133,6 +136,9 @@ const ProductForm = ({ product, error }: ProductForm) => {
 
   const handleDelete = (productID: string) => {
     deleteProduct(productID)
+    setShow(false)
+    resetOpt()
+    fetchProducts()
   }
 
   const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -333,7 +339,14 @@ const ProductForm = ({ product, error }: ProductForm) => {
                 Clear Form
             </Button>}
             { product &&
-            <Button onClick={() => handleDelete(product._id)} variant="danger">Delete</Button>
+            <><Button onClick={() =>  setShow(true)} variant="danger">Delete</Button>
+              <ConfirmAction
+                handleClose={() => setShow(false)}
+                show={show}
+                message={`This will delete the ${product.productName}`}
+                handleDelete={handleDelete}
+                productId={product._id}
+              /></>
             }
           </div>
         </Form>
@@ -341,5 +354,6 @@ const ProductForm = ({ product, error }: ProductForm) => {
     </Container>
   )
 }
+// handleDelete(product._id)
 
 export default ProductForm
