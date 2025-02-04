@@ -248,6 +248,7 @@ export class Product {
     try {
       // validate user
       const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      req.params.category = Utils.firstLetterToUpperCase(req.params.category)
 
       // validate params
       const parsedDataOrError = Utils.schemaParser(categorySchema, req.params) 
@@ -256,13 +257,36 @@ export class Product {
         return next(new ZodValidationError(parsedDataOrError.toString()))
       }
 
-      const reqQuery = Utils.sanitizeInput(req.params)
-      const { category }  = reqQuery
-
+      const { category } = req.params
       // fetch products
       const products = await productService.fetchCategories(`${existingUser.associatedBusinessesId}`, category)
+      let transformedProducts
+      if (products) {
+        transformedProducts = products.map((product) => {
+          const productData = product.toJSON()
+          // Rename stockId to stock
+          if (productData.stockId) {
+            productData.stock = productData.stockId 
+            delete productData.stockId 
+          } else {
+            productData.stock = null
+            delete productData.stockId 
+          }
+      
+          // Omit unnecessary fields
+          return omit(productData, [
+            'isActive',
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+            '__v',
+          ])
+        })
+      }
+      
       const message = products.length? 'Products data fetched successfully' : 'No product found'
-      res.status(HTTP_STATUS.OK).json({ message, data: products })
+      res.status(HTTP_STATUS.OK).json({ message, data: transformedProducts })
 
     } catch(error) {
       // Log and forward the error to a centralized error handler

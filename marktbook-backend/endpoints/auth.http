@@ -159,7 +159,7 @@ Accept: application/json
 withCredentials: true
 
 ### fetch all products by category
-GET {{baseUrl}}/{{urlpath}}/products/categories/Electronics
+GET {{baseUrl}}/{{urlpath}}/products/categories/Cosmeticss
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

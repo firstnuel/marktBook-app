@@ -75,7 +75,7 @@ export enum ProductCategory {
     Food = 'Food',                 
     Jewelry = 'Jewelry',         
     Textiles = 'Textiles',                 
-    Other = 'Other',                        // For categories not explicitly defined
+    Other = 'Other',
 }
 
 export enum ProductType {

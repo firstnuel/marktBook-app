@@ -52,7 +52,7 @@ export const productSchema = z.object({
 })
 
 export const categorySchema = z.object({
-  category: z.nativeEnum(ProductCategory)
+  category: z.string({required_error: 'Category is required'})
 })
 
 export const searchSchema = z.object({
