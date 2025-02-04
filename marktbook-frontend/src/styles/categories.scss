@@ -2,6 +2,12 @@
     display: flex;
     flex-direction: column;
     gap: .5em;
+    .error {
+        color: var(--secondary-color);
+        font-size: .8em;
+        font-style: italic;
+        margin-left: .5em;
+    }
 }
 
 #cat-footer {
@@ -43,6 +49,10 @@
             tr {
                 height: 5em;
                 border-bottom: 1px solid var(--light-gray);
+                &:hover {
+                    color: var(--primary-color);
+                    cursor: pointer;
+                }
                 td {
                     padding: .5em;
                 }

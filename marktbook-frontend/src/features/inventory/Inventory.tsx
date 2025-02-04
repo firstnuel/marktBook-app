@@ -8,6 +8,7 @@ import ProductForm from './ProductForm'
 import './index.scss'
 import StockForm from './StockForm'
 import PrintCodes from './PrintCodes'
+import ProductByCategory from './ProductByCategory'
 
 
 const Inventory = () => {
@@ -21,7 +22,7 @@ const Inventory = () => {
           <SecOption name='Products' mainOpt={mainOpt}/>
           <SecOption name='Create Products' mainOpt={mainOpt}/>
           <SecOption name='Stock Data' mainOpt={mainOpt}/>
-          <SecOption name='Products Variants'/>
+          {/* <SecOption name='Products Variants'/> */}
           <SecOption name='Categories' mainOpt={mainOpt}/>
           <SecOption name='Print Codes'  mainOpt={mainOpt}/>
         </Container>
@@ -31,9 +32,9 @@ const Inventory = () => {
           { mainOpt === 'Create Products' && <ProductForm error={error!} /> }
           { mainOpt === 'Stock Data' && <StockForm /> }
           { mainOpt === 'Print Codes' && <PrintCodes /> }
-          { mainOpt === 'Categories' && <Categories /> }
+          { mainOpt === 'Categories' && subOpt !== 'Product By Cat' && <Categories /> }
+          {mainOpt === 'Categories' && subOpt === 'Product By Cat' && <ProductByCategory />}
         </Container>
-
       </div>
     </div>
   )

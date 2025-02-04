@@ -61,6 +61,15 @@ class InventoryService {
     }
   }
 
+  public async fetchProductsByCat(category: string): Promise<any> {
+    try {
+      const response = await this.axios.get(`/products/categories/${category}`)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, `An error occurred while products by ${category}.`)
+    }
+  }
+
   public async updateProduct(productId: string, data: IProduct): Promise<any> {
 
     try {

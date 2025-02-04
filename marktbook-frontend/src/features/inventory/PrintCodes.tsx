@@ -1,4 +1,3 @@
-import noImg from '@assets/images/file.png'
 import { usePos } from '@hooks/usePos'
 import Container from 'react-bootstrap/Container'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -11,6 +10,7 @@ import { Product } from '@typess/pos'
 import { useReactToPrint } from 'react-to-print'
 import { useRef } from 'react'
 import Barcode from 'react-barcode'
+import ProductList from './ProductList'
 
 
 const PrintCodes = () => {
@@ -46,13 +46,10 @@ const PrintCodes = () => {
     }
   }
 
-
   const handleSelect = (eventKey: string | null) => {
     if (eventKey !== null)
       setSelectValue(eventKey)
   }
-
-  const handleSearch = () => console.log('Pussy')
 
 
   return (
@@ -67,7 +64,7 @@ const PrintCodes = () => {
           onSelect={handleSelect}
           eventKeys={searchKeys}
           useField={searchProduct}
-          handleSearch={handleSearch}
+          handleSearch={() => {}}
           reset={reset}
         />
         {filteredProducts() &&
@@ -80,28 +77,7 @@ const PrintCodes = () => {
             </Dropdown.Item>))}
         </Container>}
       </Container>
-      {selectedProduct &&
-        <div className="product-info">
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>SKU</th>
-                <th>Quantity</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className='body-row'>
-                  <img src={selectedProduct?.productImage ? selectedProduct.productImage : noImg} alt="" className="prd-img" />
-                  <span className="prdname">{selectedProduct?.productName}</span>
-                </td>
-                <td>{selectedProduct?.sku?? '-'}</td>
-                <td>{selectedProduct?.stock? selectedProduct.stock.unitsAvailable?? '0' : '-'}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>}
+      {selectedProduct && <ProductList product={selectedProduct}/>}
       {selectedProduct &&  <div className="barcode">
         <div className="label">Barcode <span className="optional">the code is generated based on SKU</span></div>
         <div ref={contentRef}>

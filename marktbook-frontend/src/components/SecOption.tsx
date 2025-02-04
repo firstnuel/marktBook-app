@@ -9,8 +9,12 @@ interface SecOptionProps {
 }
 
 const SecOption = ({ name, mainOpt }: SecOptionProps) => {
-  const { setMainOpt } = useInv()
-  const handleClick = () => setMainOpt(name)
+  const { setMainOpt, setSubOpt } = useInv()
+  const handleClick = () => {
+    setMainOpt(name)
+    if (name === 'Products') setSubOpt('Product List')
+  }
+
 
   return(
     <div className={name === mainOpt ? 'section-opt active' : 'section-opt'} onClick={handleClick}>

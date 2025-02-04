@@ -4,9 +4,11 @@ import { PriceInfo, CartItemProps, Product } from '@typess/pos'
 
 export const validationErrorFn = (msg: string , fn: (value: React.SetStateAction<string | null>) => void): void => {
   fn(msg)
-  setTimeout(() => {
+  const timer = setTimeout(() => {
     fn(null)
   }, 5000)
+
+  return clearTimeout(timer)
 }
 
 export const parseZError = (error: ZodError): string =>

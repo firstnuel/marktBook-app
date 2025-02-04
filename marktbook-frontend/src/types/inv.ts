@@ -1,4 +1,4 @@
-import { ProductAttributes, ProductCategory, CustomCategory, ProductType, ProductVariants } from './pos'
+import { ProductAttributes, ProductCategory, CustomCategory, ProductType, ProductVariants, Product } from './pos'
 
 type MainOption =
     | 'Products'
@@ -11,10 +11,12 @@ type MainOption =
 type SubOption =
     | 'Product List'
     | 'Edit Product'
+    | 'Product By Cat'
 
 export interface invState {
     mainOpt: MainOption
     subOpt: SubOption
+    productsByCat: Product[]
     product: IProduct | null
     stock: IStock | null
     error: string | null

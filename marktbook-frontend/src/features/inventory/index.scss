@@ -21,8 +21,8 @@
             flex-direction: column;
             padding: 0;
             gap: .5em;
-
         }
+
         .sec-show {
             width: 80%;
             height: 100%;
@@ -31,54 +31,64 @@
             display: flex;
             flex-direction: column;
             gap: .5em;
-            
+
             .main-content {
                 height: 93dvh;
                 overflow-y: auto;
                 scroll-behavior: smooth;
                 scroll-snap-type: y mandatory;
                 gap: 0.5em;
+
                 &::-webkit-scrollbar {
                     display: none;
                 }
+
                 table {
                     thead {
                         th {
                             position: sticky;
                             top: 0;
                             background-color: var(--light-blue) !important;
+
                             .th-con {
                                 font-weight: 500 !important;
                                 width: 100%;
                                 display: flex;
                                 justify-content: space-between;
                                 align-items: center;
+
                                 svg {
                                     max-width: 20px;
                                     max-height: 20px;
                                     fill: black;
                                 }
+
                                 svg.asc {
                                     transform: rotate(180deg);
                                 }
+
                                 svg.desc {
                                     transform: rotate(0deg);
                                 }
                             }
                         }
                     }
+
                     tbody {
                         tr {
                             cursor: pointer;
+
                             .body-row {
                                 display: flex;
                                 align-items: center;
                                 gap: .5em;
+
                                 img {
                                     width: 2em;
                                     height: 2em;
                                 }
                             }
+
                             .prod-name {
                                 &:hover {
                                     color: var(--primary-color);
@@ -95,7 +105,6 @@
             display: flex;
             height: 3em;
 
-
             .top-menu {
                 width: 100%;
                 display: flex;
@@ -103,15 +112,18 @@
                 padding: 0 .5em;
                 align-items: center;
                 justify-content: space-between;
+
                 .title-box {
                     font-size: 1.2em;
                     font-weight: 500;
                 }
+
                 .options {
                     display: flex;
                     align-items: center;
                     width: 60%;
                     gap: 1em;
+
                     .add-product {
                         display: flex;
                         align-items: center;
@@ -120,18 +132,22 @@
                         background-color: var(--primary-color);
                         color: var(--white-color);
                         cursor: pointer;
+
                         img {
                             width: 1.5em;
                             height: 1.5em;
                         }
                     }
+
                     .pdf, .excel, .print, .refresh {
                         cursor: pointer;
+
                         img {
                             width: 1.5em;
                             height: 1.5em;
                         }
                     }
+
                     input {
                         width: 100%;
                         height: 2em;
@@ -139,12 +155,109 @@
                         padding: 0 .5em;
                         border: 1px solid var(--dark-gray);
                     }
-
                 }
+            }
+        }
+    }
+}
 
-                
+.back {
+    display: flex;
+    cursor: pointer;
+
+    img {
+        width: 1.5em;
+        height: 1.5em;
+        filter: invert(100%) brightness(0%);
+    }
+}
+
+.cat-content {
+    width: 100%;
+    height: 83dvh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+
+
+/* For Tablets (e.g., iPad) */
+@media (max-width: 1024px) {
+    .main-container-inv .main-con {
+        flex-direction: column;
+
+        .sec {
+            width: 100%;
+            height: auto;
+        }
+
+        .sec-show {
+            width: 100%;
+            height: auto;
+        }
+
+        .topper .top-menu .options {
+            width: 100%;
+            flex-wrap: wrap;
+        }
+    }
+}
+
+/* For Mobile Devices */
+@media (max-width: 768px) {
+    .main-container-inv .main-con {
+        padding: 0 0.5em;
+
+        .sec-show .main-content {
+            height: auto;
+        }
+
+        .topper .top-menu {
+            flex-direction: column;
+            gap: 0.5em;
+
+            .title-box {
+                font-size: 1em;
+            }
+
+            .options {
+                width: 100%;
+                gap: 0.5em;
+
+                input {
+                    width: 100%;
+                }
             }
         }
     }
 
+    .back img {
+        width: 1.2em;
+        height: 1.2em;
+    }
+}
+
+/* For Smaller Mobile Devices */
+@media (max-width: 480px) {
+    .main-container-inv .main-con {
+        .sec-show .main-content table {
+            font-size: 0.9em;
+        }
+
+        .topper .top-menu .options {
+            gap: 0.3em;
+
+            .add-product, .pdf, .excel, .print, .refresh {
+                img {
+                    width: 1.2em;
+                    height: 1.2em;
+                }
+            }
+        }
+    }
 }

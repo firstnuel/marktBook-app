@@ -2,17 +2,31 @@ import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '@styles/categories.scss'
 import { ProductCategory } from '@typess/pos'
 import { useBusiness } from '@hooks/useBusiness'
 import { useField } from '@hooks/useField'
 import Notify from '@components/Notify'
+import { useInv } from '@hooks/useInv'
 
 const Categories = () => {
   const [show, setShow] = useState(false)
-  const { business, updateCategory, clearError, success, error } = useBusiness()
+  const { business, updateCategory } = useBusiness()
+  const { setSubOpt, fetchProductsByCat, successMsg, success, error, clearError } = useInv()
   const { reset, ...category } = useField('category', 'text')
+  const [inputError, setInputError] = useState(false)
+
+
+  const getProductsByCat = (category: string) => {
+    fetchProductsByCat(category)
+  }
+
+  useEffect(() => {
+    if(success) {
+      setSubOpt('Product By Cat')
+    }
+  }, [success, setSubOpt])
 
   const handleSubmit = () => {
     if((category.value as string).length) {
@@ -22,7 +36,12 @@ const Categories = () => {
       updateCategory(business!._id, { customCategories: data })
       if(success)
         reset()
-      setShow(false)}
+      setShow(false)
+    } else {
+      setInputError(true)
+      const timer  = setTimeout(() => setInputError(false), 3000)
+      return () => clearTimeout(timer)
+    }
   }
   const handleShow = () => setShow(true)
   const categoryData = business?.customCategories?.length ?
@@ -37,7 +56,7 @@ const Categories = () => {
 
   return(
     <Container className="whole">
-      <Notify clearErrFn={clearError} success={success} error={error} />
+      <Notify clearErrFn={clearError} success={successMsg} error={error} />
       <div className="head-info">
         <div className="head-name">All Categories</div>
         <Button onClick={handleShow}>Add New Category</Button>
@@ -54,7 +73,7 @@ const Categories = () => {
           </thead>
           <tbody>
             {categoryData.map((category, idx) => (
-              <tr key={idx}>
+              <tr key={idx} onClick={() => getProductsByCat(category)}>
                 <td>{category}</td>
                 <td>{checkType(category)}</td>
               </tr>))
@@ -75,7 +94,9 @@ const Categories = () => {
         </Modal.Header>
         <Modal.Body>
           <div className='cat-input'>
-            <div>Category Name:</div>
+            <div>Category Name:
+              {inputError && <span className="error">This field cannot be empty.</span>}
+            </div>
             <Form.Control {...category} />
           </div>
         </Modal.Body>

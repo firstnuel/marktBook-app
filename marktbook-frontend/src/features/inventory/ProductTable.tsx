@@ -52,7 +52,6 @@ const ProductTable = () => {
     Quantity: 'stock.unitsAvailable', // Handle nested field
     Discount: 'discount',
     Type: 'productType',
-    Unit: 'unit',
   }
 
   const header = Object.keys(hFields)
@@ -99,7 +98,6 @@ const ProductTable = () => {
         product.stock?.unitsAvailable ?? 0,
         product.discount,
         product.productType,
-        product.unit,
       ]),
     })
 
@@ -119,7 +117,6 @@ const ProductTable = () => {
     { label: 'Quantity', key: 'stock.unitsAvailable' },
     { label: 'Discount', key: 'discount' },
     { label: 'Type', key: 'productType' },
-    { label: 'Unit', key: 'unit' },
   ]
 
   return (
@@ -172,7 +169,6 @@ const ProductTable = () => {
                 <td>{product.stock?.unitsAvailable ?? 0}</td>
                 <td>{product.discount}</td>
                 <td>{product.productType}</td>
-                <td>{product.unit}</td>
               </tr>
             ))}
           </tbody>

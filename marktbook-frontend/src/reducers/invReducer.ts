@@ -6,6 +6,7 @@ const initialState: invState = {
   mainOpt: 'Products',
   subOpt: 'Product List',
   product: null,
+  productsByCat: [],
   stock: null,
   error: null,
   loading: false,
@@ -21,6 +22,18 @@ export const fetchProduct = createAsyncThunk('inv/getProduct', async (productId:
 
   return { product: response.data, successMsg: response.message }
 })
+
+export const fetchProductsByCat = createAsyncThunk('inv/getProductsByCat', async (category: string) => {
+  const response = await inventoryService.fetchProductsByCat(category)
+  if (response.message === 'No product found') {
+    throw new Error(`${response.message} for ${category}`)
+  } else if (response.status === 'status') {
+    throw new Error(response.message)
+  }
+
+  return { products: response.data, successMsg: response.message }
+})
+
 
 export const fetchStock = createAsyncThunk('inv/getStockData', async (productId: string) => {
   const response = await inventoryService.fetchStock(productId)
@@ -231,7 +244,24 @@ const invSlice = createSlice({
       state.loading = false
       state.success = false
       state.error = action.error.message as string ||
-          'Product could not be deletes, try again later'
+          'Product could not be deleted, try again later'
+    })
+    builder.addCase(fetchProductsByCat.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    builder.addCase(fetchProductsByCat.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+      state.successMsg = action.payload.successMsg
+      state.productsByCat = action.payload.products
+      state.success = true
+    })
+    builder.addCase(fetchProductsByCat.rejected, (state, action) => {
+      state.loading = false
+      state.success = false
+      state.error = action.error.message as string ||
+          'Product by category could not be fetched, try again later'
     })
   }
 })

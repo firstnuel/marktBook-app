@@ -42,6 +42,9 @@
             border-bottom: 1px solid var(--light-gray);
             font-weight: 500;
             font-size: 1.1em;
+            position: sticky;
+            top: 0;
+            background-color: var(--white-color);
         }
         tbody {
             text-align: left;

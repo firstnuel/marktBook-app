@@ -33,13 +33,18 @@ const authPersistConfig = {
   blacklist: ['loading', 'error', 'registered', 'reset', 'updated']
 }
 
+const invPersistConfig = {
+  key: 'inv',
+  storage,
+  whitelist: ['mainOpt', 'subOpt', 'product', 'productsByCat', 'stock' ]
+}
 
 // the base reducer combination
 const combinedReducer = combineReducers({
   'auth': persistReducer(authPersistConfig, authReducer),
   'pos': persistReducer({ key: 'pos', storage, whitelist: ['cartItems'] }, posReducer),
   'business': persistReducer({ key: 'business', storage, whitelist: ['business'] }, businessReducer),
-  'inv': invReducer
+  'inv': persistReducer(invPersistConfig, invReducer)
 })
 
 // root reducer with reset capability

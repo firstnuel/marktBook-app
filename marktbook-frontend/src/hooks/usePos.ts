@@ -1,5 +1,4 @@
-import { CartItemProps, ProductCategory, SearchKeys } from '@typess/pos'
-import {  useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../store'
 import {
   clearCart,
@@ -12,10 +11,12 @@ import {
   searchByCategory,
   searchByKeyandPhrase,
 } from '@reducers/posReducers'
+import { CartItemProps, ProductCategory, SearchKeys } from '@typess/pos'
 
 export const usePos = () => {
   const dispatch = useAppDispatch()
   const hasLoaded = useRef(false)
+
   const {
     products,
     cartItems,
@@ -29,22 +30,61 @@ export const usePos = () => {
     successMsg,
   } = useAppSelector(state => state.pos)
 
+  // Automatically clear error or success message after 5 seconds
   useEffect(() => {
     if (error || successMsg) {
       const timer = setTimeout(() => {
         dispatch(clearError())
       }, 5000)
-
       return () => clearTimeout(timer)
     }
   }, [error, dispatch, successMsg])
 
+  // Fetch products only once when the component mounts
   useEffect(() => {
     if (!hasLoaded.current && !products.length) {
       dispatch(fetchProducts())
       hasLoaded.current = true
     }
   }, [dispatch, products.length])
+
+  // Memoized functions to avoid unnecessary re-creations
+  const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
+
+  const fetchProductsHandler = useCallback(() => dispatch(fetchProducts()), [dispatch])
+
+  const searchByCategoryHandler = useCallback(
+    (category: ProductCategory | 'ALL') => dispatch(searchByCategory({ category })),
+    [dispatch]
+  )
+
+  const searchByKeyAndPhraseHandler = useCallback(
+    (searchKey: keyof typeof SearchKeys, searchPhrase: string) =>
+      dispatch(searchByKeyandPhrase({ searchKey, searchPhrase })),
+    [dispatch]
+  )
+
+  const updateDiscountHandler = useCallback(
+    (discount: number) => dispatch(updatePrice({ discount })),
+    [dispatch]
+  )
+
+  const clearCartHandler = useCallback(() => dispatch(clearCart()), [dispatch])
+
+  const addToCartHandler = useCallback(
+    (cartItem: CartItemProps) => dispatch(addToCart({ cartItem })),
+    [dispatch]
+  )
+
+  const addQuantityHandler = useCallback(
+    (productId: string) => dispatch(addQuantity({ productId })),
+    [dispatch]
+  )
+
+  const subQuantityHandler = useCallback(
+    (productId: string) => dispatch(subQuantity({ productId })),
+    [dispatch]
+  )
 
   return {
     products,
@@ -57,15 +97,14 @@ export const usePos = () => {
     error,
     priceInfo,
     successMsg,
-    clearError: () => dispatch(clearError()),
-    fetchProducts: () => dispatch(fetchProducts()),
-    searchByCategory: (category: ProductCategory | 'ALL') => dispatch(searchByCategory({ category })),
-    searchByKeyandPhrase: (searchKey: (keyof typeof SearchKeys), searchPhrase: string) =>
-      dispatch(searchByKeyandPhrase({ searchKey, searchPhrase })),
-    updateDiscount: ( discount: number) => dispatch(updatePrice({ discount })),
-    clearCart: () => dispatch(clearCart()),
-    addToCart: (cartItem: CartItemProps) => dispatch(addToCart({ cartItem })),
-    addQuantity: (productId: string) => dispatch(addQuantity({ productId })),
-    subQuantity: (productId: string) => dispatch(subQuantity({ productId })),
+    clearError: clearErrorHandler,
+    fetchProducts: fetchProductsHandler,
+    searchByCategory: searchByCategoryHandler,
+    searchByKeyandPhrase: searchByKeyAndPhraseHandler,
+    updateDiscount: updateDiscountHandler,
+    clearCart: clearCartHandler,
+    addToCart: addToCartHandler,
+    addQuantity: addQuantityHandler,
+    subQuantity: subQuantityHandler,
   }
 }

@@ -98,7 +98,7 @@ const StockForm = () => {
       <Notify error={error} success={successMsg} clearErrFn={clearError} />
       <div className="head-info">
         <div className="head-name">
-          {stock ? 'Edit Stock Data' : 'Create Stock Data'}
+          {stock ? 'Edit Stock Data' : 'Add Stock Data'}
         </div>
         <div className="action-btns">
         {product &&  <div className="back">
