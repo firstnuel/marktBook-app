@@ -46,6 +46,17 @@ export interface ProductVariants {
     stockId: ObjectId | string;
 }
 
+// export interface ProductVariants {
+//   variantName: string; // e.g., "Small - Red"
+//   sku: string; // Unique identifier for the variant
+//   attributes: Record<string, string>; // e.g., { size: "Small", color: "Red" }
+//   priceAdjustment?: number; // Price difference compared to the base product
+//   image?: string; // URL to variant-specific image
+//   stock?: number; // Stock count for the variant (if managed at the variant level)
+// }
+
+
+
 export interface ProductAttributes {
   color?: string;
   size?: number;

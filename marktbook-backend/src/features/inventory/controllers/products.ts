@@ -285,12 +285,12 @@ export class Product {
         })
       }
       
-      const message = products.length? 'Products data fetched successfully' : 'No product found'
+      const message = products.length? `Products data for '${category}' fetched successfully` : 'No product found'
       res.status(HTTP_STATUS.OK).json({ message, data: transformedProducts })
 
     } catch(error) {
       // Log and forward the error to a centralized error handler
-      log.error('Error fetching uses')
+      log.error('Error fetching Products data')
       next(error)
     }
   }
