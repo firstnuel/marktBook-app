@@ -28,13 +28,7 @@ const PasswordResetForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    try {
-      await passwordReset(email.value)
-
-    } catch (err) {
-      console.error('Password reset error:', err)
-    }
+    await passwordReset(email.value as string)
   }
 
   return (

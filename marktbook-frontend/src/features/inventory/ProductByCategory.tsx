@@ -4,15 +4,17 @@ import ProductList from './ProductList'
 import './index.scss'
 import icons from '@assets/icons'
 import IconBox from '@components/IconBox'
+import Notify from '@components/Notify'
 
 
 const ProductByCategory = () => {
-  const { productsByCat, setSubOpt } = useInv()
+  const { productsByCat, setSubOpt, successMsg, clearError } = useInv()
 
 
   return(
 
     <Container className="whole">
+      <Notify clearErrFn={clearError} success={successMsg}  />
       <div className="head-info">
         <div className="head-name"> Products Under {productsByCat[0].productCategory}</div>
         <div className="back">

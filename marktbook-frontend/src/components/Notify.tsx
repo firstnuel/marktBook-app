@@ -7,8 +7,8 @@ interface NotifyProps {
 }
 
 interface NotifyBoxProps {
-    error: string | null ,
-    success:string | null,
+    error?: string | null ,
+    success?:string | null,
     clearErrFn: () => void,
 }
 
