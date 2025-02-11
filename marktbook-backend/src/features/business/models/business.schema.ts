@@ -22,7 +22,7 @@ const businessSchema: Schema = new Schema(
     ],
     customCategories: { type: [String], default: [] },
     businessImg: { type: String, required: false },
-    currency: { type: String, required: false, default: 'USD' },
+    currency: { type: String, required: true, default: 'USD' },
     
     businessLogo: { type: String, required: false },
     uId: { type: String, required: false },

@@ -11,7 +11,7 @@ export interface IBusinessDocument extends Document {
   username: string;
   email: string;
   admins: IBusinessAdmin[];
-  currency?: Currency;
+  currency: Currency;
   customCategories?: string[];
   businessLogo?: string;
   businessImg?: string;

@@ -52,11 +52,15 @@ class Business {
 
       const editedBusinessData = await businessService.updateBusinessData(businessId, filteredData)
 
+      if (!editedBusinessData) {
+        throw new BadRequestError('Failed to update business data')
+      }
+
       // Respond to client
       res.status(HTTP_STATUS.CREATED).json({
         status: 'success',
         message: 'Business data updated successfully',
-        data: omit(editedBusinessData, ['uId', 'verifyData']), // Exclude sensitive fields
+        data: omit(editedBusinessData.toJSON(), ['uId', 'verifyData']), // Exclude sensitive fields
       })
 
     } catch (error) {
@@ -77,12 +81,16 @@ class Business {
       const { businessId } = req.params
 
       const businessData = await businessService.getBusinessById(businessId)
+      
+      if (!businessData) {
+        throw new BadRequestError('Failed to update business data')
+      }
 
       // Respond to client
       res.status(HTTP_STATUS.CREATED).json({
         status: 'success',
         message: 'Business data fetched successfully',
-        data: omit(businessData, ['uId', 'verifyData']), // Exclude sensitive fields
+        data: omit(businessData.toJSON(), ['uId', 'verifyData','admins', '__v']), // Exclude sensitive fields
       })
 
 
@@ -92,6 +100,13 @@ class Business {
     }
   }
 
+
+
+  // public async delete(req: Request, res: Response, next: NextFunction):Promise<void> {
+
+
+  // }
+ 
 }
 
 

@@ -237,6 +237,7 @@ export class Register {
       uId: uIds?.businessUId?? '',
       businessCategory,
       businessAddress,
+      currency: 'USD',
       businessType,
       businessAccount: {
         accountName: '',
