@@ -11,9 +11,7 @@ import icons from '@assets/icons'
 import './index.scss'
 
 
-
 const PasswordResetForm = () => {
-
 
   const { reset: emailReset, ...email } = useField('email', 'email')
   const [success, setSuccess] = useState<boolean>(false)
@@ -51,12 +49,9 @@ const PasswordResetForm = () => {
             {loading? 'Loading...' : 'Reset Password'}
           </Button >
         </Form>
-
       </Container>
     </div>
   )
 }
-
-
 
 export default PasswordResetForm

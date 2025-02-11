@@ -30,6 +30,7 @@ import uploadicon from '@assets/icons/upload-icon.svg'
 import addNewIcon from '@assets/icons/add-nwe-icon.svg'
 import refreshIcon from '@assets/icons/refresh.icon.svg'
 import printIcon from '@assets/icons/print-icon.svg'
+import dashBoard from '@assets/icons/dashboard.svg'
 
 
 const icons = {
@@ -64,7 +65,8 @@ const icons = {
   upload: uploadicon,
   addNew: addNewIcon,
   refresh: refreshIcon,
-  print: printIcon
+  print: printIcon,
+  dashboard: dashBoard,
 }
 
 export default icons

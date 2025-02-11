@@ -7,6 +7,7 @@ import PasswordUpdateForm from '@auth/AuthForms/PasswordUpdate'
 import PointOfSale from '@features/pos/PointOfSale'
 import Home from '@features/home/home'
 import { useAuth } from '@hooks/useAuth'
+import Settings from '@features/business/settings'
 
 const AppRoutes = () => {
   const { user } = useAuth()
@@ -26,6 +27,13 @@ const AppRoutes = () => {
       <Route path="/reset-password" element={<PasswordUpdateForm />} />
 
       {/* Protected Routes */}
+      <Route path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        } />
+
       <Route
         path="/inventory"
         element={
