@@ -20,7 +20,7 @@ export interface IBusinessDocument extends Document {
   businessAddress?: string;
   businessType?: BusinessType;
   businessAccount?: IBusinessBankAccount;
-  businessBio?: string;
+  phoneNumber?: string;
   notifications?: INotificationSettings;
   createdAt?: Date;
 }
@@ -28,11 +28,14 @@ export interface IBusinessDocument extends Document {
 export const EDIT_BUSINESS_FIELDS: (keyof IBusinessDocument)[] = [
   'businessLogo',
   'businessAddress',
-  'businessImg',
-  'businessBio',
   'businessAccount',
   'notifications',
-  'customCategories'
+  'customCategories',
+  'currency',
+  'businessCategory',
+  'businessType',
+  'phoneNumber',
+  'businessName',
 ] 
 
 export interface IBusinessBankAccount {

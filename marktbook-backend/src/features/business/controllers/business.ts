@@ -3,7 +3,6 @@ import { singleImageUpload } from '@root/shared/globals/helpers/cloudinary-uploa
 import HTTP_STATUS from 'http-status-codes'
 import { Request, Response, NextFunction } from 'express'
 import { businessService } from '@service/db/business.service'
-import { v4 as uuidv4 } from 'uuid'
 import { config } from '@root/config'
 import { Utils } from '@global/helpers/utils'
 import { BadRequestError, ZodValidationError } from '@global/helpers/error-handlers'
@@ -47,10 +46,6 @@ class Business {
 
       if (filteredData.businessLogo) {
         filteredData.businessLogo = await singleImageUpload(filteredData.businessLogo, businessId)
-      }
-
-      if (filteredData.businessImg) {
-        filteredData.businessImg = await singleImageUpload(filteredData.businessImg, uuidv4())
       }
 
       const editedBusinessData = await businessService.updateBusinessData(businessId, filteredData)

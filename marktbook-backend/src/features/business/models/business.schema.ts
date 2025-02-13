@@ -43,7 +43,7 @@ const businessSchema: Schema = new Schema(
       bankName: { type: String, required: false },
       accountType: { type: String, required: false },
     },
-    businessBio: { type: String, required: false },
+    phoneNumber: { type: String, required: false },
     notifications: {
       sales: { type: Boolean, default: true },
       stockLevel: { type: Boolean, default: true },

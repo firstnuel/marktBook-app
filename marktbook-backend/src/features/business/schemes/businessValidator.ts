@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { BusinessCategory, BusinessType, } from '@auth/interfaces/auth.interface'
 
 const businessAccount = z.object({
   accountName: z.string({ required_error: 'accountName  is required' }).trim(),
@@ -14,19 +15,15 @@ const notifications = z.object({
   userDataChange: z.boolean({ required_error: 'value is required for userDataChange'}),
 }).optional()
   
-const social = z.object({
-  facebook: z.string().trim().optional(),
-  instagram: z.string().trim().optional(),
-  twitter: z.string().trim().optional(),
-  youtube: z.string().trim().optional(),
-  website: z.string().trim().optional(),
-}).optional()
 
 export const editBusinessSchema = z.object({
   businessLogo: z.string().trim().optional(),
+  businessName: z.string().trim().optional(),
   businessAddress: z.string().trim().optional(),
   businessBio: z.string().trim().optional(),
+  phoneNumber: z.string().trim().optional(),
+  businessCategory: z.nativeEnum(BusinessCategory).optional(),
+  businessType: z.nativeEnum(BusinessType).optional(),
   businessAccount,
   notifications,
-  social
 })

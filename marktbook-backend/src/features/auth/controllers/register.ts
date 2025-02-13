@@ -245,7 +245,7 @@ export class Register {
         bankName: '',
         accountType: '',
       },
-      businessBio: '',
+      phoneNumber: '',
       notifications: {
         sales: true,
         stockLevel: true,

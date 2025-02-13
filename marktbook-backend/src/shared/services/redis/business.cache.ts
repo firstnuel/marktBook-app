@@ -31,7 +31,7 @@ class BusinessCache extends Basecache {
       businessAddress,
       businessType,
       businessAccount,
-      businessBio,
+      phoneNumber,
       notifications,
     } = createdBusiness
       
@@ -50,7 +50,7 @@ class BusinessCache extends Basecache {
       'businessAddress', businessAddress || '',
       'businessType', JSON.stringify(businessType || ''),
       'businessAccount', JSON.stringify(businessAccount || {}),
-      'businessBio', businessBio || '',
+      'phoneNumber', phoneNumber || '',
     ]
       
     const thirdList: string[] = [
@@ -102,7 +102,7 @@ class BusinessCache extends Basecache {
         businessAddress: cacheData['businessAddress'] || undefined,
         businessType: JSON.parse(cacheData['businessType']),
         businessAccount: JSON.parse(cacheData['businessAccount']),
-        businessBio: cacheData['businessBio'] || undefined,
+        phoneNumber: cacheData['phoneNumber'] || undefined,
         admins: JSON.parse(cacheData['admins']),
         businessLogo: cacheData['businessLogo'] || undefined,
         notifications: JSON.parse(cacheData['notifications']),
