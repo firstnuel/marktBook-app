@@ -16,7 +16,12 @@ class UsersRoutes {
     this.router.get('/users', authMiddleware.checkAuthentication, users.read.bind(users))
     this.router.get('/users/:id', authMiddleware.checkAuthentication, userManagement.getUser.bind(users))
     this.router.patch('/users/:id', authMiddleware.checkAuthentication, userManagement.editUser.bind(users))
-    this.router.delete('/users/:id', authMiddleware.checkAuthentication, userManagement.deleteUser.bind(users))
+
+    this.router.delete('/users/:id', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      authMiddleware.validateBusiness,
+      userManagement.deleteUser.bind(users))
 
 
     return this.router

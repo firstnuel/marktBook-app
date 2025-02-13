@@ -1,7 +1,13 @@
+import { LogModel } from '@activity/models/logs.schema'
 import { IBusinessDocument, IBusinessAdmin } from '@business/interfaces/business.interface'
 import { BusinessModel } from '@business/models/business.schema'
+import { CustomerModel } from '@contacts/models/contacts.schema'
+import { LocationModel } from '@inventory/models/locations.schema'
+import { ProductModel } from '@inventory/models/products.schema'
+import { StockModel } from '@inventory/models/stocks.schema'
+import { SaleModel } from '@transactions/models/sales.schema'
 import { ObjectId } from 'mongodb'
-
+import { Model } from 'mongoose'
 
 class BusinessService {
   public async addBusinessData(data: IBusinessDocument): Promise<void> {
@@ -25,6 +31,16 @@ class BusinessService {
       }
     }
     )
+  }
+
+  public async deleteBusiness(businessId: ObjectId | string): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const collections: Array<Model<any>> = [ProductModel, LocationModel, CustomerModel, SaleModel, StockModel, LogModel]
+
+    for (const model of collections) {
+      await model.deleteMany({ businessId: businessId })
+    }
+    await BusinessModel.findByIdAndDelete(businessId)
   }
 }
 

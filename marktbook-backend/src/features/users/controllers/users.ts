@@ -54,10 +54,10 @@ export class Users {
 
       // Check if user account already exist
       const checkExistingAccount: IuserDocument | null = await userService.getUserByUsernameAndEmail(username, email)
-      const checkExistingAuthAccount: IAuthDocument | null =  await authService.getUserByEmailOrUsername(email, username)
+      const checkExistingAuthAccount: IAuthDocument | null =  await authService.getUserByUsername(username)
       if (checkExistingAccount || checkExistingAuthAccount) {
-        log.warn(`User registration failed: Account with username "${username}" and email "${email}" already exists.`)
-        return next(new BadRequestError('User account with this username or email already exists.'))
+        log.warn(`User registration failed: Account with username "${username}" already exists.`)
+        return next(new BadRequestError('User account with this username already exists.'))
       }
 
       // validate business

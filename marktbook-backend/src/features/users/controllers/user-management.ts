@@ -11,6 +11,7 @@ import {  NotFoundError } from '@global/helpers/error-handlers'
 import {  singleImageUpload } from '@global/helpers/cloudinary-upload'
 import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
+import { authService } from '@service/db/auth.service'
 
 const log  = config.createLogger('userController')
 
@@ -131,7 +132,8 @@ class UserManagement extends Users {
         return next(new NotFoundError('User not found'))
       }
 
-      // Perform deletion
+      // delete user and auth credentials
+      await authService.deleteAuth(existingUser.authId as string)
       await userService.deleteUserById(id)
 
       // log user activity

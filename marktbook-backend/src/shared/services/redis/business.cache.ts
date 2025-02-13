@@ -25,6 +25,7 @@ class BusinessCache extends Basecache {
       email,
       admins,
       businessLogo,
+      currency,
       uId,
       businessCategory,
       businessAddress,
@@ -32,7 +33,6 @@ class BusinessCache extends Basecache {
       businessAccount,
       businessBio,
       notifications,
-      social,
     } = createdBusiness
       
     const firstList: string[] = [
@@ -40,6 +40,7 @@ class BusinessCache extends Basecache {
       'businessName', businessName || '',
       'email', email || '',
       'uId', uId || '',
+      'currency', currency || 'USD', 
     ]
       
     const secondList: string[] = [
@@ -56,7 +57,6 @@ class BusinessCache extends Basecache {
       'admins', JSON.stringify(admins || []),
       'businessLogo', businessLogo || '',
       'notifications', JSON.stringify(notifications || {}),
-      'social', JSON.stringify(social || {}),
       'createdAt', createdAt.toISOString(),
     ]
         
@@ -106,7 +106,6 @@ class BusinessCache extends Basecache {
         admins: JSON.parse(cacheData['admins']),
         businessLogo: cacheData['businessLogo'] || undefined,
         notifications: JSON.parse(cacheData['notifications']),
-        social: JSON.parse(cacheData['social']),
         createdAt: new Date(cacheData['createdAt']),
       } as IBusinessDocument
     
@@ -116,8 +115,6 @@ class BusinessCache extends Basecache {
       throw new ServerError('Error retrieving business data from cache, try again')
     }
   }
-    
-
 }
 
 

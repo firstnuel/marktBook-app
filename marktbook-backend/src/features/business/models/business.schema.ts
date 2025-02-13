@@ -49,14 +49,7 @@ const businessSchema: Schema = new Schema(
       stockLevel: { type: Boolean, default: true },
       dueCreditSales: { type: Boolean, default: true },
       userDataChange: { type: Boolean, default: true },
-    },
-    social: {
-      facebook: { type: String, required: false },
-      instagram: { type: String, required: false },
-      twitter: { type: String, required: false },
-      youtube: { type: String, required: false },
-      website: { type: String, required: false },
-    },
+    }
   },
   {
     timestamps: true,

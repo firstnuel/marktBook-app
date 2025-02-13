@@ -9,6 +9,8 @@ import { Utils } from '@global/helpers/utils'
 import { BadRequestError, ZodValidationError } from '@global/helpers/error-handlers'
 import { filterFields, IBusinessDocument, EDIT_BUSINESS_FIELDS } from '@business/interfaces/business.interface'
 import { omit } from 'lodash'
+import { authService } from '@service/db/auth.service'
+import { userService } from '@service/db/user.service'
 
 export const log = config.createLogger('businessController')
 
@@ -17,6 +19,7 @@ class Business {
   constructor( ) {
     this.editBusiness = this.editBusiness.bind(this)
     this.fetch = this.fetch.bind(this)
+    this.delete = this.delete.bind(this)
   }
 
   /**
@@ -83,7 +86,7 @@ class Business {
       const businessData = await businessService.getBusinessById(businessId)
       
       if (!businessData) {
-        throw new BadRequestError('Failed to update business data')
+        throw new BadRequestError('Can not find business account')
       }
 
       // Respond to client
@@ -101,12 +104,33 @@ class Business {
   }
 
 
+  public async delete(req: Request, res: Response, next: NextFunction):Promise<void> {
+    try {
+      const { businessId } = req.params
 
-  // public async delete(req: Request, res: Response, next: NextFunction):Promise<void> {
+
+      const business = await businessService.getBusinessById(businessId)
+      
+      if (!business) {
+        throw new BadRequestError('Can not find business account')
+      }
+
+      await authService.deleteAllAuth(business.email)
+      await userService.deleteAllUsers(business._id)
+      await businessService.deleteBusiness(business._id)
 
 
-  // }
- 
+      // Respond to client
+      res.status(HTTP_STATUS.ACCEPTED).json({
+        status: 'success',
+        message: 'Business account data deleted successfully',
+      })
+      
+    } catch (error) {
+      log.error('Error fetching business data')
+      next(error)
+    }
+  }
 }
 
 

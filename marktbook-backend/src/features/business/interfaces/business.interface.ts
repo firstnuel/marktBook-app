@@ -22,7 +22,6 @@ export interface IBusinessDocument extends Document {
   businessAccount?: IBusinessBankAccount;
   businessBio?: string;
   notifications?: INotificationSettings;
-  social?: ISocialLinks;
   createdAt?: Date;
 }
 
@@ -32,7 +31,6 @@ export const EDIT_BUSINESS_FIELDS: (keyof IBusinessDocument)[] = [
   'businessImg',
   'businessBio',
   'businessAccount',
-  'social',
   'notifications',
   'customCategories'
 ] 
@@ -56,14 +54,6 @@ export interface INotificationSettings {
   stockLevel: boolean;
   dueCreditSales: boolean;
   userDataChange: boolean;
-}
-
-export interface ISocialLinks {
-  facebook?: string;
-  instagram?: string;
-  twitter?: string;
-  youtube?: string;
-  website?: string;
 }
 
 export enum BusinessRole {

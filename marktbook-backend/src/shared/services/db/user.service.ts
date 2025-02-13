@@ -38,9 +38,11 @@ class UserService {
   public async deleteUserById(userId: string): Promise<void> {
     await UserModel.findByIdAndDelete(userId).exec()
   }
-  
-  
-  
+
+  public async deleteAllUsers(businessId: string | ObjectId): Promise<void> {
+
+    await UserModel.deleteMany({ associatedBusinessesId: businessId }).exec()
+  }
 
 }
 

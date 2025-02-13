@@ -252,13 +252,6 @@ export class Register {
         dueCreditSales: true,
         userDataChange: true,
       },
-      social: {
-        facebook: '',
-        instagram: '',
-        twitter: '',
-        youtube: '',
-        website: '',
-      },
       createdAt: new Date(),
     } as IBusinessDocument
   }

@@ -23,6 +23,13 @@ class BusinessRoutes {
       business.fetch
     )
 
+    this.router.delete('/business/:businessId', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      authMiddleware.validateBusiness,
+      business.delete
+    )
+
 
     return this.router
   }
