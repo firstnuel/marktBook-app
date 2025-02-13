@@ -58,7 +58,8 @@
 |  | 2 |  Implemented reducers, hooks and interfaces to handle business  |
 | **4.02.**  | 2 | Implemented UI, reducers and services to fetch product by category |
 |  | 2 |  Major refactor of inventory UI  |
-| **13.02.**  | 3 | Implemented UI for account management |
-| **Total**  | **146** | |
+| **12.02.**  | 3 | Implemented UI for account management |
+| **13.02.**  | 2 | Completed UI for account management |
+| **Total**  | **148** | |
 
 
