@@ -1,8 +1,9 @@
 import testImage from '@assets/images/file.png'
-import { cutName } from '@utils/helpers'
+import { cutName, getCurrencySymbol } from '@utils/helpers'
 import ProductBox from '@components/ProductBox'
 import { Product } from '@typess/pos'
 import { useState } from 'react'
+import { useBusiness } from '@hooks/useBusiness'
 import '@styles/product-card.scss'
 
 interface ProductCardProps {
@@ -11,7 +12,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const [modalShow, setModalShow] = useState(false)
-
+  const { business } = useBusiness()
 
   return(
     <>
@@ -23,7 +24,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="card-data">
           <div className={product.stock?.unitsAvailable? 'available' : 'unavailable'}>
             <span>{product.stock?.unitsAvailable? 'In Stock' : 'Out of Atock'}</span></div>
-          <div className="price">{`$${product.salePrice.toFixed(2)}`}</div>
+          <div className="price">{`${getCurrencySymbol(business?.currency?? 'USD')}${product.salePrice.toFixed(2)}`}</div>
         </div>
       </div>
       <ProductBox

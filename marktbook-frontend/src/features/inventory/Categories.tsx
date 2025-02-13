@@ -12,7 +12,7 @@ import { useInv } from '@hooks/useInv'
 
 const Categories = () => {
   const [show, setShow] = useState(false)
-  const { business, updateCategory } = useBusiness()
+  const { business, update } = useBusiness()
   const { setSubOpt, fetchProductsByCat, successMsg, success, error, clearError } = useInv()
   const { reset, ...category } = useField('category', 'text')
   const [inputError, setInputError] = useState(false)
@@ -33,7 +33,7 @@ const Categories = () => {
       const data = business?.customCategories
         ? [...business.customCategories, category.value as string]
         : [category.value as string]
-      updateCategory(business!._id, { customCategories: data })
+      update(business!._id, { customCategories: data })
       if(success)
         reset()
       setShow(false)

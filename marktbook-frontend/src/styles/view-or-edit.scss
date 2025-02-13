@@ -28,6 +28,12 @@
             .field-value {
                 width: 70%;
                 .edit-field {
+                    span {
+                        color: var(--secondary-color);
+                        font-size: .8em;
+                        margin-left: .5em;
+                        font-style: italic;
+                    }
                     input {
                         width: 70%;
                     }

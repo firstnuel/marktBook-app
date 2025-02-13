@@ -1,7 +1,8 @@
-import { clearError, fetchBusiness, updateCategory } from '@reducers/businessReducer'
+import { clearError, fetchBusiness, update } from '@reducers/businessReducer'
 import { useAppDispatch, useAppSelector } from '../store'
 import { useAuth } from '@hooks/useAuth'
 import { useEffect, useRef, useCallback } from 'react'
+import { Business } from '@typess/bizness'
 
 export const useBusiness = () => {
   const { business, error, loading, success } = useAppSelector(state => state.business)
@@ -28,8 +29,8 @@ export const useBusiness = () => {
 
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
   const fetchBusinessHandler = useCallback((businessId: string) => dispatch(fetchBusiness(businessId)), [dispatch])
-  const updateCategoryHandler = useCallback((businessId: string, data: { customCategories: string[] }) =>
-    dispatch(updateCategory({ businessId, data })), [dispatch])
+  const updateHandler = useCallback((businessId: string, data: Partial<Business>) =>
+    dispatch(update({ businessId, data })), [dispatch])
 
   return{
     business,
@@ -38,6 +39,6 @@ export const useBusiness = () => {
     error,
     clearError: clearErrorHandler,
     fetchBusiness: fetchBusinessHandler,
-    updateCategory: updateCategoryHandler
+    update: updateHandler
   }
 }

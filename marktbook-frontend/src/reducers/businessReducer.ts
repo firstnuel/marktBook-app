@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { businessService } from '@services/businessService'
-import { BusinessState } from '@typess/bizness'
+import { BusinessState, Business } from '@typess/bizness'
 
 const initialState: BusinessState =  {
+  mainOpt: 'Business',
   business: null,
   success: null,
   error: null,
@@ -17,9 +18,9 @@ export const fetchBusiness = createAsyncThunk('business/fetchBusiness', async (b
   return { business: response.data, message: response.message }
 })
 
-export const updateCategory = createAsyncThunk('business/updateCategory',
-  async ({ businessId, data }: { businessId: string, data: { customCategories: string[] }}) => {
-    const response = await businessService.updateCategory(businessId, data)
+export const update = createAsyncThunk('business/updateCategory',
+  async ({ businessId, data }: { businessId: string, data: Partial<Business>}) => {
+    const response = await businessService.update(businessId, data)
     if (!response.data) {
       throw new Error(response.message)
     }
@@ -52,18 +53,18 @@ const businessSlice = createSlice({
       state.success = null
       state.error = action.error.message || 'Business data could not be fetched, try again later'
     })
-    builder.addCase(updateCategory.pending, (state) => {
+    builder.addCase(update.pending, (state) => {
       state.loading = true
       state.error = null
       state.success = null
     })
-    builder.addCase(updateCategory.fulfilled, (state, action) => {
+    builder.addCase(update.fulfilled, (state, action) => {
       state.loading = false
       state.error = null
       state.success = action.payload.message
       state.business = action.payload.business
     })
-    builder.addCase(updateCategory.rejected, (state, action) => {
+    builder.addCase(update.rejected, (state, action) => {
       state.loading = false
       state.success = null
       state.error = action.error.message || 'Business data could not be updated, try again later'

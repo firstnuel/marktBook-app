@@ -5,6 +5,8 @@ import testImage from '@assets/images/file.png'
 import { Product } from '@typess/pos'
 import { usePos } from '@hooks/usePos'
 import '@styles/product-box.scss'
+import { getCurrencySymbol } from '@utils/helpers'
+import { useBusiness } from '@hooks/useBusiness'
 
 interface ProductBoxPrpos {
     show: boolean;
@@ -13,6 +15,7 @@ interface ProductBoxPrpos {
 }
 
 const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
+  const { business } = useBusiness()
   const [quantity, setQuantity] = useState(1)
   const { addToCart } = usePos()
   const incrementQuantity = () => {
@@ -57,8 +60,8 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
         </div>
         <div className="name">{product.productName}</div>
         <div className="short-description">{product.shortDescription}</div>
-        <div className="price">{`$${product.salePrice.toFixed(2)}`}
-          {product.salePrice !== product.basePrice && <span className='base-price'>{`$${product.basePrice.toFixed(2)}`}</span>}
+        <div className="price">{`${getCurrencySymbol(business?.currency?? 'USD')}${product.salePrice.toFixed(2)}`}
+          {product.salePrice !== product.basePrice && <span className='base-price'>{`${getCurrencySymbol(business?.currency?? 'USD')}${product.basePrice.toFixed(2)}`}</span>}
         </div>
         <div className="location">Location: {product.stock?.compartment ? product.stock?.compartment : 'Unknown'}</div>
         <div className="category">Category: {product.productCategory}</div>

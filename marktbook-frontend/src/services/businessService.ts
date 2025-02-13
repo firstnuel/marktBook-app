@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance } from 'axios'
 import { Token } from './authService'
+import { Business } from '@typess/bizness'
 
 class BusinessService {
   private readonly BASE_PATH: string = import.meta.env.VITE_API_URL
@@ -41,7 +42,7 @@ class BusinessService {
     }
   }
 
-  public async updateCategory(businessId: string, data: { customCategories: string[] }): Promise<any> {
+  public async update(businessId: string, data: Partial<Business>): Promise<any> {
     try {
       const response = await this.axios.patch(`/business/${businessId}`, data)
       return response.data

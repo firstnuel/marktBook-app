@@ -13,11 +13,13 @@ import { usePos } from '@hooks/usePos'
 import { useInv } from '@hooks/useInv'
 import Loading from '@components/Spinner'
 import Notify from '@components/Notify'
-import { cutName } from '@utils/helpers'
+import { cutName, getCurrencySymbol } from '@utils/helpers'
+import { useBusiness } from '@hooks/useBusiness'
 
 const ProductTable = () => {
   const { products, fetchProducts, loading: pLoading, error, clearError, successMsg } = usePos()
   const { setSubOpt, fetchProduct, product } = useInv()
+  const { business } = useBusiness()
   const [sort, setSort] = useState({ key: 'Name', dir: 'asc' })
   const [search, setSearch] = useState('')
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products)
@@ -164,8 +166,8 @@ const ProductTable = () => {
                 </td>
                 <td>{product.sku}</td>
                 <td>{product.productCategory}</td>
-                <td>{`$ ${product.basePrice.toFixed(2)}`}</td>
-                <td>{`$ ${product.salePrice.toFixed(2)}`}</td>
+                <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.basePrice.toFixed(2)}`}</td>
+                <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.salePrice.toFixed(2)}`}</td>
                 <td>{product.stock?.unitsAvailable ?? 0}</td>
                 <td>{product.discount}</td>
                 <td>{product.productType}</td>

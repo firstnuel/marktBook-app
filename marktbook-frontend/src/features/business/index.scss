@@ -37,12 +37,52 @@
         height: 5em;
         background-position: center;
         background-size: cover;
+        border-radius: 50%;
 
         img {
             width: 20%;
             height: 20%;
             margin-bottom: 1em;
+            &:hover {
+                width: 25%;
+                height: 25%;
+                cursor: pointer;
+            }
 
         }
+    }
+}
+
+.mod-body {
+    display: flex;
+    gap: 1em;
+    flex-direction: row !important;
+    align-items: center;
+
+    div.logo-img {
+        width: 30%;
+        border: 2px solid var(--light-gray);
+        border-radius: 50%;
+
+        img.logo-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+    div.info-input {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        gap: .5em;
+
+        input {
+            width: 28%;
+            padding: .2em;
+            border: 1px solid var(--dark-gray);
+            border-radius: 5px;
+        }
+
     }
 }

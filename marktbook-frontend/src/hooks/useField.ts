@@ -12,6 +12,7 @@ export const useField = (name: string, type: string, val: string | number='') =>
     reset,
     type,
     onChange,
-    required: true
+    required: true,
+    setValue,
   }
 }

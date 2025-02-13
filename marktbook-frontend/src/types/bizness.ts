@@ -1,12 +1,18 @@
 import { BusinessCategory, BusinessType } from './auth'
 import { Currency } from './pos'
 
+
+type mainOption =
+  | 'Business'
+  | 'Payments'
 export interface BusinessState {
     business: Business | null
     error: string | null,
     success: string | null,
-    loading: boolean
+    loading: boolean,
+    mainOpt: mainOption
 }
+
 
 export interface Business  {
     _id: string ;
@@ -19,15 +25,13 @@ export interface Business  {
     currency?: Currency;
     customCategories?: string[];
     businessLogo?: string;
-    businessImg?: string;
     uId?: string;
     businessCategory?: BusinessCategory;
     businessAddress?: string;
     businessType?: BusinessType;
     businessAccount?: IBusinessBankAccount;
-    businessBio?: string;
+    phoneNumber?: string;
     notifications?: INotificationSettings;
-    social?: ISocialLinks;
     createdAt?: Date;
   }
 
@@ -56,10 +60,3 @@ export interface INotificationSettings {
     userDataChange: boolean;
   }
 
-export interface ISocialLinks {
-    facebook?: string;
-    instagram?: string;
-    twitter?: string;
-    youtube?: string;
-    website?: string;
-  }

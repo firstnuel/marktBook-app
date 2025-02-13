@@ -67,3 +67,17 @@ export const countByCategoryList = (products: Product[]) => {
       return a.category.localeCompare(b.category)
     })
 }
+
+export const getCurrencySymbol = (currency: string): string => {
+
+  switch (currency) {
+  case 'USD':
+    return '$'
+  case 'NGN':
+    return '₦'
+  case 'EUR':
+    return '€'
+  default:
+    return '$'
+  }
+}

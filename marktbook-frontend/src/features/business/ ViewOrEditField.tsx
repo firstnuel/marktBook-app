@@ -3,28 +3,48 @@ import { useField } from '@hooks/useField'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useState } from 'react'
+import { useBusiness } from '@hooks/useBusiness'
 import '@styles/view-or-edit.scss'
 
 interface ViewOrEditProps {
     fieldName: string
-    fieldValue: string
+    fieldData : {
+      fieldValue: string
+      fieldKey: string
+    }
     disableEdit: boolean
     setDisableEdit: React.Dispatch<React.SetStateAction<boolean>>
-    onSubmit?: () => void
     fe?: boolean
     dropDownFields?: string[]
 }
 
 
-const ViewOrEdit = ({ fieldName, fieldValue, onSubmit, fe, dropDownFields, disableEdit, setDisableEdit }: ViewOrEditProps) => {
+const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, setDisableEdit }: ViewOrEditProps) => {
+  const { fieldKey, fieldValue } = fieldData
   const [hideEdit, setHideEdit] = useState(true)
-  const { reset, ...field } = useField(fieldName, 'text', fieldValue)
+  const [err, setErr] = useState('')
+  const { business, update, loading } = useBusiness()
+  const { ...field } = useField(fieldName, 'text', fieldValue)
   const [selectedDdvalue, setSelectedDdvalue] = useState<string>(fieldValue?? '')
   const handleDd = (event: React.ChangeEvent<HTMLSelectElement>) => setSelectedDdvalue(event.target.value)
 
   const handleSave = () => {
-    if(onSubmit) onSubmit()
-    reset()
+    if (dropDownFields) {
+      update(business!._id, { [fieldKey]: selectedDdvalue })
+    } else {
+      if (field.value !== '') {
+        update(business!._id, { [fieldKey]: field.value as string })
+      }
+      else if (field.value.trim() === '') {
+        setErr('This field can not be empty')
+        const timer = setTimeout(() => {
+          setErr('')
+        }, 3000)
+        return () => clearTimeout(timer)
+      }
+    }
+    setHideEdit(!hideEdit)
+    setDisableEdit(false)
   }
 
   const handleEdit = () => {
@@ -32,6 +52,7 @@ const ViewOrEdit = ({ fieldName, fieldValue, onSubmit, fe, dropDownFields, disab
     setDisableEdit(true)
   }
   const handleCancel = () => {
+    field.setValue(fieldValue)
     setHideEdit(!hideEdit)
     setDisableEdit(false)
   }
@@ -46,6 +67,7 @@ const ViewOrEdit = ({ fieldName, fieldValue, onSubmit, fe, dropDownFields, disab
               <div className="view-field">{fieldValue}</div>
               : <div className="edit-field">
                 <Form.Label htmlFor={fieldName}>{fieldName}</Form.Label>
+                {err && <span>-{err}</span>}
                 {dropDownFields ?
                   <Form.Select onChange={handleDd} value={selectedDdvalue}>
                     <option value="">{selectedDdvalue? selectedDdvalue :`Select ${fieldName}`}</option>
@@ -65,7 +87,7 @@ const ViewOrEdit = ({ fieldName, fieldValue, onSubmit, fe, dropDownFields, disab
               onClick={disableEdit? () => {} : handleEdit} disabled={disableEdit}>Edit</button>
             : <button className="edit-or-cancel" onClick={handleCancel}>Cancel</button>
           }
-          {!hideEdit && <Button variant='primary' onClick={handleSave}>Save</Button> }
+          {!hideEdit && <Button variant='primary' disabled={loading} onClick={handleSave}>{loading? 'Saving...' : 'Save'}</Button> }
         </div>
       </div>
     </Container>
