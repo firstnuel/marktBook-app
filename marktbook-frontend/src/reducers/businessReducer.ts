@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { businessService } from '@services/businessService'
-import { BusinessState } from '@typess/Business'
+import { BusinessState } from '@typess/bizness'
 
 const initialState: BusinessState =  {
   business: null,

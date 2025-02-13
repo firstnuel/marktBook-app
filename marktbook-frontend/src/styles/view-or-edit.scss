@@ -1,0 +1,69 @@
+.fe {
+    border-top: 1px solid var(--light-gray);
+
+}
+.ve-container {
+    border-bottom: 1px solid var(--light-gray);
+    margin-top: 1em;
+    
+
+    .field-div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: max-content;
+        padding: 0.5em 0.5em 1.5em;
+
+        .field-name-value {
+            display: flex;
+            width: 70%;
+            gap: 3em;
+
+            .field-name {
+                font-weight: 450;
+                font-size: 1.1em;
+                width: 25%;
+            }
+
+            .field-value {
+                width: 70%;
+                .edit-field {
+                    input {
+                        width: 70%;
+                    }
+                }
+            }
+        }
+
+        .action-btns {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 2em;
+
+            .disable {
+                color: var(--dark-gray);
+                padding: .5em;
+                border: none;
+                background-color: var(--white-color) ;
+
+                &:hover {
+                    cursor: not-allowed;
+                }
+            }
+
+            .edit-or-cancel {
+                color: var(--primary-color);
+                padding: .5em;
+                border: none;
+                background-color: var(--white-color);
+
+                &:hover {
+                    background-color: var(--light-blue);
+                    cursor: pointer;
+                    border-radius: .5em;
+                }
+            }
+        }
+    }
+}

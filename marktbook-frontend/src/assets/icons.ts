@@ -31,6 +31,9 @@ import addNewIcon from '@assets/icons/add-nwe-icon.svg'
 import refreshIcon from '@assets/icons/refresh.icon.svg'
 import printIcon from '@assets/icons/print-icon.svg'
 import dashBoard from '@assets/icons/dashboard.svg'
+import imagePlaceholder from '@assets/icons/img-placeholder.png'
+import logoPlaceholder from '@assets/icons/logo-placeholder-image.png'
+import cameraIcon from '@assets/icons/camera-icon.svg'
 
 
 const icons = {
@@ -67,6 +70,9 @@ const icons = {
   refresh: refreshIcon,
   print: printIcon,
   dashboard: dashBoard,
+  imagePlaceholder,
+  cameraIcon,
+  logoPlaceholder
 }
 
 export default icons

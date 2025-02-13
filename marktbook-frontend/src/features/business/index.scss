@@ -1,0 +1,48 @@
+.sec-show{
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.head-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: var(--white-color);
+    .name-desc {
+        display: flex;
+        flex-direction: column;
+        gap: .2em;
+        padding: 1em;   
+
+        .name {
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+        .desc {
+            font-size: 1.1em;
+            color: var(--dark-gray);
+        }
+    }
+
+    .business-logo {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        width: 5em;
+        height: 5em;
+        background-position: center;
+        background-size: cover;
+
+        img {
+            width: 20%;
+            height: 20%;
+            margin-bottom: 1em;
+
+        }
+    }
+}

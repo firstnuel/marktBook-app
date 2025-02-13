@@ -1,6 +1,7 @@
 import Container from 'react-bootstrap/Container'
 import HeaderInfo from '@components/HeaderInfo'
 import SecOption from '@components/SecOption'
+import EditBusiness from './Editbusiness'
 
 
 const Settings = () => {
@@ -16,6 +17,7 @@ const Settings = () => {
           <SecOption name='Notifications' />
         </Container>
         <Container className='sec-show'>
+          <EditBusiness />
 
         </Container>
       </div>
