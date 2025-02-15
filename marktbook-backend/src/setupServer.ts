@@ -55,7 +55,9 @@ export class MarktBookServer {
     app.use(hpp())
     app.use(
       cors({
-        origin: config.CLIENT_URL,
+        origin: (origin, callback) => {
+          callback(null, true)
+        },
         credentials: true,
         optionsSuccessStatus: 200,
         methods: ['GET', 'PUT', 'DELETE', 'POST', 'PATCH','OPTIONS']

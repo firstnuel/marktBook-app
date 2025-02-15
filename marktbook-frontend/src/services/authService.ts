@@ -2,10 +2,8 @@
 import axios, { AxiosInstance } from 'axios'
 import { LoginData, RegisterData, passwordData } from '../types/auth'
 
-export let Token: string
-export const setToken = (token: string) => {
-  Token = token
-}
+export let Token: string | null
+export const setToken = (aToken :string | null) => Token = aToken
 
 class AuthService {
   private readonly BASE_PATH = import.meta.env.VITE_API_URL
@@ -41,7 +39,11 @@ class AuthService {
 
   public async getUser(): Promise<any> {
     try {
-      const response = await this.axios.get('/me')
+      const response = await this.axios.get('/me', {
+        headers: {
+          Authorization: `Bearer ${Token}`
+        }
+      })
       return response
     } catch (error) {
       this.handleAxiosError(error, 'An error occurred while fetching user')

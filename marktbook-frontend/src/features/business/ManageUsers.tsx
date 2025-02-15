@@ -2,21 +2,25 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import { useBusiness } from '@hooks/useBusiness'
 import icons from '@assets/icons'
+import { useState } from 'react'
+import NewUser from './NewUser'
 
 
 const ManageUsers = () => {
   const { users } = useBusiness()
+  const [show, setShow] = useState(false)
 
 
   return(
     <Container>
+      <NewUser show={show} setShow={setShow} />
       <div className="head-info">
         <div className="name-desc">
           <div className="name">User Accounts</div>
           <div className="desc">Manage user accounts associated with this business</div>
         </div>
         <div className="new-user">
-          <Button variant='primary'>Add New User</Button>
+          <Button variant='primary'onClick={() => setShow(true)} >Add New User</Button>
         </div>
       </div>
 

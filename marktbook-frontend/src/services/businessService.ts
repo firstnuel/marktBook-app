@@ -17,7 +17,7 @@ class BusinessService {
     })
 
     this.axios.interceptors.request.use((config) => {
-      const token = Token
+      const token = Token || localStorage.getItem('userToken')
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
       }
