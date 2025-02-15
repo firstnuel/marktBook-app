@@ -60,6 +60,8 @@
 |  | 2 |  Major refactor of inventory UI  |
 | **12.02.**  | 3 | Implemented UI for account management |
 | **13.02.**  | 2 | Completed UI for account management |
-| **Total**  | **148** | |
+| **14.02.**  | 2 | refactored user controller to move user and business validation from user controller to middleware |
+| **15.02.**  | 3 | Implement manage users pages and its UI, services and slices|
+| **Total**  | **153** | |
 
 
