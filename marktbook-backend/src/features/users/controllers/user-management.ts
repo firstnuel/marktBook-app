@@ -6,8 +6,8 @@ import HTTP_STATUS from 'http-status-codes'
 import { config } from '@root/config'
 import { Utils } from '@global/helpers/utils'
 import { editUserSchema } from '@users/schemes/userValidation'
-import { filterAllowedFields } from '@users/interfaces/user.interface'
-import {  NotFoundError } from '@global/helpers/error-handlers'
+import { ADMIN_UPDATE_FIELDS, filterAllowedFields, IuserDocument, USER_UPDATE_FIELDS } from '@users/interfaces/user.interface'
+import {  NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
 import {  singleImageUpload } from '@global/helpers/cloudinary-upload'
 import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
@@ -16,6 +16,12 @@ import { authService } from '@service/db/auth.service'
 const log  = config.createLogger('userController')
 
 class UserManagement extends Users {
+  constructor(){
+    super()
+    this.getUser = this.getUser.bind(this)
+    this.editUser = this.editUser.bind(this)
+    this.deleteUser = this.deleteUser.bind(this)
+  }
   /**
    * Handles fetching User by Id     
    * @param req Express Request object
@@ -28,7 +34,7 @@ class UserManagement extends Users {
       const { id } = req.params
 
       // Validate the requesting user
-      await this.validateUser(`${req.currentUser?.userId}`)
+      await this.checkUser(`${req.currentUser?.userId}`)
 
       const fetchedUser = await userService.getUserById(id)
 
@@ -64,19 +70,28 @@ class UserManagement extends Users {
   
       // Extract and sanitize the input data
       const body = Utils.sanitizeInput(req.body)
-      const filteredData = filterAllowedFields(body)
-  
+
+      let filteredData: Partial<IuserDocument>
+      
+      const userId = req.currentUser?.userId
+      if (!userId) {
+        throw new NotAuthorizedError('Invalid User: Not authorized for user role')
+      }
+      const user = await this.checkUser(userId)
+
+      if (user.role === 'Manager' || user.role === 'Owner') {
+        filteredData = filterAllowedFields(body, ADMIN_UPDATE_FIELDS)
+      }
+      filteredData = filterAllowedFields(body, USER_UPDATE_FIELDS)
+
       // Extract user ID
       const { id } = req.params
   
-      // Validate requesting user
-      const admin = await this.validateUser(`${req.currentUser?.userId}`)
-  
       // Check if user exists
-      const existingUser = await userService.getUserById(id)
+      const existingUser = await this.checkUser(id)
       if (!existingUser) {
-        return next(new NotFoundError('User not found'))
-      }
+        throw new NotFoundError('User not found')
+      } 
 
       // Upload profille picture if provided
       if (filteredData.profilePicture){ 
@@ -90,9 +105,9 @@ class UserManagement extends Users {
 
       // log user activity
       const logData = createActivityLog (
-        admin._id, 
-        admin.username, 
-        admin.associatedBusinessesId, 
+        user._id, 
+        user.username, 
+        user.associatedBusinessesId, 
         'EDIT' as ActionType, 
         'USER' as EntityType,
         `${id}`,
@@ -123,8 +138,7 @@ class UserManagement extends Users {
       // Extract ID
       const { id } = req.params
 
-      // Validate the requesting user
-      const admin = await this.validateUser(`${req.currentUser?.userId}`)
+      const admin = await this.checkUser(`${req.currentUser?.userId}`)
 
       // Check if user exists
       const existingUser = await userService.getUserById(id)

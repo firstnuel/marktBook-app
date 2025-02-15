@@ -55,7 +55,18 @@ export interface IuserData {
   businessId: string | ObjectId;
 }
 
-export const ALLOWED_UPDATE_FIELDS: (keyof IuserDocument)[] = [
+export const USER_UPDATE_FIELDS: (keyof IuserDocument)[] = [
+  'name',
+  'mobileNumber',
+  'address',
+  'nin',
+  'emergencyContact',
+  'notificationPreferences',
+  'languagePreference',
+  'profilePicture',
+]
+
+export const ADMIN_UPDATE_FIELDS: (keyof IuserDocument)[] = [
   'name',
   'mobileNumber',
   'role',
@@ -66,10 +77,9 @@ export const ALLOWED_UPDATE_FIELDS: (keyof IuserDocument)[] = [
   'notificationPreferences',
   'languagePreference',
   'isVerified',
-  'profilePicture',
 ]
 
-export function filterAllowedFields(data: Partial<IuserDocument>): Partial<IuserDocument> {
+export function filterAllowedFields(data: Partial<IuserDocument>, ALLOWED_UPDATE_FIELDS:  (keyof IuserDocument)[]): Partial<IuserDocument> {
   return Object.keys(data)
     .filter(key => ALLOWED_UPDATE_FIELDS.includes(key as keyof IuserDocument))
     .reduce((obj, key) => {

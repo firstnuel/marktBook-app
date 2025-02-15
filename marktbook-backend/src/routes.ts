@@ -25,10 +25,10 @@ export default (app: Application) => {
 
     app.use(BASE_PATH, authMiddleware.verifyUser, currentUserRoutes.currentUserRoute())
     app.use(BASE_PATH, authMiddleware.verifyUser, productRoutes.productRoutes())
-    app.use(BASE_PATH, authMiddleware.verifyUser, usersRoutes.UsersRoutes())
+    app.use(BASE_PATH, authMiddleware.verifyUser, usersRoutes.usersRoutes())
 
-    app.use(BASE_PATH, authMiddleware.verifyUser, logsRoutes.LogsRoutes())
-    app.use(BASE_PATH, authMiddleware.verifyUser, stockRoutes.StockRoutes())
+    app.use(BASE_PATH, authMiddleware.verifyUser, logsRoutes.logsRoutes())
+    app.use(BASE_PATH, authMiddleware.verifyUser, stockRoutes.stockRoutes())
     app.use(BASE_PATH, authMiddleware.verifyUser, locationRoutes.LocationRoutes())
 
     app.use(BASE_PATH, authMiddleware.verifyUser, saleRoutes.SaleRoutes())

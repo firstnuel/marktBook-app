@@ -9,7 +9,7 @@ class StockRoutes {
     this.router = express.Router()
   }
 
-  public StockRoutes(): Router {
+  public stockRoutes(): Router {
     this.router.post('/stocks', authMiddleware.checkAuthentication, stock.create)
     this.router.get('/stocks', authMiddleware.checkAuthentication, stock.read)
     this.router.get('/stocks/low-stock', authMiddleware.checkAuthentication, stock.low)

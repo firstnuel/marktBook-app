@@ -3,7 +3,7 @@ import { businessCache } from '@service/redis/business.cache'
 import HTTP_STATUS from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { Request, Response, NextFunction } from 'express'
-import { ZodValidationError, NotFoundError, NotAuthorizedError, ServerError, BadRequestError } from '@root/shared/globals/helpers/error-handlers'
+import { ZodValidationError, ServerError, BadRequestError } from '@root/shared/globals/helpers/error-handlers'
 import { IuserDocument, IuserData } from '../interfaces/user.interface'
 import { IAuthDocument } from '@auth/interfaces/auth.interface'
 import { userSchema } from '../schemes/userValidation'
@@ -27,8 +27,11 @@ const log  = config.createLogger('userController')
 
 export class Users {
   constructor(){
-    this.UserData = this.UserData.bind(this)
-    this.validateUser = this.validateUser.bind(this)
+    this.userData = this.userData.bind(this)
+    this.checkUser = this.checkUser.bind(this)
+    this.create = this.create.bind(this)
+    this.read = this.read.bind(this)
+
   }
 
   /**
@@ -46,22 +49,21 @@ export class Users {
       this.validateInput(userSchema, req.body)
 
       // validate user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = await this.checkUser(`${req.currentUser?.userId}`)
 
       // sanitize input
       const body = Utils.sanitizeInput(req.body) as IuserData
-      const { email, username, mobileNumber, name, role, status, address, nin, businessId } = body 
+      const { username, mobileNumber, name, role, status, address, nin, businessId } = body 
 
       // Check if user account already exist
-      const checkExistingAccount: IuserDocument | null = await userService.getUserByUsernameAndEmail(username, email)
       const checkExistingAuthAccount: IAuthDocument | null =  await authService.getUserByUsername(username)
-      if (checkExistingAccount || checkExistingAuthAccount) {
+      if (checkExistingAuthAccount) {
         log.warn(`User registration failed: Account with username "${username}" already exists.`)
         return next(new BadRequestError('User account with this username already exists.'))
       }
 
       // validate business
-      const existingBusiness = await this.validateBusiness(`${businessId}`, existingUser)
+      const existingBusiness = await this.checkBusiness(`${businessId}`)
 
       // Generate unique identifiers
       const newUserId: ObjectId = new ObjectId()
@@ -71,8 +73,8 @@ export class Users {
       // Prepare authentication data
       const authData = {
         _id: authObjectId,
-        email,
-        adminFullName: name,
+        email: existingBusiness.email,
+        adminFullName: Utils.firstLetterToUpperCase(name),
         username,
         password,
         businessName: existingBusiness.businessName!,
@@ -82,7 +84,7 @@ export class Users {
         businessLogo: existingBusiness.businessLogo || '',
       } as IAuthDocument
 
-      const userData: IuserDocument = this.UserData(authData, nin, newUserId, new ObjectId(businessId), status, address, role, mobileNumber)
+      const userData: IuserDocument = this.userData(authData, nin, newUserId, new ObjectId(businessId), status, address, role, mobileNumber)
       const adminData = {
         userId: newUserId,
         username,
@@ -116,7 +118,7 @@ export class Users {
       // Respond to client
       res.status(HTTP_STATUS.CREATED).json({
         status: 'success',
-        message: `User '${name} account created successfully`,
+        message: `User '${userData.name} account created successfully`,
         data: userData
       })
     } catch (error: any) {
@@ -147,13 +149,9 @@ export class Users {
      * @returns IuserDocument
      */
 
-  protected async validateUser(userId: string): Promise<IuserDocument> {
+  protected async checkUser(userId: string): Promise<IuserDocument> {
     const cachedUser = await userCache.getUserfromCache(userId) as IuserDocument
     const existingUser = cachedUser? cachedUser  : await userService.getUserById(userId) as IuserDocument
-
-    if(existingUser?.status !== 'active' || !( existingUser?.role === 'Owner' || existingUser?.role === 'Manager')) {
-      throw new NotAuthorizedError('Invalid User: Not authorized for user role') 
-    }
 
     return existingUser
   }
@@ -164,15 +162,10 @@ export class Users {
      * @param user IuserDocument
      * @returns IBusinessDocument
      */
-  protected async validateBusiness(businessId: string, user: IuserDocument): Promise<IBusinessDocument> {
+  protected async checkBusiness(businessId: string): Promise<IBusinessDocument> {
     const cachedBusiness = await businessCache.getBusinessFromCache(businessId) as IBusinessDocument
     const existingBusiness = cachedBusiness ? cachedBusiness : await businessService.getBusinessById(businessId) as IBusinessDocument
 
-    if (!existingBusiness) {
-      throw new NotFoundError('Invalid Business: business not found')
-    } else if (existingBusiness._id.toString() !== user.associatedBusinessesId.toString()) {
-      throw new NotAuthorizedError('Invalid Business: not authorized for this business')
-    }
 
     return existingBusiness
   }
@@ -190,7 +183,7 @@ export class Users {
      * @returns User document conforming to IuserDocument interface
      */
 
-  private UserData(
+  private userData(
     data: IAuthDocument, 
     nin: string = '',
     userObjectId: ObjectId, 
@@ -242,7 +235,7 @@ export class Users {
 
     try{
       // validate user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = await this.checkUser(`${req.currentUser?.userId}`)
   
       let users = await userService.getAllUsers(existingUser.associatedBusinessesId)
       users = users?.filter(user => user._id.toString() !== existingUser._id.toString())
