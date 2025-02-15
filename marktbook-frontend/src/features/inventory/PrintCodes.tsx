@@ -73,7 +73,7 @@ const PrintCodes = () => {
             (<Dropdown.Item
               key={product._id}
               onClick={() => handleSelectPrdouct(product)}
-              href="#/productName">{product.productName}
+              href={`#/${product._id}`}>{product.productName}
             </Dropdown.Item>))}
         </Container>}
       </Container>

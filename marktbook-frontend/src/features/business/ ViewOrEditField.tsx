@@ -24,7 +24,8 @@ const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, set
   const [hideEdit, setHideEdit] = useState(true)
   const [err, setErr] = useState('')
   const { business, update, loading } = useBusiness()
-  const { ...field } = useField(fieldName, 'text', fieldValue)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { reset, ...field } = useField(fieldName, 'text', fieldValue)
   const [selectedDdvalue, setSelectedDdvalue] = useState<string>(fieldValue?? '')
   const handleDd = (event: React.ChangeEvent<HTMLSelectElement>) => setSelectedDdvalue(event.target.value)
 
@@ -52,7 +53,7 @@ const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, set
     setDisableEdit(true)
   }
   const handleCancel = () => {
-    field.setValue(fieldValue)
+    field.onChange(fieldValue)
     setHideEdit(!hideEdit)
     setDisableEdit(false)
   }

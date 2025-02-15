@@ -158,21 +158,28 @@ const ProductTable = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedProducts.map((product) => (
-              <tr key={product.id} onClick={() => handleProduct(product.id)}>
-                <td className='body-row'>
-                  <img src={product.productImage || noImg} alt="" className="prd-img" />
-                  <span className="prod-name prdname">{cutName(product.productName, 25)}</span>
-                </td>
-                <td>{product.sku}</td>
-                <td>{product.productCategory}</td>
-                <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.basePrice.toFixed(2)}`}</td>
-                <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.salePrice.toFixed(2)}`}</td>
-                <td>{product.stock?.unitsAvailable ?? 0}</td>
-                <td>{product.discount}</td>
-                <td>{product.productType}</td>
-              </tr>
-            ))}
+            {sortedProducts.length > 0 ?
+              sortedProducts.map((product) => (
+                <tr key={product.id} onClick={() => handleProduct(product.id)}>
+                  <td className='body-row'>
+                    <img src={product.productImage || noImg} alt="" className="prd-img" />
+                    <span className="prod-name prdname">{cutName(product.productName, 25)}</span>
+                  </td>
+                  <td>{product.sku}</td>
+                  <td>{product.productCategory}</td>
+                  <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.basePrice.toFixed(2)}`}</td>
+                  <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.salePrice.toFixed(2)}`}</td>
+                  <td>{product.stock?.unitsAvailable ?? 0}</td>
+                  <td>{product.discount}</td>
+                  <td>{product.productType}</td>
+                </tr>
+              ))
+              :
+              (
+                <tr>
+                  <td colSpan={8} className="no-user">No product found</td>
+                </tr>
+              )}
           </tbody>
         </Table>
       </div>

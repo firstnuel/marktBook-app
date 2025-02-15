@@ -1,21 +1,19 @@
-import { clearError, fetchBusiness, update } from '@reducers/businessReducer'
+import {
+  clearError,
+  fetchBusiness,
+  update,
+  setMainOpt,
+  fetchBusinessUsers,
+  setSubOpt,
+} from '@reducers/businessReducer'
 import { useAppDispatch, useAppSelector } from '../store'
-import { useAuth } from '@hooks/useAuth'
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { Business } from '@typess/bizness'
 
 export const useBusiness = () => {
-  const { business, error, loading, success } = useAppSelector(state => state.business)
+  const { business, error, loading, success, mainOpt, users } = useAppSelector(state => state.business)
   const dispatch = useAppDispatch()
-  const { user } = useAuth()
-  const hasFetchedBusiness = useRef(false)
 
-  useEffect(() => {
-    if(user && !hasFetchedBusiness.current) {
-      dispatch(fetchBusiness(user.associatedBusinessesId))
-      hasFetchedBusiness.current = true
-    }
-  }, [user, dispatch])
 
   useEffect(() => {
     if (error || success) {
@@ -28,17 +26,30 @@ export const useBusiness = () => {
   }, [error, dispatch, success])
 
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
+
+  const setMainOption = useCallback((option: string) => dispatch(setMainOpt({ option })), [dispatch])
+
+  const setSubOption = useCallback((option: string) => dispatch(setSubOpt({ option })), [dispatch])
+
   const fetchBusinessHandler = useCallback((businessId: string) => dispatch(fetchBusiness(businessId)), [dispatch])
+
+  const fetchUsersHandler = useCallback(() => dispatch(fetchBusinessUsers()), [dispatch])
+
   const updateHandler = useCallback((businessId: string, data: Partial<Business>) =>
     dispatch(update({ businessId, data })), [dispatch])
 
   return{
+    mainOpt,
     business,
     loading,
     success,
     error,
+    users,
     clearError: clearErrorHandler,
     fetchBusiness: fetchBusinessHandler,
-    update: updateHandler
+    update: updateHandler,
+    setMainOpt: setMainOption,
+    setSubOpt: setSubOption,
+    fetchBusinessUsers: fetchUsersHandler
   }
 }

@@ -81,7 +81,7 @@ class AuthService {
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000))
 
-      const response = await this.axios.post('$/register', registerData)
+      const response = await this.axios.post('/register', registerData)
       return response
     } catch (error) {
       this.handleAxiosError(error, 'An error occurred while registering user')

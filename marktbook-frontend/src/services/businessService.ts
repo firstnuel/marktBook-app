@@ -42,6 +42,15 @@ class BusinessService {
     }
   }
 
+  public async fetchUsers(): Promise<any> {
+    try {
+      const response = await this.axios.get('/users')
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while fetching business users.')
+    }
+  }
+
   public async update(businessId: string, data: Partial<Business>): Promise<any> {
     try {
       const response = await this.axios.patch(`/business/${businessId}`, data)

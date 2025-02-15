@@ -23,7 +23,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="card-name">{cutName(`${product.productName}`, 20)}</div>
         <div className="card-data">
           <div className={product.stock?.unitsAvailable? 'available' : 'unavailable'}>
-            <span>{product.stock?.unitsAvailable? 'In Stock' : 'Out of Atock'}</span></div>
+            <span>{product.stock?.unitsAvailable? 'In Stock' : 'Out of Stock'}</span></div>
           <div className="price">{`${getCurrencySymbol(business?.currency?? 'USD')}${product.salePrice.toFixed(2)}`}</div>
         </div>
       </div>

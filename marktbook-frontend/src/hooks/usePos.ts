@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../store'
 import {
   clearCart,
@@ -13,9 +13,10 @@ import {
 } from '@reducers/posReducers'
 import { CartItemProps, ProductCategory, SearchKeys } from '@typess/pos'
 
+
+
 export const usePos = () => {
   const dispatch = useAppDispatch()
-  const hasLoaded = useRef(false)
 
   const {
     products,
@@ -40,13 +41,6 @@ export const usePos = () => {
     }
   }, [error, dispatch, successMsg])
 
-  // Fetch products only once when the component mounts
-  useEffect(() => {
-    if (!hasLoaded.current && !products.length) {
-      dispatch(fetchProducts())
-      hasLoaded.current = true
-    }
-  }, [dispatch, products.length])
 
   // Memoized functions to avoid unnecessary re-creations
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])

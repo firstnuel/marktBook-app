@@ -1,18 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import '@styles/sec-option.scss'
-import { useInv } from '@hooks/useInv'
-
 
 
 interface SecOptionProps {
     name: string;
     mainOpt?: string;
+    setMainOpt: (option: string) => {
+      payload: any
+      type: string
+    }
+    setSubOpt?: (option: string) => {
+      payload: any;
+      type: string;
+    }
 }
 
-const SecOption = ({ name, mainOpt }: SecOptionProps) => {
-  const { setMainOpt, setSubOpt } = useInv()
+const SecOption = ({ name, mainOpt, setMainOpt, setSubOpt }: SecOptionProps) => {
   const handleClick = () => {
     setMainOpt(name)
-    if (name === 'Products') setSubOpt('Product List')
+    if (name === 'Products' && setSubOpt) setSubOpt('Product List')
   }
 
 

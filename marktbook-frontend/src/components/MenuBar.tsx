@@ -18,7 +18,6 @@ const MenuBar = () => {
     logout()
     handleClose()
     navigate('/login')
-
   }
 
   return (

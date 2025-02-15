@@ -25,9 +25,8 @@ const initialState: PosState = {
 export const fetchProducts = createAsyncThunk('pos/products', async() => {
   const response = await inventoryService.fetchProducts()
   if (response.data.length === 0) {
-    throw new Error(response.data.message)
+    throw new Error(response.message)
   }
-
   return { products: response.data, successMsg: response.message }
 })
 
@@ -153,6 +152,7 @@ const posSlice = createSlice({
     })
     builder.addCase(fetchProducts.rejected, (state, action) => {
       state.loading = false
+      state.products = []
       state.error = action.error.message as string ||
       'Products data could not be fetched, try again later'
     })

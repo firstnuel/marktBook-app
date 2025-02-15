@@ -4,6 +4,7 @@ import { authService } from '@services/authService'
 import { setToken } from '@services/authService'
 import { persistor, RESET_ALL } from '../store'
 
+
 const initialState: AuthState = {
   user: null,
   userToken: null,
@@ -41,7 +42,8 @@ export const logout = createAsyncThunk('auth/logoutUser', async (_, { dispatch }
   }
   dispatch({ type: RESET_ALL })
   await persistor.purge()
-
+  dispatch({ type: 'STORE_RESET' })
+  window.location.reload()
   return response.data
 })
 
@@ -95,10 +97,8 @@ const authSlice = createSlice({
     })
 
     //logout
-    builder.addCase(logout.fulfilled, (state) => {
-      state.error = null
-      state.userToken = null
-      state.user = null
+    builder.addCase(logout.fulfilled, () => {
+      return initialState
     })
     builder.addCase(logout.rejected, (state, action) => {
       state.error = action.error.message ||'User logout failed, Try again later'

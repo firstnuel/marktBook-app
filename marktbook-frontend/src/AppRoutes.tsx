@@ -7,17 +7,51 @@ import PasswordUpdateForm from '@auth/AuthForms/PasswordUpdate'
 import PointOfSale from '@features/pos/PointOfSale'
 import Home from '@features/home/home'
 import { useAuth } from '@hooks/useAuth'
-import Settings from '@features/business/settings'
+import Settings from '@features/business/BusinessSettings'
+import { useBusiness } from '@hooks/useBusiness'
+import { usePos } from '@hooks/usePos'
+import { useEffect, memo } from 'react'
 
-const AppRoutes = () => {
+// Memoize ProtectedRoute to prevent unnecessary re-renders
+const ProtectedRoute = memo(({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth()
 
-  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    if (!user) {
-      return <Navigate to="/login" replace />
-    }
-    return children
+  if (!user) {
+    return <Navigate to="/login" replace />
   }
+  return <>{children}</>
+})
+
+ProtectedRoute.displayName = 'ProtectedRoute'
+
+const AppRoutes = () => {
+  const { user, fetchUser, userToken } = useAuth()
+  const { business, fetchBusiness, fetchBusinessUsers, users } = useBusiness()
+  const { fetchProducts, products } = usePos()
+
+  useEffect(() => {
+    if (userToken && !user) {
+      fetchUser()
+    }
+  }, [userToken, user, fetchUser])
+
+  useEffect(() => {
+    if (user?.associatedBusinessesId && !business) {
+      fetchBusiness(user.associatedBusinessesId)
+    }
+  }, [user?.associatedBusinessesId, business, fetchBusiness])
+
+  useEffect(() => {
+    if (business?._id && !products.length) {
+      fetchProducts()
+    }
+  }, [business?._id, products.length, fetchProducts])
+
+  useEffect(() => {
+    if (business?._id && !users.length) {
+      fetchBusinessUsers()
+    }
+  }, [business?._id, fetchBusinessUsers, users.length])
 
   return (
     <Routes>
@@ -27,13 +61,14 @@ const AppRoutes = () => {
       <Route path="/reset-password" element={<PasswordUpdateForm />} />
 
       {/* Protected Routes */}
-      <Route path="/settings"
+      <Route
+        path="/settings"
         element={
           <ProtectedRoute>
             <Settings />
           </ProtectedRoute>
-        } />
-
+        }
+      />
       <Route
         path="/inventory"
         element={

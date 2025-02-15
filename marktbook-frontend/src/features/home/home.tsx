@@ -1,5 +1,6 @@
 import MenuBar from '@components/MenuBar'
 
+
 const Home = () => {
 
   return(

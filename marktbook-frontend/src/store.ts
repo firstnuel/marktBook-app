@@ -53,6 +53,9 @@ const rootReducer = (state: RootState | undefined, action: Action) => {
     // This will reset all reducers to their initial state
     state = undefined
   }
+  if (action.type === 'STORE_RESET') {
+    combinedReducer(undefined, action)
+  }
   return combinedReducer(state, action)
 }
 

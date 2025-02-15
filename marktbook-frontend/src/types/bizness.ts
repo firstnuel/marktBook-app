@@ -1,18 +1,26 @@
-import { BusinessCategory, BusinessType } from './auth'
+import { BusinessCategory, BusinessType, User } from './auth'
 import { Currency } from './pos'
 
 
 type mainOption =
   | 'Business'
   | 'Payments'
+  | 'Manage Accounts'
+  | 'Notifications'
+
+type subOption =
+  | 'Business'
+
+
 export interface BusinessState {
     business: Business | null
     error: string | null,
     success: string | null,
     loading: boolean,
     mainOpt: mainOption
+    subOpt: subOption,
+    users: User[]
 }
-
 
 export interface Business  {
     _id: string ;

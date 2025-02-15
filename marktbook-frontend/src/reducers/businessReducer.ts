@@ -4,10 +4,12 @@ import { BusinessState, Business } from '@typess/bizness'
 
 const initialState: BusinessState =  {
   mainOpt: 'Business',
+  subOpt: 'Business',
   business: null,
   success: null,
   error: null,
-  loading: false
+  loading: false,
+  users: []
 }
 
 export const fetchBusiness = createAsyncThunk('business/fetchBusiness', async (businessId: string) => {
@@ -16,6 +18,14 @@ export const fetchBusiness = createAsyncThunk('business/fetchBusiness', async (b
     throw new Error(response.message)
   }
   return { business: response.data, message: response.message }
+})
+
+export const fetchBusinessUsers = createAsyncThunk('business/fetchBusinessUsers', async () => {
+  const response = await businessService.fetchUsers()
+  if (!response.data) {
+    throw new Error(response.message)
+  }
+  return { users: response.data, message: response.message }
 })
 
 export const update = createAsyncThunk('business/updateCategory',
@@ -35,6 +45,12 @@ const businessSlice = createSlice({
       state.error = null
       state.success = null
     },
+    setMainOpt: (state, action) => {
+      state.mainOpt = action.payload.option
+    },
+    setSubOpt: (state, action) => {
+      state.subOpt = action.payload.option
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBusiness.pending, (state) => {
@@ -52,6 +68,23 @@ const businessSlice = createSlice({
       state.loading = false
       state.success = null
       state.error = action.error.message || 'Business data could not be fetched, try again later'
+    })
+    builder.addCase(fetchBusinessUsers.pending, (state) => {
+      state.loading = true
+      state.error = null
+      state.success = null
+    })
+    builder.addCase(fetchBusinessUsers.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+      state.success = action.payload.message
+      state.users = action.payload.users
+    })
+    builder.addCase(fetchBusinessUsers.rejected, (state, action) => {
+      state.loading = false
+      state.success = null
+      state.users = []
+      state.error = action.error.message || 'Business users could not be fetched, try again later'
     })
     builder.addCase(update.pending, (state) => {
       state.loading = true
@@ -74,5 +107,5 @@ const businessSlice = createSlice({
 
 
 
-export const { clearError } = businessSlice.actions
+export const { clearError, setMainOpt, setSubOpt } = businessSlice.actions
 export default businessSlice.reducer

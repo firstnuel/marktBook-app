@@ -86,3 +86,17 @@
 
     }
 }
+
+.userr-img {
+    margin-right: 1em;
+    border: 2px solid var(--dark-gray);
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+}
+
+.no-user {
+    font-size: 1.1em;
+    color: var(--dark-gray);
+    text-align: center;
+}

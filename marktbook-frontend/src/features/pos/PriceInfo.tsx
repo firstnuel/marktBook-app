@@ -4,10 +4,13 @@ import { useState } from 'react'
 import { usePos } from '@hooks/usePos'
 import ConfirmAction from '@components/ConfimAction'
 import '@styles/price-info.scss'
+import { getCurrencySymbol } from '@utils/helpers'
+import { useBusiness } from '@hooks/useBusiness'
 
 
 const PriceInfo = () => {
   const { cartItems, priceInfo, updateDiscount } = usePos()
+  const { business } = useBusiness()
   const [show, setShow] = useState(false)
   const [payInfo, setpayInfo] = useState({})
 
@@ -17,6 +20,7 @@ const PriceInfo = () => {
   }
 
   const payinfo = {
+    // demo test data
     amount: priceInfo.total,
     method: 'Cash',
     payment: true,
@@ -34,14 +38,14 @@ const PriceInfo = () => {
       <div className="subtotal-info">
         <div className="subtotal">Subtotal</div>
         <div className="amount-info">
-          <div className="currency">$</div>
+          <div className="currency">{getCurrencySymbol(business!.currency?? 'USD')}</div>
           <div className="sb-price">{`${priceInfo.subtotal.toFixed(2)}`}</div>
         </div>
       </div>
       <div className="tax-info">
         <div className="tax-percent">Tax (10%)</div>
         <div className="amount-info">
-          <div className="tx-currency">$</div>
+          <div className="tx-currency">{getCurrencySymbol(business!.currency?? 'USD')}</div>
           <div className="tx-price">{`${priceInfo.tax.toFixed(2)}`}</div>
         </div>
       </div>
@@ -52,14 +56,14 @@ const PriceInfo = () => {
           <Form.Control
             value={priceInfo.discount.toFixed(2)}
             type='text'
-            onChange={(e) =>  updateDiscount(parseFloat(e.target.value))}
+            onChange={(e) => updateDiscount(parseFloat(e.target.value))}
           />
         </div>
       </div>
       <div className="total-info">
         <div className="total">Total</div>
         <div className="amount-info">
-          <div className="currency">$</div>
+          <div className="currency">{getCurrencySymbol(business!.currency?? 'USD')}</div>
           <div className="tt-price">{`${priceInfo.total.toFixed(2)}`}</div>
         </div>
       </div>

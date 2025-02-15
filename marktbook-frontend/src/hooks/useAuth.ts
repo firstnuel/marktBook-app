@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../store'
 import {
   login,
@@ -14,7 +14,6 @@ import { LoginData, RegisterData, passwordData } from '@typess/auth'
 export const useAuth = () => {
   const dispatch = useAppDispatch()
   const { user, error, reset, loading, registered, updated, userToken } = useAppSelector(state => state.auth)
-  const hasFetchedUser = useRef(false)
 
   // Automatically clear error after 5 seconds
   useEffect(() => {
@@ -26,15 +25,7 @@ export const useAuth = () => {
     }
   }, [error, dispatch])
 
-  // Fetch user if token exists and user is not already loaded
-  useEffect(() => {
-    if (!user && userToken && !hasFetchedUser.current) {
-      hasFetchedUser.current = true
-      dispatch(fetchUser())
-    }
-  }, [dispatch, user, userToken])
-
-
+  // handlers
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
 
   const passwordResetHandler = useCallback(
@@ -53,6 +44,7 @@ export const useAuth = () => {
   )
 
   const logoutHandler = useCallback(() => dispatch(logout()), [dispatch])
+  const fetchUserHandler = useCallback(() => dispatch(fetchUser()), [dispatch])
 
   const registerHandler = useCallback(
     (registerData: RegisterData) => dispatch(register(registerData)),
@@ -67,6 +59,7 @@ export const useAuth = () => {
     reset,
     updated,
     registered,
+    fetchUser: fetchUserHandler,
     passwordReset: passwordResetHandler,
     passwordUpdate: passwordUpdateHandler,
     isAuthenticated: !!user,
