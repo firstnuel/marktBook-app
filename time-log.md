@@ -62,6 +62,7 @@
 | **13.02.**  | 2 | Completed UI for account management |
 | **14.02.**  | 2 | refactored user controller to move user and business validation from user controller to middleware |
 | **15.02.**  | 3 | Implement manage users pages and its UI, services and slices|
-| **Total**  | **153** | |
+| **16.02.**  | 3 | Implement edit user UI and functionality, minor refactor on user controller|
+| **Total**  | **156** | |
 
 
