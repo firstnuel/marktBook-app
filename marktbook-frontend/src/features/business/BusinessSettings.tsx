@@ -4,10 +4,11 @@ import SecOption from '@components/SecOption'
 import EditBusiness from './Editbusiness'
 import { useBusiness } from '@hooks/useBusiness'
 import ManageUsers from './ManageUsers'
+import EditUser from './EditUser'
 
 
 const Settings = () => {
-  const { mainOpt, setMainOpt } = useBusiness()
+  const { mainOpt, setMainOpt, subOpt } = useBusiness()
 
   return(
     <div className="main-container-inv">
@@ -21,8 +22,8 @@ const Settings = () => {
         </Container>
         <Container className='sec-show'>
           {mainOpt === 'Business' && <EditBusiness />}
-          {mainOpt === 'Manage Accounts' && <ManageUsers />}
-
+          {mainOpt === 'Manage Accounts' && subOpt === 'None'  && <ManageUsers />}
+          {mainOpt === 'Manage Accounts' && subOpt === 'Edit User'  && <EditUser />}
         </Container>
       </div>
     </div>

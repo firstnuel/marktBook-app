@@ -35,7 +35,10 @@ const MenuBar = () => {
 
       {/* Menu Bar */}
       <div className={`menu-bar ${showBar ? 'open' : ''}`}>
-        <MenuBarUser name={user?.name || 'Unknown'} role={user?.role || 'Unknown'} closeFn={handleClose} />
+        <MenuBarUser name={user?.name || 'Unknown'}
+          role={user?.role || 'Unknown'}
+          closeFn={handleClose} userImg={user?.profilePicture || ''}
+        />
         <div className="menu-options">
           <MenuOption handleClose={handleClose} option="Dashboard" icon={icons.dashboard} to='/dashboard'/>
           <MenuOption handleClose={handleClose} option="Point of Sales" icon={icons.pos} to='/pos' />

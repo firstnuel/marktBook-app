@@ -5,8 +5,11 @@ import Button from 'react-bootstrap/Button'
 import { useState } from 'react'
 import { useBusiness } from '@hooks/useBusiness'
 import '@styles/view-or-edit.scss'
+import { User } from '@typess/auth'
+
 
 interface ViewOrEditProps {
+    user?: User
     fieldName: string
     fieldData : {
       fieldValue: string
@@ -19,15 +22,18 @@ interface ViewOrEditProps {
 }
 
 
-const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, setDisableEdit }: ViewOrEditProps) => {
+const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, setDisableEdit, user }: ViewOrEditProps) => {
   const { fieldKey, fieldValue } = fieldData
   const [hideEdit, setHideEdit] = useState(true)
   const [err, setErr] = useState('')
-  const { business, update, loading } = useBusiness()
+  const { business, update, loading, updateUser } = useBusiness()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { reset, ...field } = useField(fieldName, 'text', fieldValue)
   const [selectedDdvalue, setSelectedDdvalue] = useState<string>(fieldValue?? '')
-  const handleDd = (event: React.ChangeEvent<HTMLSelectElement>) => setSelectedDdvalue(event.target.value)
+  const handleDd = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDdvalue(event.target.value)
+  }
+
 
   const handleSave = () => {
     if (dropDownFields) {
@@ -35,6 +41,25 @@ const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, set
     } else {
       if (field.value !== '') {
         update(business!._id, { [fieldKey]: field.value as string })
+      }
+      else if (field.value.trim() === '') {
+        setErr('This field can not be empty')
+        const timer = setTimeout(() => {
+          setErr('')
+        }, 3000)
+        return () => clearTimeout(timer)
+      }
+    }
+    setHideEdit(!hideEdit)
+    setDisableEdit(false)
+  }
+
+  const handleUserSave = () => {
+    if (dropDownFields) {
+      updateUser(user!._id, { [fieldKey]: selectedDdvalue })
+    } else {
+      if (field.value !== '') {
+        updateUser(user!._id, { [fieldKey]: field.value as string })
       }
       else if (field.value.trim() === '') {
         setErr('This field can not be empty')
@@ -88,7 +113,7 @@ const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, set
               onClick={disableEdit? () => {} : handleEdit} disabled={disableEdit}>Edit</button>
             : <button className="edit-or-cancel" onClick={handleCancel}>Cancel</button>
           }
-          {!hideEdit && <Button variant='primary' disabled={loading} onClick={handleSave}>{loading? 'Saving...' : 'Save'}</Button> }
+          {!hideEdit && <Button variant='primary' disabled={loading} onClick={user ? handleUserSave : handleSave}>{loading? 'Saving...' : 'Save'}</Button> }
         </div>
       </div>
     </Container>

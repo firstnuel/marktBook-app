@@ -5,6 +5,43 @@
     }
 }
 
+span.err {
+    color: red;
+    font-size: .8em;
+    font-style: italic;
+    margin-left: .5em;
+}
+
+#mod-body {
+    div.container {
+        height: max-content;
+        margin: .5em 0; 
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: .5em;
+
+            .role-status, .username-phone {   
+                display: flex;
+                gap: .5em;
+
+                .role-div, .username-div,
+                .phone-div, .status-div {
+                    width: 50%;
+                }
+                .status-div {
+                    span {
+                        font-size: .7em;
+                        font-style: italic;
+                        color: var(--dark-gray);
+                        margin-left: .5em;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .head-info {
     display: flex;
     justify-content: space-between;
@@ -28,7 +65,6 @@
             color: var(--dark-gray);
         }
     }
-
     .business-logo {
         display: flex;
         align-items: flex-end;
@@ -38,7 +74,7 @@
         background-position: center;
         background-size: cover;
         border-radius: 50%;
-
+    
         img {
             width: 20%;
             height: 20%;
@@ -47,11 +83,13 @@
                 width: 25%;
                 height: 25%;
                 cursor: pointer;
+                }
+    
             }
-
         }
-    }
 }
+
+
 
 .mod-body {
     display: flex;
@@ -87,7 +125,7 @@
     }
 }
 
-.userr-img {
+img.userr-img {
     margin-right: 1em;
     border: 2px solid var(--dark-gray);
     border-radius: 50%;
@@ -95,8 +133,37 @@
     height: 2em;
 }
 
+
 .no-user {
     font-size: 1.1em;
     color: var(--dark-gray);
     text-align: center;
+}
+
+
+
+.edit-con {
+    div.user-pic {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        width: 5em;
+        height: 5em;
+        background-position: center;
+        background-size: cover;
+        border-radius: 50%;
+    
+        img {
+            width: 20%;
+            height: 20%;
+            margin-bottom: 1em;
+            &:hover {
+                width: 25%;
+                height: 25%;
+                cursor: pointer;
+            }
+    
+        }
+    }
+
 }

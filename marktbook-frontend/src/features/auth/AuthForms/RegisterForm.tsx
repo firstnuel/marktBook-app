@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import { useField } from '@hooks/useField'
 import Form from 'react-bootstrap/Form'
 import { RegisterDataSchema } from '@auth/auth.schema'
-import { NavLink } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@hooks/useAuth'
 import { BusinessCategory, BusinessType, RegisterData } from '@typess/auth'
@@ -28,6 +28,8 @@ const RegisterForm = () => {
   const [validationError, setValidationError] = useState<string | null>(null)
 
   const { register, registered, loading, error } = useAuth()
+  const [success, setSuccess] = useState('')
+  const navigate = useNavigate()
 
 
   const handleCatChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -40,13 +42,15 @@ const RegisterForm = () => {
 
   useEffect(() => {
     if (registered) {
+      setSuccess('Account registered successfully')
       businessNameReset()
       emailReset()
       nameReset()
       passwordReset()
       usernameReset()
+      navigate('/login')
     }
-  }, [registered, passwordReset, businessNameReset, emailReset, usernameReset, nameReset])
+  }, [registered, passwordReset, businessNameReset, emailReset, usernameReset, nameReset, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -81,8 +85,8 @@ const RegisterForm = () => {
       <Container className='registerform-container'>
         <AppNameTag />
         <Form onSubmit={handleSubmit} className="d-grid gap-2">
-          <div className={IError? 'error': 'info'}>
-            {IError? IError : 'Let\'s get you started'}
+          <div className={IError? 'error': success ?'info success' : 'info'}>
+            {IError? IError : success ? success :'Let\'s get you started'}
           </div>
           <InputGroup className="mb-3">
             <InputGroup.Text> <img src={icons.email} alt="email icon" className="icon" />

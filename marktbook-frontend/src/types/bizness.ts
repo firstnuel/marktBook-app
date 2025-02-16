@@ -9,8 +9,8 @@ type mainOption =
   | 'Notifications'
 
 type subOption =
-  | 'Business'
-
+  | 'Edit User'
+  | 'None'
 
 export interface BusinessState {
     business: Business | null
@@ -20,6 +20,7 @@ export interface BusinessState {
     mainOpt: mainOption
     subOpt: subOption,
     users: User[]
+    user: User | null
 }
 
 export interface Business  {

@@ -178,10 +178,10 @@ const ProductForm = ({ product, error }: ProductForm) => {
         <div className="head-name">{
           product ? 'Edit Product' : 'Create Product'}</div>
         <div className="action-btns">
-          <div className="back" onClick={() => resetOpt()}>
+          {product && <div className="back" onClick={() => resetOpt()}>
             <IconBox src={icons.arrowback} clName='img-div'/>
             <span className="text">Back</span>
-          </div>
+          </div>}
           { product &&
             <Button onClick={() => handleStock(product._id)} variant="secondary">Stock Data</Button>
           }

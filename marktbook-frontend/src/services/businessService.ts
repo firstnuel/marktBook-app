@@ -2,6 +2,7 @@
 import axios, { AxiosInstance } from 'axios'
 import { Token } from './authService'
 import { Business } from '@typess/bizness'
+import { User } from '@typess/auth'
 
 class BusinessService {
   private readonly BASE_PATH: string = import.meta.env.VITE_API_URL
@@ -51,12 +52,39 @@ class BusinessService {
     }
   }
 
-  public async update(businessId: string, data: Partial<Business>): Promise<any> {
+  public async fetchUser(id: string): Promise<any> {
+    try {
+      const response = await this.axios.get(`/users/${id}`)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while fetching user.')
+    }
+  }
+
+  public async updateBusiness(businessId: string, data: Partial<Business>): Promise<any> {
     try {
       const response = await this.axios.patch(`/business/${businessId}`, data)
       return response.data
     } catch (error) {
-      this.handleAxiosError(error, 'An error occurred while fetching business data.')
+      this.handleAxiosError(error, 'An error occurred while updating business data.')
+    }
+  }
+
+  public async updateUser(userId: string, data: Partial<User>): Promise<any> {
+    try {
+      const response = await this.axios.patch(`/users/${userId}`, data)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while updating user account.')
+    }
+  }
+
+  public async createUser(data: Partial<User>): Promise<any> {
+    try {
+      const response = await this.axios.post('/users', data)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while adding user.')
     }
   }
 }

@@ -8,16 +8,21 @@ interface MBUProps {
     role: string;
     closeFn: ()=> void;
     dropDownFn?: ()=> void;
+    userImg: string
 
 }
 
 
-export const MenuBarUser = ({ name, role, closeFn, dropDownFn }: MBUProps) => (
+export const MenuBarUser = ({ name, role, closeFn, dropDownFn, userImg }: MBUProps) => (
 
   <div className="user-info-div">
     <div className="user-info">
       <div className="user-details">
-        <IconBox src={icons.user} clName="user-img" />
+        {userImg ?
+          <img src={userImg} alt="User profile pic" className='useprofile-img' />
+          :
+          <IconBox src={icons.user} clName="user-img" />
+        }
         <div className="user-name-role">
           <div className="user-name">{cutName(name)}</div>
           <div className="user-role">{role}</div>

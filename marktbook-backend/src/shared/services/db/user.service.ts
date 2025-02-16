@@ -26,8 +26,8 @@ class UserService {
 
   public async getAllUsers(businessId: string | ObjectId): Promise<IuserDocument[]> {
     const result = await UserModel.find({ associatedBusinessesId: businessId }) 
-      .select(['name', '_id', 'email', 'username', 'status', 'profilePicture', 'role', 'associatedBusinessesId'])
-      
+      .select(['name', '_id', 'email', 'username', 'status', 'lastLogin',
+        'profilePicture', 'role', 'associatedBusinessesId'])
     return result
   }
 

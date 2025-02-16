@@ -1,3 +1,7 @@
+import { useBusiness } from '@hooks/useBusiness'
+import { useField } from '@hooks/useField'
+import { User } from '@typess/auth'
+import { useState, ChangeEvent, useEffect } from 'react'
 import { Button, Modal, Form, Container } from 'react-bootstrap'
 
 interface NewUserProps {
@@ -7,7 +11,62 @@ interface NewUserProps {
 
 
 const NewUser = ({ show, setShow }: NewUserProps) => {
+  const [err, setErr] = useState('')
+  const { business, loading, createUser, success } = useBusiness()
+  const [selectedUserRole, setSelectedUserRole] = useState('Staff')
+  const [selectedStatus, setSelectedStatus] = useState('Active')
+  const { reset: nameReset, ...name } = useField('name', 'text')
+  const { reset: addressReset, ...address } = useField('address', 'text')
+  const { reset: emailReset, ...email } = useField('name', 'email')
+  const { reset: phoneReset, ...phone } = useField('phone', 'text')
+  const { reset: usernameReset, ...username } = useField('username', 'text')
 
+  const handleUserRole = (e: ChangeEvent<HTMLSelectElement>) => setSelectedUserRole(e.target.value)
+  const handeleStatus = (e: ChangeEvent<HTMLSelectElement>) => setSelectedStatus(e.target.value)
+
+  const resetForm = () => {
+    nameReset()
+    emailReset()
+    addressReset()
+    phoneReset()
+    usernameReset()
+  }
+
+  const handleClose = () => {
+    resetForm()
+    setShow(!show)
+  }
+  const formData = {
+    username: username.value,
+    email: email.value,
+    mobileNumber: phone.value,
+    name: name.value,
+    status: (selectedStatus as string).toLowerCase(),
+    role: selectedUserRole,
+    businessId: business?._id,
+    address: address.value
+  } as Partial<User>
+
+  const handleCreate = () => {
+    for (const val of Object.values(formData)) {
+      if ((val as string) === '') {
+        setErr('No field can be empty')
+        const timer = setTimeout(() => {
+          setErr('')
+        }, 3000)
+        return () => clearTimeout(timer)
+      }
+    }
+    console.log(formData)
+    createUser(formData)
+  }
+
+  useEffect(() => {
+    if (success) {
+      resetForm()
+      setShow(false)
+    }
+  })
 
   return (
     <Modal
@@ -16,26 +75,35 @@ const NewUser = ({ show, setShow }: NewUserProps) => {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       show={show}
-      onHide={() => setShow(!show)}>
+      onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Create New User</Modal.Title>
+        <Modal.Title>Create New User
+          {err && <span className='err'>-{err}</span>}
+        </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body id='mod-body'>
         <Container>
           <Form onSubmit={() => {}}>
             <div className="user-name-div">
               <Form.Label>Name:</Form.Label>
-              <Form.Control
+              <Form.Control {...name}
               />
             </div>
-            <div className="username-div">
-              <Form.Label>Username:</Form.Label>
-              <Form.Control
-              />
+            <div className="username-phone">
+              <div className="username-div">
+                <Form.Label>Username:</Form.Label>
+                <Form.Control {...username}
+                />
+              </div>
+              <div className="phone-div">
+                <Form.Label>Phone Number:</Form.Label>
+                <Form.Control {...phone}
+                />
+              </div>
             </div>
-            <div className="phone-div">
-              <Form.Label>Phone Number:</Form.Label>
-              <Form.Control
+            <div className="email-div">
+              <Form.Label>Email:</Form.Label>
+              <Form.Control {...email}
               />
             </div>
             <div className="role-status">
@@ -43,8 +111,10 @@ const NewUser = ({ show, setShow }: NewUserProps) => {
                 <Form.Label>User Role:</Form.Label>
                 <Form.Select
                   name="userRole"
+                  value={selectedUserRole}
+                  onChange={handleUserRole}
                 >
-                  {['Staff', 'Manager', 'User'].map((role, idx) => (
+                  {['Staff', 'Manager', 'Owner'].map((role, idx) => (
                     <option key={idx} value={role}>
                       {role}
                     </option>
@@ -52,9 +122,13 @@ const NewUser = ({ show, setShow }: NewUserProps) => {
                 </Form.Select>
               </div>
               <div className="status-div">
-                <Form.Label>User Status:</Form.Label>
+                <Form.Label>Status:
+                  <span className="info">-Setting to inactive will prevent the user from logging in.</span>
+                </Form.Label>
                 <Form.Select
                   name="userStatus"
+                  value={selectedStatus}
+                  onChange={handeleStatus}
                 >
                   {['Active', 'Inactive'].map((status, idx) => (
                     <option key={idx} value={status}>
@@ -64,27 +138,17 @@ const NewUser = ({ show, setShow }: NewUserProps) => {
                 </Form.Select>
               </div>
             </div>
-            <div className="lang-div">
-              <Form.Label>Preferred Language:</Form.Label>
-              <Form.Select
-                name="preferredLanguage"
-              >
-                {['English'].map((language, idx) => (
-                  <option key={idx} value={language}>
-                    {language}
-                  </option>
-                ))}
-              </Form.Select>
+            <div className="address-div">
+              <Form.Label>Address:</Form.Label>
+              <Form.Control {...address}
+              />
             </div>
-            <Button variant="primary" type="submit">
-                Save User
-            </Button>
           </Form>
         </Container>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={() => setShow(false)}>
-            Close
+      <Modal.Footer id='cat-footer'>
+        <Button variant="Success" onClick={handleCreate}>
+          {loading? 'Loading...' :'Create User'}
         </Button>
       </Modal.Footer>
     </Modal>

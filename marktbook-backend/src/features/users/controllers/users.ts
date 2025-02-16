@@ -53,13 +53,14 @@ export class Users {
 
       // sanitize input
       const body = Utils.sanitizeInput(req.body) as IuserData
-      const { username, mobileNumber, name, role, status, address, nin, businessId } = body 
+      const { username, mobileNumber, name, role, status, address, nin, businessId, email } = body 
 
       // Check if user account already exist
-      const checkExistingAuthAccount: IAuthDocument | null =  await authService.getUserByUsername(username)
-      if (checkExistingAuthAccount) {
-        log.warn(`User registration failed: Account with username "${username}" already exists.`)
-        return next(new BadRequestError('User account with this username already exists.'))
+      const checkExistingAccount: IuserDocument | null = await userService.getUserByUsernameAndEmail(username, email)
+      const checkExistingAuthAccount: IAuthDocument | null =  await authService.getUserByEmailOrUsername(email, username)
+      if (checkExistingAccount || checkExistingAuthAccount) {
+        log.warn(`User registration failed: Account with username "${username}" and email "${email}" already exists.`)
+        return next(new BadRequestError('User account with this username or email already exists.'))
       }
 
       // validate business
@@ -73,9 +74,10 @@ export class Users {
       // Prepare authentication data
       const authData = {
         _id: authObjectId,
-        email: existingBusiness.email,
+        email,
+        businessId: existingBusiness._id,
         adminFullName: Utils.firstLetterToUpperCase(name),
-        username,
+        username: Utils.firstLetterToUpperCase(username),
         password,
         businessName: existingBusiness.businessName!,
         businessAddress: existingBusiness.businessAddress!,

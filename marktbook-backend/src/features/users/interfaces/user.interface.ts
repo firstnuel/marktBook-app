@@ -74,6 +74,7 @@ export const ADMIN_UPDATE_FIELDS: (keyof IuserDocument)[] = [
   'address',
   'nin',
   'emergencyContact',
+  'profilePicture',
   'notificationPreferences',
   'languagePreference',
   'isVerified',

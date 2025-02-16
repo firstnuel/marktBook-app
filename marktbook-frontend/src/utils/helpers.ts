@@ -1,6 +1,6 @@
 import { ZodError } from 'zod'
 import { PriceInfo, CartItemProps, Product } from '@typess/pos'
-
+import { timeDay } from 'd3-time'
 
 export const validationErrorFn = (msg: string , fn: (value: React.SetStateAction<string | null>) => void): void => {
   fn(msg)
@@ -80,4 +80,30 @@ export const getCurrencySymbol = (currency: string): string => {
   default:
     return '$'
   }
+}
+
+export const getLastSeen = (timeString: string ): string => {
+  if (!timeString || timeString === '') {
+    return '-'
+  }
+  const end = new Date()
+  const start = new Date(timeString)
+
+  const days = timeDay.count(start, end)
+
+  if (days < 1) {
+    return 'Today'
+  } else if (days === 1) {
+    return 'Yesterday'
+  } else if (days === 30) {
+    return `${Math.floor(days / 30)} months ago`
+  } else {
+    return `${days} days ago`
+  }
+
+}
+
+export const handleFullScreen = () => {
+  document.documentElement.requestFullscreen()
+    .catch(err => console.log(err))
 }

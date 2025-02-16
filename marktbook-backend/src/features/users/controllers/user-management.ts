@@ -81,8 +81,9 @@ class UserManagement extends Users {
 
       if (user.role === 'Manager' || user.role === 'Owner') {
         filteredData = filterAllowedFields(body, ADMIN_UPDATE_FIELDS)
+      } else {
+        filteredData = filterAllowedFields(body, USER_UPDATE_FIELDS)
       }
-      filteredData = filterAllowedFields(body, USER_UPDATE_FIELDS)
 
       // Extract user ID
       const { id } = req.params

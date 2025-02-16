@@ -110,7 +110,7 @@ class Business {
         throw new BadRequestError('Can not find business account')
       }
 
-      await authService.deleteAllAuth(business.email)
+      await authService.deleteAllAuth(business._id)
       await userService.deleteAllUsers(business._id)
       await businessService.deleteBusiness(business._id)
 

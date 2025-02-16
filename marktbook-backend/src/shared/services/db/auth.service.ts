@@ -80,8 +80,8 @@ class AuthService {
     await AuthModel.findByIdAndDelete(authId).exec()
   }
 
-  public async deleteAllAuth(email: string): Promise<void> {
-    await AuthModel.deleteMany({ email: Utils.lowerCase(email) }).exec()
+  public async deleteAllAuth(businessId: string | ObjectId): Promise<void> {
+    await AuthModel.deleteMany({ businessId }).exec()
   }
 }
 

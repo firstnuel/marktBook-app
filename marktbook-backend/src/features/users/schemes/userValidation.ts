@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { BusinessRole } from '@business/interfaces/business.interface'
-import { username } from '@auth/schemes/authValidation'
+import { email, username } from '@auth/schemes/authValidation'
 
 // Zod schema for IuserData
 export const userSchema = z.object({
@@ -12,6 +12,7 @@ export const userSchema = z.object({
   nin: z.string().optional(),
   businessId: z.string({required_error: 'business Id is required'}),
   username,
+  email,
 })
 
 const emergencyContactSchema = z.object({

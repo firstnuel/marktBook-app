@@ -5,14 +5,11 @@ import './App.scss'
 
 function App() {
 
-  const handleFullScreen = () => {
-    document.documentElement.requestFullscreen()
-      .catch(err => console.log(err))
-  }
+
 
 
   return (
-    <div onDoubleClick={handleFullScreen}>
+    <div>
       <AppRoutes />
     </div>
   )

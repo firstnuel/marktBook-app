@@ -1,7 +1,4 @@
 import Container from 'react-bootstrap/Container'
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import Modal from 'react-bootstrap/Modal'
 import ViewOrEdit from './ ViewOrEditField'
 import './index.scss'
 import { BusinessCategory, BusinessType } from '@typess/auth'
@@ -9,36 +6,12 @@ import { useState } from 'react'
 import icons from '@assets/icons'
 import { useBusiness } from '@hooks/useBusiness'
 import Notify from '@components/Notify'
+import ChangeImage from './ChangeImage'
 
 const EditBusiness = () => {
   const { business, update, loading, clearError, error, success } = useBusiness()
   const [hideEdit, setHideEdit] = useState(false)
-  const [stageImage, setStageImage] = useState(business?.businessLogo?? '')
   const [show, setShow] = useState(false)
-
-  const onHide = () => {
-    setStageImage(business?.businessLogo?? '')
-    setShow(false)
-  }
-
-  const handleSave = () => {
-    update(business!._id, {
-      businessLogo: stageImage
-    })
-  }
-
-  const handleImgChange = (e: React.ChangeEvent) => {
-    const file = (e.target as HTMLInputElement).files![0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          setStageImage(reader.result)
-        }
-      }
-      reader.readAsDataURL(file)
-    }
-  }
 
   return(
     <Container className="edit-business">
@@ -95,29 +68,13 @@ const EditBusiness = () => {
         />
       </Container>
 
-      <Modal show={show}
-        onHide={onHide}
-        backdrop="static"
-        keyboard={false}
-        centered >
-        <Modal.Header closeButton>
-          <Modal.Title>Update Business Logo</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='mod-body'>
-          <div className="logo-img">
-            <img src={stageImage !== ''? stageImage : icons.imagePlaceholder} alt="" className="logo-img" />
-          </div>
-          <div className="info-input">
-            <div className="info">This would be used on generated documents (example. invoices) </div>
-            <Form.Control type="file" accept="image/*" onChange={handleImgChange}/>
-          </div>
-        </Modal.Body>
-        <Modal.Footer id='cat-footer'>
-          <Button variant="Success" onClick={handleSave}>
-            {loading? 'Saving...' :'Save'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ChangeImage show={show}
+        loading={loading}
+        updateBLogo={update}
+        imageSrc={business?.businessLogo ?? ''}
+        id={business!._id}
+        setShow={setShow}
+      />
     </Container>
   )
 }
