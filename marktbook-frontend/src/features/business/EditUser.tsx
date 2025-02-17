@@ -79,6 +79,7 @@ const EditUser = ({ currentUser }: EditUserProps ) => {
           setDisableEdit={setHideEdit}
           disableEdit={hideEdit}
           user={User}
+          status={true}
         />
         <ViewOrEdit fieldName='Address'
           fieldData={{ fieldValue: User?.address ?? '-', fieldKey: 'address' }}

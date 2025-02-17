@@ -19,10 +19,20 @@ interface ViewOrEditProps {
     setDisableEdit: React.Dispatch<React.SetStateAction<boolean>>
     fe?: boolean
     dropDownFields?: string[]
+    status?: boolean
 }
 
 
-const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, setDisableEdit, user }: ViewOrEditProps) => {
+const ViewOrEdit = ({ fieldName,
+  fieldData,
+  fe,
+  dropDownFields,
+  disableEdit,
+  setDisableEdit,
+  user,
+  status
+}: ViewOrEditProps) => {
+
   const { fieldKey, fieldValue } = fieldData
   const [hideEdit, setHideEdit] = useState(true)
   const [err, setErr] = useState('')
@@ -92,7 +102,10 @@ const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, set
             { hideEdit ?
               <div className="view-field">{fieldValue}</div>
               : <div className="edit-field">
-                <Form.Label htmlFor={fieldName}>{fieldName}</Form.Label>
+                <Form.Label htmlFor={fieldName}>{fieldName}
+                  {status && <span className="info" style={{ color: 'darkgray' }}>
+                    -Setting to inactive will prevent the user from logging in.
+                  </span>}</Form.Label>
                 {err && <span>-{err}</span>}
                 {dropDownFields ?
                   <Form.Select onChange={handleDd} value={selectedDdvalue}>
@@ -113,7 +126,8 @@ const ViewOrEdit = ({ fieldName, fieldData, fe, dropDownFields, disableEdit, set
               onClick={disableEdit? () => {} : handleEdit} disabled={disableEdit}>Edit</button>
             : <button className="edit-or-cancel" onClick={handleCancel}>Cancel</button>
           }
-          {!hideEdit && <Button variant='primary' disabled={loading} onClick={user ? handleUserSave : handleSave}>{loading? 'Saving...' : 'Save'}</Button> }
+          {!hideEdit && <Button variant='primary' disabled={loading}
+            onClick={user ? handleUserSave : handleSave}>{loading? 'Saving...' : 'Save'}</Button> }
         </div>
       </div>
     </Container>

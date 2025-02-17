@@ -15,12 +15,17 @@ class BusinessService {
   }
 
   public async updateBusinessData(id: string | ObjectId, data: Partial<IBusinessDocument>): Promise<IBusinessDocument | null> {
-    const result = await BusinessModel.findByIdAndUpdate(id, { ...data }, { new: true })
+    const result = await BusinessModel.findByIdAndUpdate(id, { ...data }, { new: true }).exec()
     return result
   }
 
   public async getBusinessById(id: string | ObjectId): Promise<IBusinessDocument | null> {
-    const result = await BusinessModel.findById(new ObjectId(id))
+    const result = await BusinessModel.findById(new ObjectId(id)).exec()
+    return result
+  }
+
+  public async getBusinessByEmail(email: string): Promise<IBusinessDocument | null> {
+    const result = await BusinessModel.findOne({ email }).exec()
     return result
   }
 
@@ -30,7 +35,7 @@ class BusinessService {
         admins: { ...userData, addedAt: Date.now() } 
       }
     }
-    )
+    ).exec()
   }
 
   public async deleteBusiness(businessId: ObjectId | string): Promise<void> {
@@ -38,7 +43,7 @@ class BusinessService {
     const collections: Array<Model<any>> = [ProductModel, LocationModel, CustomerModel, SaleModel, StockModel, LogModel]
 
     for (const model of collections) {
-      await model.deleteMany({ businessId: businessId })
+      await model.deleteMany({ businessId })
     }
     await BusinessModel.findByIdAndDelete(businessId)
   }

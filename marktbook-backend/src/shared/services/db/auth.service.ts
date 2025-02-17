@@ -59,7 +59,7 @@ class AuthService {
   }
 
   public async getUserByUsername(username: string): Promise<IAuthDocument | null> {
-    const user  =  await AuthModel.findOne({ username: Utils.lowerCase(username) }).exec() as IAuthDocument
+    const user  =  await AuthModel.findOne({ username: Utils.firstLetterToUpperCase(username) }).exec() as IAuthDocument
     return user || null
   }
 
