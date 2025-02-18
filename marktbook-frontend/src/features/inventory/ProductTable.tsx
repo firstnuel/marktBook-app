@@ -52,7 +52,7 @@ const ProductTable = () => {
     'Base Price': 'basePrice',
     'Sale Price': 'salePrice',
     Quantity: 'stock.unitsAvailable', // Handle nested field
-    Discount: 'discount',
+    // Discount: 'discount',
     Type: 'productType',
   }
 
@@ -98,7 +98,7 @@ const ProductTable = () => {
         product.basePrice.toFixed(2),
         product.salePrice.toFixed(2),
         product.stock?.unitsAvailable ?? 0,
-        product.discount,
+        // product.discount,
         product.productType,
       ]),
     })
@@ -117,7 +117,7 @@ const ProductTable = () => {
     { label: 'Base Price', key: 'basePrice' },
     { label: 'Sale Price', key: 'salePrice' },
     { label: 'Quantity', key: 'stock.unitsAvailable' },
-    { label: 'Discount', key: 'discount' },
+    // { label: 'Discount', key: 'discount' },
     { label: 'Type', key: 'productType' },
   ]
 
@@ -170,7 +170,7 @@ const ProductTable = () => {
                   <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.basePrice.toFixed(2)}`}</td>
                   <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.salePrice.toFixed(2)}`}</td>
                   <td>{product.stock?.unitsAvailable ?? 0}</td>
-                  <td>{product.discount}</td>
+                  {/* <td>{product.discount}</td> */}
                   <td>{product.productType}</td>
                 </tr>
               ))

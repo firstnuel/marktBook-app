@@ -83,7 +83,7 @@ const PriceInfo = () => {
         <Button variant="primary"
           disabled={cartItems.length===0}
           onClick={handlePay}>
-          {priceInfo.total? `Payment - ${priceInfo.total.toFixed(2)}`: 'Payment'}
+          {priceInfo.total? `Payment - ${getCurrencySymbol(business!.currency?? 'USD')}${priceInfo.total.toFixed(2)}`: 'Payment'}
         </Button>
       </div>
       <ConfirmAction

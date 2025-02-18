@@ -19,7 +19,17 @@ export const uploads = (
         public_id, 
         overwrite, 
         invalidate, 
-        folder: 'marktBook' 
+        folder: 'marktBook' ,
+        transformation: [
+          {
+            crop: 'fill',
+            gravity: 'auto',
+            width: 500,
+            height: 500,
+            fetch_format: 'auto',
+            quality: 'auto'
+          }
+        ]
       } ,
       (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
         if (error) {

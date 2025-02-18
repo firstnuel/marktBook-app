@@ -1,10 +1,11 @@
 {
     "name": "MarktBook",
     "short_name": "MarktBook",
-    "start_url": ".",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
-     "theme_color": "#000000",
+    "theme_color": "#000000",
+    "offline_page": "/offline.html",
     "description": "An inventory and sales management system for small businesses.",
     "icons": [
         {
