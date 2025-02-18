@@ -168,3 +168,40 @@ img.userr-img {
     }
 
 }
+
+
+#cat-footer > button {
+    background-color: var(--secondary-color) !important;
+    }
+
+
+.confim-delete {
+    margin: 1em 0;
+    padding: 0.5em 0;
+    align-items: center;
+    display: flex;
+    justify-content: end !important;
+
+    button {
+        background-color: var(--secondary-color) !important;
+        border: 1px solid var(--secondary-color) ;
+        padding: 0.5em 1em;
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+  }
+  
+  body > div.fade.modal.show > div > div > div.modal-body > .err {
+    border: 1px solid var(--secondary-color) !important;
+    animation: shake 0.3s ease-in-out;
+  }
+  
+
+#custom-switch {
+    max-width: 2.5em !important;
+}

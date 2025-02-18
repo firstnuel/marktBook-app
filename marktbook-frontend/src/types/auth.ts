@@ -13,8 +13,8 @@ export interface User {
   isVerified: boolean;
   profilePicture: string;
   notificationPreferences: {
-      emailNotifications: boolean;
-      smsNotifications: boolean;
+      emailNotifications?: boolean;
+      smsNotifications?: boolean;
   };
 }
 

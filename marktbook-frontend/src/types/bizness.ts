@@ -63,9 +63,9 @@ export interface IBusinessAdmin {
   }
 
 export interface INotificationSettings {
-    sales: boolean;
-    stockLevel: boolean;
-    dueCreditSales: boolean;
-    userDataChange: boolean;
+    sales?: boolean;
+    stockLevel?: boolean;
+    dueCreditSales?: boolean;
+    userDataChange?: boolean;
   }
 

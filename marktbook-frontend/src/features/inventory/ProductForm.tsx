@@ -153,7 +153,6 @@ const ProductForm = ({ product, error }: ProductForm) => {
     if (success) {
       resetOpt()
     }
-
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

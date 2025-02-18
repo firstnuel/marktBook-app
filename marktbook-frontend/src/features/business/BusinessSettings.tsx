@@ -5,6 +5,7 @@ import EditBusiness from './Editbusiness'
 import { useBusiness } from '@hooks/useBusiness'
 import ManageUsers from './ManageUsers'
 import EditUser from './EditUser'
+import EditNotifications from './EditNotifications'
 
 
 const Settings = () => {
@@ -24,6 +25,7 @@ const Settings = () => {
           {mainOpt === 'Business' && <EditBusiness />}
           {mainOpt === 'Manage Accounts' && subOpt === 'None'  && <ManageUsers />}
           {mainOpt === 'Manage Accounts' && subOpt === 'Edit User'  && <EditUser />}
+          {mainOpt === 'Notifications' && <EditNotifications />}
         </Container>
       </div>
     </div>

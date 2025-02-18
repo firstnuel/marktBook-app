@@ -61,12 +61,30 @@ class BusinessService {
     }
   }
 
+  public async deleteUser(id: string): Promise<any> {
+    try {
+      const response = await this.axios.delete(`/users/${id}`)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while deleting user.')
+    }
+  }
+
   public async updateBusiness(businessId: string, data: Partial<Business>): Promise<any> {
     try {
       const response = await this.axios.patch(`/business/${businessId}`, data)
       return response.data
     } catch (error) {
       this.handleAxiosError(error, 'An error occurred while updating business data.')
+    }
+  }
+
+  public async deleteBusiness(businessId: string): Promise<any> {
+    try {
+      const response = await this.axios.delete(`/business/${businessId}`)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while deleting business data.')
     }
   }
 

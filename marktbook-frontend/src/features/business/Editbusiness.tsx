@@ -7,9 +7,10 @@ import icons from '@assets/icons'
 import { useBusiness } from '@hooks/useBusiness'
 import Notify from '@components/Notify'
 import ChangeImage from './ChangeImage'
+import ConfirmDelete from './ConfimDelete'
 
 const EditBusiness = () => {
-  const { business, update, loading, clearError, error, success } = useBusiness()
+  const { business, update, loading, clearError, error, success, deleteBusiness } = useBusiness()
   const [hideEdit, setHideEdit] = useState(false)
   const [show, setShow] = useState(false)
 
@@ -66,6 +67,7 @@ const EditBusiness = () => {
           setDisableEdit={setHideEdit}
           disableEdit={hideEdit}
         />
+        <ConfirmDelete id={business!._id} deleteFn={deleteBusiness} successMsg={success} loading={loading} />
       </Container>
 
       <ChangeImage show={show}

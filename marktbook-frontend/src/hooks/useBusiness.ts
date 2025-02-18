@@ -8,6 +8,8 @@ import {
   setSubOpt,
   fetchUser,
   updateUser,
+  deleteUser,
+  deleteBusiness,
   rmUser,
 } from '@reducers/businessReducer'
 import { useAppDispatch, useAppSelector } from '../store'
@@ -18,7 +20,6 @@ import { User } from '@typess/auth'
 export const useBusiness = () => {
   const { business, error, loading, success, mainOpt, users, subOpt, user } = useAppSelector(state => state.business)
   const dispatch = useAppDispatch()
-
 
   useEffect(() => {
     if (error || success) {
@@ -44,6 +45,10 @@ export const useBusiness = () => {
 
   const fetchUserHandler = useCallback((userId: string) => dispatch(fetchUser(userId)), [dispatch])
 
+  const deleteUserHandler = useCallback((userId: string) => dispatch(deleteUser(userId)), [dispatch])
+
+  const deleteBusinessHandler = useCallback((businessId: string) => dispatch(deleteBusiness(businessId)), [dispatch])
+
   const createUserHandler = useCallback((data: Partial<User>) => dispatch(createUser(data)), [dispatch])
 
   const updateHandler = useCallback((businessId: string, data: Partial<Business>) =>
@@ -61,6 +66,8 @@ export const useBusiness = () => {
     users,
     subOpt,
     user,
+    deleteBusiness: deleteBusinessHandler,
+    deleteUser: deleteUserHandler,
     updateUser: updateUserHandler,
     rmUser: rmUserHandler,
     fetchUser: fetchUserHandler,

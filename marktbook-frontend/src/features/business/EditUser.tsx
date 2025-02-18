@@ -8,13 +8,15 @@ import Notify from '@components/Notify'
 import ChangeImage from './ChangeImage'
 import { User } from '@typess/auth'
 import IconBox from '@components/IconBox'
+import ConfirmDelete from './ConfimDelete'
+import ViewOrToggle from './ViewOrToggle'
 
 interface EditUserProps {
   currentUser?: User
 }
 
 const EditUser = ({ currentUser }: EditUserProps ) => {
-  const { user, updateUser, loading, clearError, error, success, rmUser } = useBusiness()
+  const { user, updateUser, loading, clearError, error, success, rmUser, deleteUser } = useBusiness()
   const [hideEdit, setHideEdit] = useState(false)
   const [show, setShow] = useState(false)
 
@@ -66,7 +68,7 @@ const EditUser = ({ currentUser }: EditUserProps ) => {
           disableEdit={hideEdit}
           user={User}
         />
-        <ViewOrEdit fieldName='User Role'
+        <ViewOrEdit fieldName='User role'
           fieldData={{ fieldValue: User?.role ?? '', fieldKey: 'role' }}
           dropDownFields={['Owner', 'Manager', 'Staff',]}
           setDisableEdit={setHideEdit}
@@ -94,7 +96,25 @@ const EditUser = ({ currentUser }: EditUserProps ) => {
           disableEdit={hideEdit}
           user={User}
         />
+        <ViewOrToggle  fieldName='Email notifications'
+          fieldData={{ fieldValue: User?.notificationPreferences.emailNotifications ??
+        false, fieldKey: 'emailNotifications' }}
+          user={User}
+          disableEdit={hideEdit}
+          setDisableEdit={setHideEdit}
+          msg="If toggled off, the user will not receive business-related notifications by email."
+        />
+        <ViewOrToggle  fieldName='Phone notifications'
+          fieldData={{ fieldValue: User?.notificationPreferences.smsNotifications ??
+        false, fieldKey: 'smsNotifications' }}
+          user={User}
+          disableEdit={hideEdit}
+          setDisableEdit={setHideEdit}
+          msg="If toggled off, the user will not receive business-related notifications by text message."
+        />
 
+
+        <ConfirmDelete id={user!._id} deleteFn={deleteUser} user successMsg={success} loading={loading} />
       </Container>
 
       <ChangeImage show={show}

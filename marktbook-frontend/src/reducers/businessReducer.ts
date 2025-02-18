@@ -30,6 +30,22 @@ export const fetchUser = createAsyncThunk('business/fetchUser', async (userId: s
   return { user: response.data, message: response.message }
 })
 
+export const deleteUser = createAsyncThunk('business/deleteUser', async (userId: string) => {
+  const response = await businessService.deleteUser(userId)
+  if (response.status !== 'success') {
+    throw new Error(response.message)
+  }
+  return { userId, message: response.message }
+})
+
+export const deleteBusiness = createAsyncThunk('business/deleteBusiness', async (userId: string) => {
+  const response = await businessService.deleteBusiness(userId)
+  if (response.status !== 'success') {
+    throw new Error(response.message)
+  }
+  return { message: response.message }
+})
+
 export const createUser = createAsyncThunk('business/createUser', async (data: Partial<User>) => {
   const response = await businessService.createUser(data)
   if (!response.data) {
@@ -180,6 +196,37 @@ const businessSlice = createSlice({
       state.loading = false
       state.success = null
       state.error = action.error.message || 'User data could not be updated, try again later'
+    })
+    builder.addCase(deleteUser.pending, (state) => {
+      state.loading = true
+      state.error = null
+      state.success = null
+    })
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+      state.success = action.payload.message
+      state.users = state.users.filter(user => user._id !== action.payload.userId)
+    })
+    builder.addCase(deleteUser.rejected, (state, action) => {
+      state.loading = false
+      state.success = null
+      state.error = action.error.message || 'User data could not be deleted, try again later'
+    })
+    builder.addCase(deleteBusiness.pending, (state) => {
+      state.loading = true
+      state.error = null
+      state.success = null
+    })
+    builder.addCase(deleteBusiness.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+      state.success = action.payload.message
+    })
+    builder.addCase(deleteBusiness.rejected, (state, action) => {
+      state.loading = false
+      state.success = null
+      state.error = action.error.message || 'Business data could not be deleted, try again later'
     })
   }
 })
