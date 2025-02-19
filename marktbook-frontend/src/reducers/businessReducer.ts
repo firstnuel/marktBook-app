@@ -98,6 +98,11 @@ const businessSlice = createSlice({
       state.user = null
       state.subOpt = 'None'
     },
+    setUser: (state, action) => {
+      state.user = action.payload.user
+      state.mainOpt = 'Manage Accounts'
+      state.subOpt = 'Edit User'
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBusiness.pending, (state) => {
@@ -191,6 +196,9 @@ const businessSlice = createSlice({
       state.error = null
       state.success = action.payload.message
       state.user = action.payload.user
+      state.users = state.users.map(usr => usr._id === action.payload.user ?
+        action.payload.user : usr
+      )
     })
     builder.addCase(updateUser.rejected, (state, action) => {
       state.loading = false
@@ -233,5 +241,5 @@ const businessSlice = createSlice({
 
 
 
-export const { clearError, setMainOpt, setSubOpt, rmUser } = businessSlice.actions
+export const { clearError, setMainOpt, setSubOpt, rmUser, setUser } = businessSlice.actions
 export default businessSlice.reducer

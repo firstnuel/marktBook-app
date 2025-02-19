@@ -13,6 +13,7 @@ const initialState: PosState = {
   searchKey: 'SKU',
   loading: false,
   successMsg: null,
+  customer: null,
   error: null,
   priceInfo: {
     subtotal: 0,
@@ -135,7 +136,14 @@ const posSlice = createSlice({
     clearCart: (state) => {
       state.cartItems = []
       state.priceInfo = calculatePrice(state.cartItems)
-    }
+      state.customer = null
+    },
+    setCustomer: (state, action) => {
+      state.customer = action.payload.customer
+    },
+    rmCustomer: (state) => {
+      state.customer = null
+    },
   },
   extraReducers: (builder) => {
     //fetch products
@@ -164,7 +172,9 @@ const posSlice = createSlice({
 
 export const {
   addToCart,
+  setCustomer,
   clearCart,
+  rmCustomer,
   clearError,
   addQuantity,
   subQuantity,

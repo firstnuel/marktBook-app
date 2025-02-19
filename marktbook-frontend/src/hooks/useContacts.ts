@@ -7,6 +7,8 @@ import {
   updateCustomer,
   updateSupplier,
   deleteCustomer,
+  createCustomer,
+  createSupplier,
   deleteSupplier,
   setMainOpt,
   setSubOpt,
@@ -54,6 +56,10 @@ export const useContacts = () => {
 
   const fetchSuppliersHandler = useCallback(() => dispatch(fetchSuppliers()), [dispatch])
 
+  const createCustomerHandler = useCallback((data: Partial<Customer>) => dispatch(createCustomer(data)), [dispatch])
+
+  const createSupplierHandler = useCallback((data: Partial<Supplier>) => dispatch(createSupplier(data)), [dispatch])
+
   const fetchSupplierHandler = useCallback((supplierId: string) => dispatch(fetchSupplier(supplierId)), [dispatch])
 
   const updateCustomerHandler = useCallback((customerId: string, data: Partial<Customer>) =>
@@ -82,6 +88,8 @@ export const useContacts = () => {
     rmContacts: rmContactsHandler,
     setMainOpt: setMainOption,
     setSubOpt: setSubOption,
+    createCustomer: createCustomerHandler,
+    createSupplier: createSupplierHandler,
     fetchCustomers: fetchCustomersHandler,
     fetchCustomer: fetchCustomerHandler,
     fetchSuppliers: fetchSuppliersHandler,

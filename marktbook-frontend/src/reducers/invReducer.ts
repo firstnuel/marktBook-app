@@ -125,7 +125,11 @@ const invSlice = createSlice({
     },
     setSubOpt: (state, action) => {
       state.subOpt = action.payload.option
+    },
+    resetCat: (state) => {
+      state.productsByCat = []
     }
+
   },
   extraReducers: (builder) => {
     builder.addCase(fetchProduct.pending, (state) => {
@@ -266,5 +270,5 @@ const invSlice = createSlice({
   }
 })
 
-export const { clearError, setMainOpt, setLoading, setSubOpt, resetOpt, rmPrdStck } = invSlice.actions
+export const { clearError, setMainOpt, setLoading, setSubOpt, resetOpt, rmPrdStck, resetCat } = invSlice.actions
 export default invSlice.reducer

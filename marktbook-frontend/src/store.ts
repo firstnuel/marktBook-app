@@ -49,7 +49,7 @@ const contactsPersistConfig = {
 // the base reducer combination
 const combinedReducer = combineReducers({
   'auth': persistReducer(authPersistConfig, authReducer),
-  'pos': persistReducer({ key: 'pos', storage, whitelist: ['cartItems'] }, posReducer),
+  'pos': persistReducer({ key: 'pos', storage, whitelist: ['cartItems', 'customer'] }, posReducer),
   'business': persistReducer({ key: 'business', storage, whitelist: ['business'] }, businessReducer),
   'inv': persistReducer(invPersistConfig, invReducer),
   'contacts': persistReducer(contactsPersistConfig, contactsReducer)

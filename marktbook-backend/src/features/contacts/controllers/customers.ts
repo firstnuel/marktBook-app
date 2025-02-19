@@ -118,7 +118,7 @@ class Customer {
         phone: body.phone || existingCustomer.phone,
         address: body.address || existingCustomer.address,
         customerType: body.customerType || existingCustomer.customerType,
-        businessName: body.businessName || existingCustomer.businessName,
+        businessName: body.customerType === 'Individual' ?  null : body.businessName || existingCustomer.businessName,
         marketingOptIn: body.marketingOptIn ?? existingCustomer.marketingOptIn
       }
   

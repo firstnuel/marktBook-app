@@ -13,7 +13,7 @@
     }
 
     &:hover {
-        background-color: var(--primary-color) ;
+        background-color: var(--dark-gray); 
         .sec-opt-name {
             color: var(--white-color);
         }
@@ -23,5 +23,8 @@
     background-color: var(--primary-color) ;
     .sec-opt-name {
         color: var(--white-color);
+    }
+    &:hover {
+        background-color: var(--primary-color);
     }
 }

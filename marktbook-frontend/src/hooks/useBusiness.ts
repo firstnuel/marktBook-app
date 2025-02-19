@@ -6,6 +6,7 @@ import {
   fetchBusinessUsers,
   createUser,
   setSubOpt,
+  setUser,
   fetchUser,
   updateUser,
   deleteUser,
@@ -34,6 +35,8 @@ export const useBusiness = () => {
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
 
   const rmUserHandler = useCallback(() => dispatch(rmUser()), [dispatch])
+
+  const setUserHandler = useCallback((user: User) => dispatch(setUser({ user })), [dispatch])
 
   const setMainOption = useCallback((option: string) => dispatch(setMainOpt({ option })), [dispatch])
 
@@ -70,6 +73,7 @@ export const useBusiness = () => {
     deleteUser: deleteUserHandler,
     updateUser: updateUserHandler,
     rmUser: rmUserHandler,
+    setUser: setUserHandler,
     fetchUser: fetchUserHandler,
     createUser: createUserHandler,
     clearError: clearErrorHandler,

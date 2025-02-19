@@ -34,7 +34,9 @@ import dashBoard from '@assets/icons/dashboard.svg'
 import imagePlaceholder from '@assets/icons/img-placeholder.png'
 import logoPlaceholder from '@assets/icons/logo-placeholder-image.png'
 import cameraIcon from '@assets/icons/camera-icon.svg'
-
+import editFields from '@assets/icons/edit.svg'
+import deleteField from '@assets/icons/delete.svg'
+import openField from '@assets/icons/open.svg'
 
 const icons = {
   email: emailIcon,
@@ -72,7 +74,10 @@ const icons = {
   dashboard: dashBoard,
   imagePlaceholder,
   cameraIcon,
-  logoPlaceholder
+  logoPlaceholder,
+  editFields,
+  deleteField,
+  openField,
 }
 
 export default icons

@@ -30,6 +30,22 @@ export const fetchCustomer = createAsyncThunk('contacts/fetchCustomer', async (c
   return { customer: response.data, message: response.message }
 })
 
+export const createCustomer = createAsyncThunk('contacts/createCustomer', async (data: Partial<Customer>) => {
+  const response = await contactsService.createCustomer(data)
+  if (!response.data) {
+    throw new Error(response.message)
+  }
+  return { customer: response.data, message: response.message }
+})
+
+export const createSupplier = createAsyncThunk('contacts/createSupplier', async (data: Partial<Supplier>) => {
+  const response = await contactsService.createSupplier(data)
+  if (!response.data) {
+    throw new Error(response.message)
+  }
+  return { supplier: response.data, message: response.message }
+})
+
 export const fetchSuppliers = createAsyncThunk('contacts/fetchSuppliers', async () => {
   const response = await contactsService.fetchSuppliers()
   if (!response.data) {
@@ -106,6 +122,43 @@ const contactSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Create Customers
+    builder
+      .addCase(createCustomer.pending, (state) => {
+        state.loading = true
+        state.success = null
+        state.error = null
+      })
+      .addCase(createCustomer.fulfilled, (state, action) => {
+        state.loading = false
+        state.customers = [...state.customers, action.payload.customer]
+        state.success = action.payload.message
+        state.error = null
+      })
+      .addCase(createCustomer.rejected, (state, action) => {
+        state.loading = false
+        state.success = null
+        state.error = action.error.message || 'Customer could not be created, try again later'
+      })
+    // Create Supplier
+    builder
+      .addCase(createSupplier.pending, (state) => {
+        state.loading = true
+        state.success = null
+        state.error = null
+      })
+      .addCase(createSupplier.fulfilled, (state, action) => {
+        state.loading = false
+        state.suppliers = [...state.suppliers, action.payload.supplier]
+        state.success = action.payload.message
+        state.error = null
+      })
+      .addCase(createSupplier.rejected, (state, action) => {
+        state.loading = false
+        state.success = null
+        state.error = action.error.message || 'Supplier could not be created, try again later'
+      })
+
     // Fetch Customers
     builder
       .addCase(fetchCustomers.pending, (state) => {
@@ -194,6 +247,9 @@ const contactSlice = createSlice({
         state.success = action.payload.message
         state.loading = false
         state.error = null
+        state.customers = state.customers.map(cus => cus._id === action.payload.customer._id ?
+          action.payload.customer : cus
+        )
       })
       .addCase(updateCustomer.rejected, (state, action) => {
         state.loading = false

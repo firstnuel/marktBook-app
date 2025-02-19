@@ -2,6 +2,7 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import { useBusiness } from '@hooks/useBusiness'
 import icons from '@assets/icons'
+import IconBox from '@components/IconBox'
 import { useEffect, useState } from 'react'
 import NewUser from './NewUser'
 import { getLastSeen } from '@utils/helpers'
@@ -47,6 +48,7 @@ const ManageUsers = () => {
               <th>Username</th>
               <th>Role</th>
               <th>Last Seen</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -62,6 +64,11 @@ const ManageUsers = () => {
                   <td>{user?.username}</td>
                   <td>{user?.role}</td>
                   <td>{getLastSeen(user.lastLogin)}</td>
+                  <td className='actions'>
+                    <div className="cta">
+                      <IconBox src={icons.openField}  onClick={() => fetchUser(user._id)} clName='view'/>
+                    </div>
+                  </td>
                 </tr>
               ))
               :

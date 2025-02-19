@@ -113,7 +113,6 @@ const EditUser = ({ currentUser }: EditUserProps ) => {
           msg="If toggled off, the user will not receive business-related notifications by text message."
         />
 
-
         <ConfirmDelete id={user!._id} deleteFn={deleteUser} user successMsg={success} loading={loading} />
       </Container>
 

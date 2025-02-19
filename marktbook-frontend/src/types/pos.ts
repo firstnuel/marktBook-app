@@ -1,3 +1,5 @@
+import { Customer } from './contacts'
+
 export interface PosState {
     products: Product[];
     filteredProducts: Product[];
@@ -9,6 +11,7 @@ export interface PosState {
     error: string | null;
     priceInfo: PriceInfo;
     successMsg: string | null;
+    customer: Customer | null
 }
 interface Stock {
     _id: string;

@@ -11,6 +11,7 @@ import {
   deleteProduct,
   fetchStock,
   rmPrdStck,
+  resetCat,
   updateStock,
   fetchProductsByCat,
 } from '@reducers/invReducer'
@@ -98,6 +99,8 @@ export const useInv = () => {
 
   const resetOptions = useCallback(() => dispatch(resetOpt()), [dispatch])
 
+  const resetCatOption = useCallback(() => dispatch(resetCat()), [dispatch])
+
   return {
     mainOpt,
     subOpt,
@@ -108,6 +111,7 @@ export const useInv = () => {
     loading,
     successMsg,
     productsByCat,
+    resetCat: resetCatOption,
     clearError: clearErrorHandler,
     rmPrdStck: removeProductStock,
     updateStock: updateStockHandler,

@@ -6,35 +6,40 @@ import { useBusiness } from '@hooks/useBusiness'
 import './index.scss'
 import { useAuth } from '@hooks/useAuth'
 import { useField } from '@hooks/useField'
+import { useContacts } from '@hooks/useContacts'
 
 
 interface ConfirmDeleteProps {
     id: string
     user?: boolean
+    contacts?: boolean
     deleteFn: (id: string) => void
     successMsg: string | null
     loading: boolean
 }
 
 
-const ConfirmDelete = ({ id='1234', user, deleteFn, loading, successMsg }: ConfirmDeleteProps) => {
+const ConfirmDelete = ({ id='1234', user, deleteFn, loading, contacts, successMsg }: ConfirmDeleteProps) => {
   const [modalShow, setModalShow] = useState(false)
   const [success, setSuccess] = useState(false)
   const [err, setErr] = useState(false)
   const { reset, ...deleteBusiness } = useField('deleteBusiness', 'text')
   const { rmUser } = useBusiness()
   const { logout } = useAuth()
+  const { rmContacts } = useContacts()
 
   useEffect(() => {
     if(successMsg && successMsg !== 'User fetched successfully' &&
         successMsg !== 'No user found' &&
+        successMsg !== 'Customer data fetched successfully' &&
+        successMsg !== 'Supplier data fetched successfully' &&
         successMsg !== 'Users data fetched successfully') {
       setSuccess(true)
     }
   }, [successMsg])
 
   const handleDelete = () => {
-    if (user) {
+    if (user || contacts) {
       deleteFn(id)
     } else {
       if((deleteBusiness.value as string).trim() === 'Delete business') {
@@ -49,6 +54,8 @@ const ConfirmDelete = ({ id='1234', user, deleteFn, loading, successMsg }: Confi
   const handleClose = () => {
     if(user) {
       rmUser()
+    } else if(contacts) {
+      rmContacts()
     } else {
       logout()
     }
@@ -59,7 +66,7 @@ const ConfirmDelete = ({ id='1234', user, deleteFn, loading, successMsg }: Confi
     <>
       <div className='confim-delete'>
         <Button id='cta-btn'  onClick={() => setModalShow(true)}>
-          {user ? 'Delete User' : 'Delete Business'}
+          {user ? 'Delete User' : contacts ? 'Delete Account' : 'Delete Business'}
         </Button>
       </div>
       <Modal
@@ -81,12 +88,12 @@ const ConfirmDelete = ({ id='1234', user, deleteFn, loading, successMsg }: Confi
         <Modal.Body>
           <p>
             {success ? 'Account has been successfully deleted.' :
-              user
-                ? 'This action will permanently delete this user account.'
-                : 'This action will permanently delete this business account, along with all associated user accounts, inventory, and transactions.'
+              contacts ? 'This action will permanently delete this contact account.' :
+                user ? 'This action will permanently delete this user account.' :
+                  'This action will permanently delete this business account, along with all associated user accounts, inventory, and transactions.'
             }
           </p>
-          {!user && !success &&
+          {!user && !contacts && !success &&
           <>
             <Form.Label>Enter '<strong>Delete business</strong>' to confirm</Form.Label>
             <Form.Control className={err? 'err' : ''} {...deleteBusiness} />
@@ -96,7 +103,9 @@ const ConfirmDelete = ({ id='1234', user, deleteFn, loading, successMsg }: Confi
           {
             success ?
               <Button onClick={handleClose}>Close</Button> :
-              <Button className='danger' onClick={handleDelete}>{loading ? 'Deleting...' : user ? 'Delete User' : 'Delete Business'}</Button>
+              <Button className='danger' onClick={handleDelete}>{loading ? 'Deleting...' :
+                user ? 'Delete User' : contacts ? 'Delete Account' : 'Delete Business'
+              }</Button>
           }
         </Modal.Footer>
       </Modal>

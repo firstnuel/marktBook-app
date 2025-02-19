@@ -35,26 +35,16 @@ export interface Customer {
 }
 
 
-export enum SuppierType {
-    Manufacturer = 'Manufacturer',
-    Distributor = 'Distributor',
-    Retailer = 'Retailer',
-    Wholesaler ='Wholesaler'
-}
+export type SupplierType = 'Manufacturer' | 'Distributor' | 'Retailer' | 'Wholesaler';
 
-export enum PaymentMethod {
-    Bank_Transfer = 'Bank Transfer',
-    Cash = 'Cash',
-    Credit_Card = 'Credit Card',
-    Cheque = 'Cheque'
-}
+export type PaymentMethod = 'Bank Transfer' | 'Cash' | 'Credit Card' | 'Cheque'
 
 export interface Supplier {
     _id: string;
     businessId: string;
     name: string;
     contactPerson: string;
-    supplierType: SuppierType,
+    supplierType: SupplierType,
     email?: string;
     phone?: string;
     address?: string;

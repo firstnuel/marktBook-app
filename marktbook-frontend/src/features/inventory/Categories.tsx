@@ -9,11 +9,13 @@ import { useBusiness } from '@hooks/useBusiness'
 import { useField } from '@hooks/useField'
 import Notify from '@components/Notify'
 import { useInv } from '@hooks/useInv'
+import IconBox from '@components/IconBox'
+import icons from '@assets/icons'
 
 const Categories = () => {
   const [show, setShow] = useState(false)
   const { business, update } = useBusiness()
-  const { setSubOpt, fetchProductsByCat, successMsg, success, error, clearError } = useInv()
+  const { setSubOpt, fetchProductsByCat, successMsg, success, error, clearError, productsByCat } = useInv()
   const { reset, ...category } = useField('category', 'text')
   const [inputError, setInputError] = useState(false)
 
@@ -23,10 +25,10 @@ const Categories = () => {
   }
 
   useEffect(() => {
-    if(success) {
+    if(productsByCat.length) {
       setSubOpt('Product By Cat')
     }
-  }, [success, setSubOpt])
+  }, [productsByCat.length, setSubOpt])
 
   const handleSubmit = () => {
     if((category.value as string).length) {
@@ -69,13 +71,21 @@ const Categories = () => {
             <tr>
               <th>Category</th>
               <th>Type</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {categoryData.map((category, idx) => (
-              <tr key={idx} onClick={() => getProductsByCat(category)}>
+              <tr key={idx} >
                 <td>{category}</td>
                 <td>{checkType(category)}</td>
+                <td className='actions'>
+                  <div className="cta">
+                    <IconBox src={icons.openField}  onClick={() => getProductsByCat(category)} clName='view'/>
+                    {checkType(category) === 'Custom' &&  <IconBox src={icons.deleteField}
+                      onClick={() => getProductsByCat(category)} clName='view' />}
+                  </div>
+                </td>
               </tr>))
             }
           </tbody>

@@ -57,7 +57,6 @@ const NewUser = ({ show, setShow }: NewUserProps) => {
         return () => clearTimeout(timer)
       }
     }
-    console.log(formData)
     createUser(formData)
   }
 

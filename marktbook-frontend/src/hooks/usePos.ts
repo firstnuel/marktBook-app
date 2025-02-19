@@ -5,13 +5,16 @@ import {
   clearError,
   addToCart,
   fetchProducts,
+  setCustomer,
   addQuantity,
+  rmCustomer,
   subQuantity,
   updatePrice,
   searchByCategory,
   searchByKeyandPhrase,
 } from '@reducers/posReducers'
 import { CartItemProps, ProductCategory, SearchKeys } from '@typess/pos'
+import { Customer } from '@typess/contacts'
 
 
 
@@ -25,6 +28,7 @@ export const usePos = () => {
     filteredProducts,
     searchKey,
     loading,
+    customer,
     error,
     category,
     priceInfo,
@@ -45,6 +49,8 @@ export const usePos = () => {
   // Memoized functions to avoid unnecessary re-creations
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
 
+  const rmCustomerHandler = useCallback(() => dispatch(rmCustomer()), [dispatch])
+
   const fetchProductsHandler = useCallback(() => dispatch(fetchProducts()), [dispatch])
 
   const searchByCategoryHandler = useCallback(
@@ -60,6 +66,11 @@ export const usePos = () => {
 
   const updateDiscountHandler = useCallback(
     (discount: number) => dispatch(updatePrice({ discount })),
+    [dispatch]
+  )
+
+  const setCustomerHandler = useCallback(
+    (customer: Customer) => dispatch(setCustomer({ customer })),
     [dispatch]
   )
 
@@ -91,6 +102,9 @@ export const usePos = () => {
     error,
     priceInfo,
     successMsg,
+    customer,
+    setCustomer: setCustomerHandler,
+    rmCustomer: rmCustomerHandler,
     clearError: clearErrorHandler,
     fetchProducts: fetchProductsHandler,
     searchByCategory: searchByCategoryHandler,

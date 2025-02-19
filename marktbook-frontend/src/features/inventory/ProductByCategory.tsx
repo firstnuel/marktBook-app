@@ -8,8 +8,12 @@ import Notify from '@components/Notify'
 
 
 const ProductByCategory = () => {
-  const { productsByCat, setSubOpt, successMsg, clearError } = useInv()
+  const { productsByCat, setSubOpt, successMsg, clearError, resetCat } = useInv()
 
+  const handleClose = () => {
+    setSubOpt('Product List')
+    resetCat()
+  }
 
   return(
 
@@ -17,9 +21,9 @@ const ProductByCategory = () => {
       <Notify clearErrFn={clearError} success={successMsg}  />
       <div className="head-info">
         <div className="head-name"> Products Under {productsByCat[0].productCategory}</div>
-        <div className="back">
+        <div className="back"  onClick={handleClose}>
           <IconBox src={icons.arrowback} clName="img-div" />
-          <span className="text" onClick={() => setSubOpt('Product List')}>Back</span>
+          <span className="text">Back</span>
         </div>
       </div>
       <div className="cat-content">

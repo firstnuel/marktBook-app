@@ -17,10 +17,13 @@ import { useState } from 'react'
 import { usePos } from '@hooks/usePos'
 import CartItem from '@components/CartItem'
 import { countByCategoryList } from '@utils/helpers'
+import { useContacts } from '@hooks/useContacts'
+import Notify from '@components/Notify'
 
 const PointOfSale = () => {
   const [selectValue, setSelectValue] = useState('SKU')
   const { reset, ...searchProduct } = useField('searchProduct', 'text')
+  const { customers, error, success, clearError } = useContacts()
   const eventKeys = Object.values(SearchKeys)
   const {
     products,
@@ -28,6 +31,7 @@ const PointOfSale = () => {
     filteredProducts,
     searchByCategory,
     searchByKeyandPhrase,
+    setCustomer,
     loading
   } = usePos()
 
@@ -52,6 +56,7 @@ const PointOfSale = () => {
 
   return (
     <div className="main-container">
+      <Notify error={error} success={success} clearErrFn={clearError}/>
       <Container className="main">
         <Container className="header-info">
           <div className="date-time">
@@ -94,8 +99,8 @@ const PointOfSale = () => {
         )}
       </Container>
       <Container className="checkout">
-        <CustomerInfo name="Emmanuel Ikwunna" salesId={1234567890} />
-        <SelectCustomer />
+        <CustomerInfo  salesId={1234567890} />
+        <SelectCustomer customers={customers} selectCustomer={setCustomer} />
         <div className="cart-div">
           {cartItems.map(item => (
             <CartItem product={item.product} quantity={item.quantity} key={item.product.id} />

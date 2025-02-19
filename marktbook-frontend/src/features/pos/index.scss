@@ -173,7 +173,10 @@
     }
 }
 
-
+.edit-customer,
+.receipt-img {
+    cursor: pointer;
+}
 
 /* For Tablets (e.g., iPad) */
 @media (max-width: 1024px) {

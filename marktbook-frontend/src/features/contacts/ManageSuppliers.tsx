@@ -1,23 +1,22 @@
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import { useEffect, useState } from 'react'
-import NewCustomer from './NewCustomer'
+import NewSupplier from './NewSupplier'
 import Notify from '@components/Notify'
 import { useContacts } from '@hooks/useContacts'
 import icons from '@assets/icons'
 import IconBox from '@components/IconBox'
 
-
-const ManageCustomers = () => {
+const ManageSuppliers = () => {
   const {
     clearError,
     mainOpt,
     setSubOpt,
-    customers,
+    suppliers,
     success,
     error,
-    fetchCustomer,
-    customer } = useContacts()
+    fetchSupplier,
+    supplier } = useContacts()
   const [show, setShow] = useState(false)
 
   const handleNewUser = () => {
@@ -26,23 +25,22 @@ const ManageCustomers = () => {
   }
 
   useEffect(() => {
-    if( mainOpt === 'Customers' && customer) {
-      setSubOpt('Edit Customer')
+    if( mainOpt === 'Suppliers' && supplier) {
+      setSubOpt('Edit Supplier')
     }
-  }, [mainOpt, setSubOpt, customer])
-
+  }, [mainOpt, setSubOpt, supplier])
 
   return(
     <Container>
       <Notify clearErrFn={clearError} success={success} error={error} />
-      <NewCustomer show={show} setShow={setShow} />
+      <NewSupplier show={show} setShow={setShow} />
       <div className="head-info">
         <div className="name-desc">
-          <div className="name">Customer Accounts</div>
-          <div className="desc">Manage customer accounts associated with this business</div>
+          <div className="name">Supplier Accounts</div>
+          <div className="desc">Manage supplier accounts associated with this business</div>
         </div>
         <div className="new-user">
-          <Button variant='primary'onClick={handleNewUser} >Add New Customer</Button>
+          <Button variant='primary' onClick={handleNewUser}>Add New Supplier</Button>
         </div>
       </div>
 
@@ -51,21 +49,21 @@ const ManageCustomers = () => {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Business Name</th>
-              <th>Customer Type</th>
+              <th>Company Name</th>
+              <th>Supplier Type</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {customers.length ?
-              customers.map((customer, idx) => (
-                <tr key={idx} >
-                  <td className='body-row'>{customer?.name}</td>
-                  <td>{customer?.businessName ?? '-'}</td>
-                  <td>{customer?.customerType}</td>
+            {suppliers.length ?
+              suppliers.map((supplier, idx) => (
+                <tr key={idx}>
+                  <td className='body-row'>{supplier?.name}</td>
+                  <td>{supplier?.companyName ?? '-'}</td>
+                  <td>{supplier?.supplierType}</td>
                   <td className='actions'>
                     <div className="cta">
-                      <IconBox src={icons.openField} onClick={() => fetchCustomer(customer._id)} clName='view'/>
+                      <IconBox src={icons.openField} onClick={() => fetchSupplier(supplier._id)} clName='view'/>
                     </div>
                   </td>
                 </tr>
@@ -73,18 +71,15 @@ const ManageCustomers = () => {
               :
               (
                 <tr>
-                  <td colSpan={3} className="no-user">No customer found</td>
+                  <td colSpan={3} className="no-user">No supplier found</td>
                 </tr>
               )
             }
           </tbody>
         </table>
-
       </Container>
     </Container>
   )
 }
 
-export default ManageCustomers
-
-
+export default ManageSuppliers

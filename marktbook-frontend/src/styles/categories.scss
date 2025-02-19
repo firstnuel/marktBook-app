@@ -49,12 +49,24 @@
             tr {
                 height: 5em;
                 border-bottom: 1px solid var(--light-gray);
-                &:hover {
-                    color: var(--primary-color);
-                    cursor: pointer;
-                }
                 td {
                     padding: .5em;
+                }
+                td.actions {
+                    .cta {
+                        display: flex;
+                        align-items: center;
+                        gap: .5em;
+                        .view {
+                            cursor: pointer;
+                            img {
+                                height: 1.5em;
+                                width: 1.5em;
+                            }
+                        }
+                    }
+
+            
                 }
             }
         }
