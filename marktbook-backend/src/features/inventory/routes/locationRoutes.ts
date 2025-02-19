@@ -10,7 +10,7 @@ class LocationRoutes {
     this.router = express.Router()
   }
 
-  public LocationRoutes(): Router {
+  public locationRoutes(): Router {
     this.router.post('/locations', authMiddleware.checkAuthentication, location.create)
     this.router.get('/locations', authMiddleware.checkAuthentication, location.read)
     this.router.get('/locations/:id', authMiddleware.checkAuthentication, location.fetch)

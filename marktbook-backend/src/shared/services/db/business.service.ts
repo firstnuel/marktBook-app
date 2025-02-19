@@ -1,7 +1,7 @@
 import { LogModel } from '@activity/models/logs.schema'
 import { IBusinessDocument, IBusinessAdmin } from '@business/interfaces/business.interface'
 import { BusinessModel } from '@business/models/business.schema'
-import { CustomerModel } from '@contacts/models/contacts.schema'
+import { CustomerModel } from '@contacts/models/customer.schema'
 import { LocationModel } from '@inventory/models/locations.schema'
 import { ProductModel } from '@inventory/models/products.schema'
 import { StockModel } from '@inventory/models/stocks.schema'

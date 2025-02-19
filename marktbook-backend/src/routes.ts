@@ -12,6 +12,8 @@ import { locationRoutes } from '@inventory/routes/locationRoutes'
 import { saleRoutes } from '@transactions/routes/saleRoutes'
 import { businessRoutes } from '@business/routes/businessRoutes'
 import { customerRoutes } from '@contacts/routes/customerRoutes'
+import { supplierRoutes } from '@contacts/routes/supplierRoutes'
+
 
 const BASE_PATH = '/api/v1/'
 
@@ -29,11 +31,12 @@ export default (app: Application) => {
 
     app.use(BASE_PATH, authMiddleware.verifyUser, logsRoutes.logsRoutes())
     app.use(BASE_PATH, authMiddleware.verifyUser, stockRoutes.stockRoutes())
-    app.use(BASE_PATH, authMiddleware.verifyUser, locationRoutes.LocationRoutes())
+    app.use(BASE_PATH, authMiddleware.verifyUser, locationRoutes.locationRoutes())
 
-    app.use(BASE_PATH, authMiddleware.verifyUser, saleRoutes.SaleRoutes())
+    app.use(BASE_PATH, authMiddleware.verifyUser, saleRoutes.saleRoutes())
     app.use(BASE_PATH, authMiddleware.verifyUser, businessRoutes.businessRoutes())
     app.use(BASE_PATH, authMiddleware.verifyUser, customerRoutes.customerRoutes())
+    app.use(BASE_PATH, authMiddleware.verifyUser, supplierRoutes.supplierRoutes())
   }
 
   routes()

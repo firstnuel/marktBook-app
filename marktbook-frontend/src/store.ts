@@ -16,6 +16,7 @@ import posReducer from '@reducers/posReducers'
 import authReducer from '@reducers/authReducer'
 import invReducer from '@reducers/invReducer'
 import businessReducer from '@reducers/businessReducer'
+import contactsReducer from '@reducers/contactsReducer'
 
 // Add RESET_ALL action type
 export const RESET_ALL = 'RESET_ALL'
@@ -39,12 +40,19 @@ const invPersistConfig = {
   whitelist: ['mainOpt', 'subOpt', 'product', 'productsByCat', 'stock' ]
 }
 
+const contactsPersistConfig = {
+  key: 'contacts',
+  storage,
+  whitelist: ['mainOpt', 'subOpt', 'suppliers', 'contacts' ]
+}
+
 // the base reducer combination
 const combinedReducer = combineReducers({
   'auth': persistReducer(authPersistConfig, authReducer),
   'pos': persistReducer({ key: 'pos', storage, whitelist: ['cartItems'] }, posReducer),
   'business': persistReducer({ key: 'business', storage, whitelist: ['business'] }, businessReducer),
-  'inv': persistReducer(invPersistConfig, invReducer)
+  'inv': persistReducer(invPersistConfig, invReducer),
+  'contacts': persistReducer(contactsPersistConfig, contactsReducer)
 })
 
 // root reducer with reset capability

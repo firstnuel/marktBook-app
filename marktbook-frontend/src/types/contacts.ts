@@ -1,10 +1,28 @@
-import { Document } from 'mongoose'
-import { ObjectId } from 'mongodb'
+type MainOption =
+    | 'Customers'
+    | 'Suppliers'
+
+type SubOption =
+    | 'None'
+    | 'Edit Customer'
+    | 'Edit Supplier'
 
 
-export interface ICustomerDocument extends Document {
-    _id: ObjectId;
-    businessId: ObjectId;
+export interface contactsState {
+    mainOpt: MainOption
+    subOpt: SubOption
+    loading: boolean
+    success: string | null
+    error: string | null
+    supplier: Supplier | null
+    customer: Customer | null
+    suppliers: Supplier[]
+    customers: Customer[]
+}
+
+export interface Customer {
+    _id: string;
+    businessId: string;
     name: string;
     email?: string;
     phone?: string;
@@ -15,6 +33,7 @@ export interface ICustomerDocument extends Document {
     updatedAt?: Date;
     marketingOptIn?: boolean;
 }
+
 
 export enum SuppierType {
     Manufacturer = 'Manufacturer',
@@ -30,9 +49,9 @@ export enum PaymentMethod {
     Cheque = 'Cheque'
 }
 
-export interface ISupplierDocument extends Document {
-    _id: ObjectId;
-    businessId: ObjectId;
+export interface Supplier {
+    _id: string;
+    businessId: string;
     name: string;
     contactPerson: string;
     supplierType: SuppierType,

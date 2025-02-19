@@ -1,44 +1,44 @@
 import express, { Router } from 'express'
 import { authMiddleware } from '@global/helpers/auth-middleware'
-import { customer } from '@contacts/controllers/customers'
+import { supplier } from '@contacts/controllers/suppliers'
 
 
-class CustomerRoutes {
+class SupplierRoutes {
   private router: Router
 
   constructor(){
     this.router = express.Router()
   }
 
-  public customerRoutes(): Router {
-    this.router.post('/customers', 
+  public supplierRoutes(): Router {
+    this.router.post('/suppliers', 
       authMiddleware.checkAuthentication, 
       authMiddleware.validateBusiness,
-      customer.create
+      supplier.create
     )
 
-    this.router.get('/customers', 
+    this.router.get('/suppliers', 
       authMiddleware.checkAuthentication, 
-      customer.read
+      supplier.read
     )
 
-    this.router.patch('/customers/:id', 
+    this.router.patch('/suppliers/:id', 
       authMiddleware.checkAuthentication, 
-      customer.edit
+      supplier.edit
     )
 
-    this.router.delete('/customers/:id', 
+    this.router.delete('/suppliers/:id', 
       authMiddleware.checkAuthentication, 
-      customer.delete
+      supplier.delete
     )
 
-    this.router.get('/customers/:id', 
+    this.router.get('/suppliers/:id', 
       authMiddleware.checkAuthentication, 
-      customer.fetch
+      supplier.fetch
     )
 
     return this.router
   }
 }
 
-export const customerRoutes = new CustomerRoutes()
+export const supplierRoutes = new SupplierRoutes()

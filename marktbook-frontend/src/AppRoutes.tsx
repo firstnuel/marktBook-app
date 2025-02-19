@@ -11,6 +11,8 @@ import Settings from '@features/business/BusinessSettings'
 import { useBusiness } from '@hooks/useBusiness'
 import { usePos } from '@hooks/usePos'
 import { useEffect, memo } from 'react'
+import Contacts from '@features/contacts/Contacts'
+import { useContacts } from '@hooks/useContacts'
 
 // Memoize ProtectedRoute to prevent unnecessary re-renders
 const ProtectedRoute = memo(({ children }: { children: React.ReactNode }) => {
@@ -28,6 +30,7 @@ const AppRoutes = () => {
   const { user, fetchUser, userToken } = useAuth()
   const { business, fetchBusiness, fetchBusinessUsers, users } = useBusiness()
   const { fetchProducts, products } = usePos()
+  const { fetchCustomers, fetchSuppliers, customers, suppliers } = useContacts()
 
   useEffect(() => {
     if (userToken && !user) {
@@ -53,6 +56,17 @@ const AppRoutes = () => {
     }
   }, [business?._id, fetchBusinessUsers, users.length])
 
+  useEffect(() => {
+    if (business?._id && !customers.length) {
+      fetchCustomers()
+    }
+  }, [business?._id, fetchCustomers, customers.length])
+
+  useEffect(() => {
+    if (business?._id && !suppliers.length) {
+      fetchSuppliers()
+    }
+  }, [business?._id, fetchSuppliers, suppliers.length])
   return (
     <Routes>
       <Route path="/login" element={<LoginForm />} />
@@ -82,6 +96,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <PointOfSale />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/contacts"
+        element={
+          <ProtectedRoute>
+            <Contacts />
           </ProtectedRoute>
         }
       />

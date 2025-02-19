@@ -102,7 +102,7 @@ class BusinessService {
       const response = await this.axios.post('/users', data)
       return response.data
     } catch (error) {
-      this.handleAxiosError(error, 'An error occurred while adding user.')
+      this.handleAxiosError(error, 'An error occurred while creating user.')
     }
   }
 }

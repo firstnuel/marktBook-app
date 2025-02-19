@@ -10,7 +10,7 @@ class SaleRoutes {
     this.router = express.Router()
   }
 
-  public SaleRoutes(): Router {
+  public saleRoutes(): Router {
     this.router.post('/sales', authMiddleware.checkAuthentication, sale.new)
     this.router.get('/sales', authMiddleware.checkAuthentication, sale.read)
     this.router.get('/sales/:id', authMiddleware.checkAuthentication, sale.fetch)
