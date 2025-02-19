@@ -64,6 +64,7 @@
 | **15.02.**  | 3 | Implement manage users pages and its UI, services and slices|
 | **16.02.**  | 3 | Implement edit user UI and functionality, minor refactor on user controller|
 | **18.02.**  | 5 | Implement customers and suppliers backend features and started front end features also |
-| **Total**  | **161** | |
+| **19.02.**  | 3 | Implement customers and suppliers frontend features  |
+| **Total**  | **164** | |
 
 
