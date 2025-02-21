@@ -20,6 +20,12 @@ const ManageCustomers = () => {
     customer } = useContacts()
   const [show, setShow] = useState(false)
 
+  const handleSelectCustomer = (id: string) => {
+    if (customer?._id !== id) {
+      fetchCustomer(id)
+    }
+  }
+
   const handleNewUser = () => {
     clearError()
     setShow(true)
@@ -65,7 +71,9 @@ const ManageCustomers = () => {
                   <td>{customer?.customerType}</td>
                   <td className='actions'>
                     <div className="cta">
-                      <IconBox src={icons.openField} onClick={() => fetchCustomer(customer._id)} clName='view'/>
+                      <IconBox src={icons.openField}
+                        onClick={() => handleSelectCustomer(customer._id)}
+                        clName='view'/>
                     </div>
                   </td>
                 </tr>

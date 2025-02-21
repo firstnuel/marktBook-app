@@ -8,15 +8,11 @@ import PointOfSale from '@features/pos/PointOfSale'
 import StocksMangement from '@features/stocks/StocksMangement'
 import Home from '@features/home/home'
 import { useAuth } from '@hooks/useAuth'
+import { useFetchData } from '@hooks/useFetchData'
 import Settings from '@features/business/BusinessSettings'
-import { useBusiness } from '@hooks/useBusiness'
-import { usePos } from '@hooks/usePos'
-import { useEffect, memo } from 'react'
+import { memo } from 'react'
 import Contacts from '@features/contacts/Contacts'
-import { useContacts } from '@hooks/useContacts'
 
-
-export let TaxRate: number
 
 // Memoize ProtectedRoute to prevent unnecessary re-renders
 const ProtectedRoute = memo(({ children }: { children: React.ReactNode }) => {
@@ -31,52 +27,7 @@ const ProtectedRoute = memo(({ children }: { children: React.ReactNode }) => {
 ProtectedRoute.displayName = 'ProtectedRoute'
 
 const AppRoutes = () => {
-  const { user, fetchUser, userToken } = useAuth()
-  const { business, fetchBusiness, fetchBusinessUsers, users } = useBusiness()
-  const { fetchProducts, products } = usePos()
-  const { fetchCustomers, fetchSuppliers, customers, suppliers } = useContacts()
-
-  useEffect(() => {
-    if (userToken && !user) {
-      fetchUser()
-    }
-  }, [userToken, user, fetchUser])
-
-  useEffect(() => {
-    if (user?.associatedBusinessesId && !business) {
-      fetchBusiness(user.associatedBusinessesId)
-    }
-  }, [user?.associatedBusinessesId, business, fetchBusiness])
-
-  useEffect(() => {
-    if (business?._id && !products.length) {
-      fetchProducts()
-    }
-  }, [business?._id, products.length, fetchProducts])
-
-  useEffect(() => {
-    if (business?._id && !users.length) {
-      fetchBusinessUsers()
-    }
-  }, [business?._id, fetchBusinessUsers, users.length])
-
-  useEffect(() => {
-    if (business?._id && !customers.length) {
-      fetchCustomers()
-    }
-  }, [business?._id, fetchCustomers, customers.length])
-
-  useEffect(() => {
-    if (business?._id && !suppliers.length) {
-      fetchSuppliers()
-    }
-  }, [business?._id, fetchSuppliers, suppliers.length])
-
-  useEffect(() => {
-    if (business?.taxRate) {
-      TaxRate = business.taxRate
-    }
-  }, [business?.taxRate])
+  useFetchData()
 
   return (
     <Routes>

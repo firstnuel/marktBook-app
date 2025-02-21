@@ -20,6 +20,7 @@ interface ViewOrEditProps {
     fe?: boolean
     dropDownFields?: string[]
     status?: boolean
+    number? : boolean
 }
 
 
@@ -29,6 +30,7 @@ const ViewOrEdit = ({ fieldName,
   dropDownFields,
   disableEdit,
   setDisableEdit,
+  number,
   user,
   status
 }: ViewOrEditProps) => {
@@ -38,7 +40,7 @@ const ViewOrEdit = ({ fieldName,
   const [err, setErr] = useState('')
   const { business, update, loading, updateUser } = useBusiness()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { reset, ...field } = useField(fieldName, 'text', fieldValue)
+  const { reset, ...field } = useField(fieldName, number? 'number' : 'text', fieldValue)
   const [selectedDdvalue, setSelectedDdvalue] = useState<string>(fieldValue as string?? '')
   const handleDd = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDdvalue(event.target.value)

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Table from 'react-bootstrap/Table'
 import Form from 'react-bootstrap/Form'
 import IconBox from '@components/IconBox'
@@ -5,62 +6,63 @@ import icons from '@assets/icons'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { CSVLink } from 'react-csv'
-import { useEffect, useState } from 'react'
 import Caret from '@components/Caret'
 import Loading from '@components/Spinner'
 import Notify from '@components/Notify'
-import { useInv } from '@hooks/useInv'
+import { useStocks } from '@hooks/useStocks'
+import { cutName, formatDate, getCurrencySymbol } from '@utils/helpers'
+import { Stock } from '@typess/stocks'
 
 const StocksTable = () => {
-  const { lowStockData, fetchLowStockData, loading, error, clearError, successMsg } = useInv()
+  const { stocks, fetchStocks, loading, error, clearError, success } = useStocks()
+  const [sort, setSort] = useState({ key: 'Product', dir: 'asc' })
   const [search, setSearch] = useState('')
-  const [filteredData, setFilteredData] = useState(lowStockData)
-  const [sort, setSort] = useState({ key: 'product', dir: 'asc' })
+  const [filteredStocks, setFilteredStocks] = useState(stocks)
 
   useEffect(() => {
     if (search.length > 2) {
-      setFilteredData(
-        lowStockData.filter((item) =>
-          item.product.toLowerCase().includes(search.toLowerCase())
-        )
+      setFilteredStocks(
+        stocks.filter(stock => stock.product.toLowerCase().includes(search.toLowerCase()))
       )
     } else {
-      setFilteredData(lowStockData)
+      setFilteredStocks(stocks)
     }
-  }, [search, lowStockData])
+  }, [search, stocks])
 
   const hFields = {
     Product: 'product',
     Location: 'location',
     Compartment: 'compartment',
     'Units Available': 'unitsAvailable',
-    'Min Qty': 'minQuantity',
-    'Max Qty': 'maxQuantity',
-    'Cost/Unit (€)': 'costPerUnit',
-    'Total Value (€)': 'computedTotalValue',
-    'Last Restocked': 'lastRestocked',
+    'Min Quantity': 'minQuantity',
+    'Max Quantity': 'maxQuantity',
+    'Cost per Unit': 'costPerUnit',
+    'Total Value': 'totalValue',
     'Updated By': 'updatedBy.name',
-    Notes: 'notes',
+    'Last Restocked': 'lastRestocked',
+    'Updated At': 'updatedAt',
   }
 
   const header = Object.keys(hFields)
 
-  const handleHeaderClick = (header) => {
+  const handleHeaderClick = (header: string) => {
     setSort({
       key: header,
       dir: header === sort.key ? (sort.dir === 'asc' ? 'desc' : 'asc') : 'desc',
     })
   }
 
-  const getNestedValue = (obj, path) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getNestedValue = (obj: any, path: string) => {
     return path.split('.').reduce((acc, key) => acc?.[key], obj)
   }
 
-  const sortTable = (data) => {
-    const field = hFields[sort.key]
+
+  const sortTable = (stocks: Stock[]) => {
+    const field = hFields[sort.key as keyof typeof hFields]
     const direction = sort.dir === 'asc' ? 1 : -1
 
-    return [...data].sort((a, b) => {
+    return [...stocks].sort((a, b) => {
       const aValue = getNestedValue(a, field)
       const bValue = getNestedValue(b, field)
 
@@ -70,39 +72,67 @@ const StocksTable = () => {
     })
   }
 
-  const sortedData = sortTable(filteredData)
+  const sortedStocks = sortTable(filteredStocks)
 
   const exportToPDF = (print = false) => {
     const doc = new jsPDF('landscape')
-    doc.text('Low Stock Report', 20, 10)
+    doc.text('Stock List', 20, 10)
     autoTable(doc, {
       head: [header],
-      body: lowStockData.map((item) => header.map((key) => getNestedValue(item, hFields[key]) || '')),
+      body: stocks.map(stock => [
+        stock.product,
+        stock.location,
+        stock.compartment,
+        stock.unitsAvailable,
+        stock.minQuantity,
+        stock.maxQuantity,
+        stock.costPerUnit.toFixed(2),
+        stock.totalValue.toFixed(2),
+        stock.updatedBy.name,
+        formatDate(stock.lastRestocked),
+        formatDate(stock.updatedAt),
+      ]),
     })
 
     if (print) {
       window.open(doc.output('bloburl'), '_blank')
     } else {
-      doc.save('low-stock-report.pdf')
+      doc.save('stock-list.pdf')
     }
   }
 
-  const csvHeaders = header.map((key) => ({ label: key, key: hFields[key] }))
+  const csvHeaders = [
+    { label: 'Product', key: 'product' },
+    { label: 'Location', key: 'location' },
+    { label: 'Compartment', key: 'compartment' },
+    { label: 'Units Available', key: 'unitsAvailable' },
+    { label: 'Min Quantity', key: 'minQuantity' },
+    { label: 'Max Quantity', key: 'maxQuantity' },
+    { label: 'Cost per Unit', key: 'costPerUnit' },
+    { label: 'Total Value', key: 'totalValue' },
+    { label: 'Updated By', key: 'updatedBy.name' },
+    { label: 'Last Restocked', key: 'lastRestocked' },
+    { label: 'Updated At', key: 'updatedAt' },
+  ]
 
   return (
     <>
-      <Notify clearErrFn={clearError} success={successMsg} error={error} />
+      <Notify clearErrFn={clearError} success={success} error={error} />
       <div className="topper">
         <div className="top-menu">
-          <div className="title-box">Low Stock Report</div>
+          <div className="title-box">Stock List</div>
           <div className="options">
             <IconBox clName="pdf" src={icons.pdf} onClick={() => exportToPDF(false)} />
-            <CSVLink data={lowStockData} headers={csvHeaders} filename="low-stock-report.csv">
+            <CSVLink data={stocks} headers={csvHeaders} filename="stock-list.csv">
               <IconBox clName="excel" src={icons.excel} />
             </CSVLink>
             <IconBox clName="print" src={icons.print} onClick={() => exportToPDF(true)} />
-            <IconBox clName="refresh" src={icons.refresh} onClick={fetchLowStockData} />
-            <Form.Control placeholder="Search product" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <IconBox clName="refresh" src={icons.refresh} onClick={() => fetchStocks()} />
+            <Form.Control
+              placeholder="Search product"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
         </div>
       </div>
@@ -122,25 +152,25 @@ const StocksTable = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedData.length > 0 ? (
-              sortedData.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.product}</td>
-                  <td>{item.location}</td>
-                  <td>{item.compartment}</td>
-                  <td>{item.unitsAvailable}</td>
-                  <td>{item.minQuantity}</td>
-                  <td>{item.maxQuantity}</td>
-                  <td>{item.costPerUnit}</td>
-                  <td>{item.computedTotalValue}</td>
-                  <td>{new Date(item.lastRestocked).toLocaleString()}</td>
-                  <td>{item.updatedBy?.name}</td>
-                  <td>{item.notes}</td>
+            {sortedStocks.length > 0 ? (
+              sortedStocks.map((stock) => (
+                <tr key={stock.id} style={{ cursor: 'default' }}>
+                  <td className="body-row">{cutName(stock.product, 25)}</td>
+                  <td>{stock.location}</td>
+                  <td>{stock.compartment}</td>
+                  <td>{stock.unitsAvailable}</td>
+                  <td>{stock.minQuantity}</td>
+                  <td>{stock.maxQuantity}</td>
+                  <td>{`${getCurrencySymbol('USD')} ${stock.costPerUnit}`}</td>
+                  <td>{`${getCurrencySymbol('USD')} ${stock.totalValue}`}</td>
+                  <td>{stock.updatedBy.name}</td>
+                  <td>{formatDate(stock.lastRestocked)}</td>
+                  <td>{formatDate(stock.updatedAt)}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={header.length} className="no-user">No low stock data found</td>
+                <td colSpan={11} className="no-user">No stock found</td>
               </tr>
             )}
           </tbody>

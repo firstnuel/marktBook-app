@@ -108,3 +108,7 @@ export const handleFullScreen = () => {
   document.documentElement.requestFullscreen()
     .catch(err => console.log(err))
 }
+
+export const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString()
+}

@@ -1,11 +1,13 @@
 import Container from 'react-bootstrap/Container'
 import HeaderInfo from '@components/HeaderInfo'
 import SecOption from '@components/SecOption'
-import { useBusiness } from '@hooks/useBusiness'
+import { useStocks } from '@hooks/useStocks'
+import StocksTable from './StocksTable'
+import LowStockList from './LowStocksList'
 
 
 const StocksMangement = () => {
-  const { mainOpt, setMainOpt } = useBusiness()
+  const { mainOpt, setMainOpt, subOpt } = useStocks()
 
   return(
     <div className="main-container-inv">
@@ -20,6 +22,8 @@ const StocksMangement = () => {
           <SecOption name='Locations' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
         </Container>
         <Container className='sec-show'>
+          {mainOpt === 'Stocks' && subOpt === 'None' && <StocksTable />}
+          {mainOpt === 'Low Stocks' && subOpt === 'None' && <LowStockList/> }
         </Container>
       </div>
     </div>

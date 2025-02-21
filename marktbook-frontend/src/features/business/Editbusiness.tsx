@@ -56,6 +56,7 @@ const EditBusiness = () => {
           fieldData={{ fieldValue: business?.taxRate ?? '-', fieldKey: 'taxRate' }}
           setDisableEdit={setHideEdit}
           disableEdit={hideEdit}
+          number
         />
         <ViewOrEdit fieldName='Address'
           fieldData={{ fieldValue: business?.businessAddress ?? '-', fieldKey: 'address' }}

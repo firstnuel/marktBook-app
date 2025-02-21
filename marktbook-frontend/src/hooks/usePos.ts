@@ -10,6 +10,7 @@ import {
   rmCustomer,
   subQuantity,
   updatePrice,
+  setTaxRate,
   searchByCategory,
   searchByKeyandPhrase,
 } from '@reducers/posReducers'
@@ -74,6 +75,11 @@ export const usePos = () => {
     [dispatch]
   )
 
+  const setTaxRateHandler = useCallback(
+    (taxRate: number) => dispatch(setTaxRate({ taxRate })),
+    [dispatch]
+  )
+
   const clearCartHandler = useCallback(() => dispatch(clearCart()), [dispatch])
 
   const addToCartHandler = useCallback(
@@ -103,6 +109,7 @@ export const usePos = () => {
     priceInfo,
     successMsg,
     customer,
+    setTaxRate: setTaxRateHandler,
     setCustomer: setCustomerHandler,
     rmCustomer: rmCustomerHandler,
     clearError: clearErrorHandler,

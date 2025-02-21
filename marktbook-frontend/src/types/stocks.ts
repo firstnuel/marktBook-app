@@ -23,7 +23,6 @@ export interface stocksState {
     locations: Location[]
 }
 
-
 export interface Stock {
     compartment: string;
     unitsAvailable: number;

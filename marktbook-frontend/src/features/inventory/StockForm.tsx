@@ -76,6 +76,7 @@ const StockForm = () => {
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const editData: EditStockData = {
+      businessId: product!.businessId,
       unitsAvailable: parseInt(unitsAvailable.value as string),
       maxQuantity: parseInt(maxQuantity.value as string),
       minQuantity: parseInt(minQuantity.value as string),

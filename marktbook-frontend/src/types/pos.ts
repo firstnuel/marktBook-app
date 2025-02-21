@@ -11,7 +11,8 @@ export interface PosState {
     error: string | null;
     priceInfo: PriceInfo;
     successMsg: string | null;
-    customer: Customer | null
+    customer: Customer | null;
+    taxRate: number | null
 }
 interface Stock {
     _id: string;

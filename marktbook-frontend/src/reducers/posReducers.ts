@@ -3,7 +3,6 @@ import { inventoryService } from '@services/inventoryService'
 import { PosState } from '@typess/pos'
 import { calculatePrice, updateDiscount } from '@utils/helpers'
 import { ProductCategory } from '@typess/pos'
-import { TaxRate } from '../AppRoutes'
 
 const initialState: PosState = {
   products: [],
@@ -21,7 +20,8 @@ const initialState: PosState = {
     total: 0,
     discount: 0,
     tax: 0
-  }
+  },
+  taxRate: null
 }
 
 export const fetchProducts = createAsyncThunk('pos/products', async() => {
@@ -36,6 +36,9 @@ const posSlice = createSlice({
   name: 'pos',
   initialState,
   reducers: {
+    setTaxRate: (state, action) => {
+      state.taxRate = action.payload.taxRate
+    },
     addToCart: (state, action) => {
       const cartItem = action.payload.cartItem
       const itemExist = state.cartItems.find(item => item.product.id === cartItem.product.id)
@@ -45,10 +48,10 @@ const posSlice = createSlice({
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )
-        state.priceInfo = calculatePrice(state.cartItems, TaxRate)
+        state.priceInfo = calculatePrice(state.cartItems)
       } else {
         state.cartItems = [...state.cartItems, cartItem]
-        state.priceInfo = calculatePrice(state.cartItems, TaxRate)
+        state.priceInfo = calculatePrice(state.cartItems)
       }
     },
     searchByCategory: (state, action) => {
@@ -111,7 +114,7 @@ const posSlice = createSlice({
           item.product.id === productId ? { ...item, quantity: item.quantity + 1 }
             : item
         )
-        state.priceInfo = calculatePrice(state.cartItems, TaxRate)
+        state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined)
       }
     },
     subQuantity: (state, action) => {
@@ -122,13 +125,13 @@ const posSlice = createSlice({
           item.product.id === productId ? { ...item, quantity: item.quantity - 1 }
             : item
         )
-        state.priceInfo = calculatePrice(state.cartItems, TaxRate)
+        state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined)
       }
     },
     updatePrice: (state, action) => {
       const newDiscount = action.payload.discount
       state.priceInfo = { ...state.priceInfo, discount: newDiscount }
-      state.priceInfo = updateDiscount(state.priceInfo, newDiscount, TaxRate)
+      state.priceInfo = updateDiscount(state.priceInfo, newDiscount, state.taxRate ?? undefined)
     },
     clearError: (state) => {
       state.error = null
@@ -136,7 +139,7 @@ const posSlice = createSlice({
     },
     clearCart: (state) => {
       state.cartItems = []
-      state.priceInfo = calculatePrice(state.cartItems, TaxRate)
+      state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined)
       state.customer = null
     },
     setCustomer: (state, action) => {
@@ -169,11 +172,10 @@ const posSlice = createSlice({
 
 })
 
-
-
 export const {
   addToCart,
   setCustomer,
+  setTaxRate,
   clearCart,
   rmCustomer,
   clearError,

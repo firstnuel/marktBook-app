@@ -193,6 +193,7 @@ export interface ILocationData {
 }
 
 export interface EditStockData {
+    businessId: string;
     compartment?: string;
     unitsAvailable?: number;
     maxQuantity?: number;
