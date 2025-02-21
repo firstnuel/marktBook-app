@@ -2,6 +2,7 @@ import { ZodError } from 'zod'
 import { PriceInfo, CartItemProps, Product } from '@typess/pos'
 import { timeDay } from 'd3-time'
 
+
 export const validationErrorFn = (msg: string , fn: (value: React.SetStateAction<string | null>) => void): void => {
   fn(msg)
   const timer = setTimeout(() => {

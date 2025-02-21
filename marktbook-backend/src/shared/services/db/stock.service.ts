@@ -8,7 +8,22 @@ class StockService {
   }
 
   public async fetchAll(id: string | ObjectId): Promise<IStockDocument[] | []> {
-    const result =  await StockModel.find({ businessId: id }).exec()
+    const result =  await StockModel.find({ businessId: id })
+      .populate('productId', 'productName')
+      .populate('locationId','locationName' )
+      .populate('supplierId', 'name')
+      .populate('updatedBy', 'name')
+      .exec()
+    return result
+  }
+
+  public async findBySupplier(businessId: ObjectId, supplierId: ObjectId ): Promise<IStockDocument[] | []> {
+    const result =  await StockModel.find({ businessId, supplierId})
+      .populate('productId', 'productName')
+      .populate('locationId','locationName' )
+      .populate('supplierId', 'name')
+      .populate('updatedBy', 'name')
+      .exec()
     return result
   }
 
@@ -34,7 +49,12 @@ class StockService {
       $expr: {
         $lte: ['$unitsAvailable', '$minQuantity']
       }
-    }).exec()
+    })
+      .populate('productId', 'productName')
+      .populate('locationId','locationName' )
+      .populate('supplierId', 'name')
+      .populate('updatedBy', 'name')
+      .exec()
     return result
   }
 

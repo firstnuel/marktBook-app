@@ -52,17 +52,22 @@ const EditBusiness = () => {
           setDisableEdit={setHideEdit}
           disableEdit={hideEdit}
         />
+        <ViewOrEdit fieldName='Tax rate(%)'
+          fieldData={{ fieldValue: business?.taxRate ?? '-', fieldKey: 'taxRate' }}
+          setDisableEdit={setHideEdit}
+          disableEdit={hideEdit}
+        />
         <ViewOrEdit fieldName='Address'
           fieldData={{ fieldValue: business?.businessAddress ?? '-', fieldKey: 'address' }}
           setDisableEdit={setHideEdit}
           disableEdit={hideEdit}
         />
-        <ViewOrEdit fieldName='Business Type' fieldData={{ fieldValue: business?.businessType ?? '', fieldKey: 'businessType' }}
+        <ViewOrEdit fieldName='Business type' fieldData={{ fieldValue: business?.businessType ?? '', fieldKey: 'businessType' }}
           dropDownFields={Object.values(BusinessType)}
           setDisableEdit={setHideEdit}
           disableEdit={hideEdit}
         />
-        <ViewOrEdit fieldName='Business Category' fieldData={{ fieldValue: business?.businessCategory ?? '', fieldKey: 'businessCategory' }}
+        <ViewOrEdit fieldName='Business category' fieldData={{ fieldValue: business?.businessCategory ?? '', fieldKey: 'businessCategory' }}
           dropDownFields={Object.values(BusinessCategory)}
           setDisableEdit={setHideEdit}
           disableEdit={hideEdit}

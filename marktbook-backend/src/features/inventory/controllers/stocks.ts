@@ -484,12 +484,41 @@ export class Stock {
       }
 
       // fetch low stock data
-      const stockData = await stockService.lowStock(existingUser.associatedBusinessesId)
-      const returnData = stockData.length? stockData.map(data =>
-        omit(data.toObject(), ['createdBy', 'createdAt', '__v', 'businessId', '_id'])) : [] 
+      const stocks = await stockService.lowStock(existingUser.associatedBusinessesId)
+      let transformedStocks: any[] = []
+      if (stocks) {
+        transformedStocks = stocks.map(stock => {
+          const stockData = stock.toJSON()
+          if (stockData.productId) {
+            stockData.product = stockData.productId.productName
+            delete stockData.productId
+          } else {
+            stockData.product = null
+            delete stockData.productId 
+          }
+          if (stockData.locationId) {
+            stockData.location = stockData.locationId.locationName
+            delete stockData.locationId
+          } else {
+            stockData.location = null
+            delete stockData.locationId
+          }
+          if (stockData.supplierId){
+            stockData.supplier = stockData.supplierId.name
+            delete stockData.supplierId
+          } else {
+            stockData.supplier = null
+            delete stockData.supplierId
+          }
+          return omit(stockData, 
+            ['createdBy', 'createdAt', '__v', 'businessId', '_id'])
+        })
+      }
+      // const returnData = stocks.length? stocks.map(data =>
+      //   omit(data.toObject(), ['createdBy', 'createdAt', '__v', 'businessId', '_id'])) : [] 
 
-      const message = stockData.length? 'Low stocks data fetched successfully' : 'No low stock data found'
-      res.status(HTTP_STATUS.OK).json({ message,  data: returnData})
+      const message = transformedStocks.length? 'Low stocks data fetched successfully' : 'No low stock data found'
+      res.status(HTTP_STATUS.OK).json({ message,  data: transformedStocks})
 
     } catch (error: any) {
       log.error(`Error fetching low stock data: ${error.message}`)

@@ -43,7 +43,7 @@ const PriceInfo = () => {
         </div>
       </div>
       <div className="tax-info">
-        <div className="tax-percent">Tax (10%)</div>
+        <div className="tax-percent">{`Tax (${business?.taxRate ?? 10}%)`}</div>
         <div className="amount-info">
           <div className="tx-currency">{getCurrencySymbol(business!.currency?? 'USD')}</div>
           <div className="tx-price">{`${priceInfo.tax.toFixed(2)}`}</div>

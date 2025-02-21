@@ -5,6 +5,7 @@ import RegisterForm from '@auth/AuthForms/RegisterForm'
 import PasswordResetForm from '@auth/AuthForms/PasswordReset'
 import PasswordUpdateForm from '@auth/AuthForms/PasswordUpdate'
 import PointOfSale from '@features/pos/PointOfSale'
+import StocksMangement from '@features/stocks/StocksMangement'
 import Home from '@features/home/home'
 import { useAuth } from '@hooks/useAuth'
 import Settings from '@features/business/BusinessSettings'
@@ -13,6 +14,9 @@ import { usePos } from '@hooks/usePos'
 import { useEffect, memo } from 'react'
 import Contacts from '@features/contacts/Contacts'
 import { useContacts } from '@hooks/useContacts'
+
+
+export let TaxRate: number
 
 // Memoize ProtectedRoute to prevent unnecessary re-renders
 const ProtectedRoute = memo(({ children }: { children: React.ReactNode }) => {
@@ -67,6 +71,13 @@ const AppRoutes = () => {
       fetchSuppliers()
     }
   }, [business?._id, fetchSuppliers, suppliers.length])
+
+  useEffect(() => {
+    if (business?.taxRate) {
+      TaxRate = business.taxRate
+    }
+  }, [business?.taxRate])
+
   return (
     <Routes>
       <Route path="/login" element={<LoginForm />} />
@@ -104,6 +115,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Contacts />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/stocks"
+        element={
+          <ProtectedRoute>
+            <StocksMangement />
           </ProtectedRoute>
         }
       />

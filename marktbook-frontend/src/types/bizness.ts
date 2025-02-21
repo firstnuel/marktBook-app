@@ -35,6 +35,7 @@ export interface Business  {
     customCategories?: string[];
     businessLogo?: string;
     uId?: string;
+    taxRate?: number;
     businessCategory?: BusinessCategory;
     businessAddress?: string;
     businessType?: BusinessType;

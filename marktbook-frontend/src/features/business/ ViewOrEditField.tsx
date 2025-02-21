@@ -12,7 +12,7 @@ interface ViewOrEditProps {
     user?: User
     fieldName: string
     fieldData : {
-      fieldValue: string
+      fieldValue: string | number
       fieldKey: string
     }
     disableEdit: boolean
@@ -39,7 +39,7 @@ const ViewOrEdit = ({ fieldName,
   const { business, update, loading, updateUser } = useBusiness()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { reset, ...field } = useField(fieldName, 'text', fieldValue)
-  const [selectedDdvalue, setSelectedDdvalue] = useState<string>(fieldValue?? '')
+  const [selectedDdvalue, setSelectedDdvalue] = useState<string>(fieldValue as string?? '')
   const handleDd = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDdvalue(event.target.value)
   }
@@ -50,7 +50,11 @@ const ViewOrEdit = ({ fieldName,
       update(business!._id, { [fieldKey]: selectedDdvalue })
     } else {
       if (field.value !== '') {
-        update(business!._id, { [fieldKey]: field.value as string })
+        if (typeof fieldValue === 'number') {
+          update(business!._id, { [fieldKey]: parseInt(field.value as string) })
+        } else {
+          update(business!._id, { [fieldKey]: field.value as string })
+        }
       }
       else if (field.value.trim() === '') {
         setErr('This field can not be empty')
@@ -69,7 +73,11 @@ const ViewOrEdit = ({ fieldName,
       updateUser(user!._id, { [fieldKey]: selectedDdvalue })
     } else {
       if (field.value !== '') {
-        updateUser(user!._id, { [fieldKey]: field.value as string })
+        if (typeof fieldValue === 'number') {
+          update(business!._id, { [fieldKey]: parseInt(field.value as string) })
+        } else {
+          update(business!._id, { [fieldKey]: field.value as string })
+        }
       }
       else if (field.value.trim() === '') {
         setErr('This field can not be empty')
@@ -88,7 +96,7 @@ const ViewOrEdit = ({ fieldName,
     setDisableEdit(true)
   }
   const handleCancel = () => {
-    field.onChange(fieldValue)
+    field.onChange(`${fieldValue}`)
     setHideEdit(!hideEdit)
     setDisableEdit(false)
   }

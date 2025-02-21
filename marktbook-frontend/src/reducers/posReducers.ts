@@ -3,6 +3,7 @@ import { inventoryService } from '@services/inventoryService'
 import { PosState } from '@typess/pos'
 import { calculatePrice, updateDiscount } from '@utils/helpers'
 import { ProductCategory } from '@typess/pos'
+import { TaxRate } from '../AppRoutes'
 
 const initialState: PosState = {
   products: [],
@@ -44,10 +45,10 @@ const posSlice = createSlice({
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )
-        state.priceInfo = calculatePrice(state.cartItems)
+        state.priceInfo = calculatePrice(state.cartItems, TaxRate)
       } else {
         state.cartItems = [...state.cartItems, cartItem]
-        state.priceInfo = calculatePrice(state.cartItems)
+        state.priceInfo = calculatePrice(state.cartItems, TaxRate)
       }
     },
     searchByCategory: (state, action) => {
@@ -110,7 +111,7 @@ const posSlice = createSlice({
           item.product.id === productId ? { ...item, quantity: item.quantity + 1 }
             : item
         )
-        state.priceInfo = calculatePrice(state.cartItems)
+        state.priceInfo = calculatePrice(state.cartItems, TaxRate)
       }
     },
     subQuantity: (state, action) => {
@@ -121,13 +122,13 @@ const posSlice = createSlice({
           item.product.id === productId ? { ...item, quantity: item.quantity - 1 }
             : item
         )
-        state.priceInfo = calculatePrice(state.cartItems)
+        state.priceInfo = calculatePrice(state.cartItems, TaxRate)
       }
     },
     updatePrice: (state, action) => {
       const newDiscount = action.payload.discount
       state.priceInfo = { ...state.priceInfo, discount: newDiscount }
-      state.priceInfo = updateDiscount(state.priceInfo, newDiscount)
+      state.priceInfo = updateDiscount(state.priceInfo, newDiscount, TaxRate)
     },
     clearError: (state) => {
       state.error = null
@@ -135,7 +136,7 @@ const posSlice = createSlice({
     },
     clearCart: (state) => {
       state.cartItems = []
-      state.priceInfo = calculatePrice(state.cartItems)
+      state.priceInfo = calculatePrice(state.cartItems, TaxRate)
       state.customer = null
     },
     setCustomer: (state, action) => {

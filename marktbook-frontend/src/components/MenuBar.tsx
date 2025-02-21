@@ -45,7 +45,7 @@ const MenuBar = () => {
           <MenuOption handleClose={handleClose} option="Inventory" icon={icons.inventory} to='/inventory'/>
           <MenuOption handleClose={handleClose} option="Transactions" icon={icons.transactions} to='/transactions' />
           <MenuOption handleClose={handleClose} option="Reports" icon={icons.reports} to='/reports' />
-          <MenuOption handleClose={handleClose} option="Stock" icon={icons.stock} to='/stock' />
+          <MenuOption handleClose={handleClose} option="Stocks" icon={icons.stock} to='/stocks' />
           <MenuOption handleClose={handleClose} option="Contacts" icon={icons.contacts} to='/contacts' />
           <MenuOption handleClose={handleClose} option="Settings" icon={icons.settings} to='/settings' />
         </div>

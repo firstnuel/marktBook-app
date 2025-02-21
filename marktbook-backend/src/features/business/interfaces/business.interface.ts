@@ -15,6 +15,7 @@ export interface IBusinessDocument extends Document {
   customCategories?: string[];
   businessLogo?: string;
   businessImg?: string;
+  taxRate?: number;
   uId?: string;
   businessCategory?: BusinessCategory;
   businessAddress?: string;
@@ -32,6 +33,7 @@ export const EDIT_BUSINESS_FIELDS: (keyof IBusinessDocument)[] = [
   'notifications',
   'customCategories',
   'currency',
+  'taxRate',
   'businessCategory',
   'businessType',
   'phoneNumber',

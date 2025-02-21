@@ -23,7 +23,14 @@ class LocationService {
   }
 
   public async fetchAll(businessId: ObjectId): Promise<ILocationDocument[] | []> {
-    const result = await LocationModel.find({ businessId }).exec()
+    const result = await LocationModel.find({ businessId })
+      .populate({
+        path: 'stockMovements.productId', 
+        select: 'productName'
+      })
+      .populate('manager', 'name')
+      .exec()
+
     return result
   }
 

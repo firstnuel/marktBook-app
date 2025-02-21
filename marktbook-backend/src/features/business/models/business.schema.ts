@@ -23,9 +23,9 @@ const businessSchema: Schema = new Schema(
     customCategories: { type: [String], default: [] },
     businessImg: { type: String, required: false },
     currency: { type: String, required: true, default: 'USD' },
-    
     businessLogo: { type: String, required: false },
     uId: { type: String, required: false },
+    taxRate: { type: Number, required: false},
     businessAddress: { type: String, required: false },
     businessType: { 
       type: String, 
