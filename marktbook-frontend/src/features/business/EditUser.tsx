@@ -62,7 +62,7 @@ const EditUser = ({ currentUser }: EditUserProps ) => {
           user={User}
         />
         <ViewOrEdit fieldName='Phone number'
-          fieldData={{ fieldValue: user?.mobileNumber === '' ? '-'
+          fieldData={{ fieldValue: User?.mobileNumber === '' ? '-'
             : User?.mobileNumber?? '-', fieldKey: 'mobileNumber' }}
           setDisableEdit={setHideEdit}
           disableEdit={hideEdit}

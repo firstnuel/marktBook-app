@@ -2,8 +2,9 @@ import Container from 'react-bootstrap/Container'
 import { useField } from '@hooks/useField'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useBusiness } from '@hooks/useBusiness'
+import { useAuth } from '@hooks/useAuth'
 import '@styles/view-or-edit.scss'
 import { User } from '@typess/auth'
 
@@ -38,7 +39,8 @@ const ViewOrEdit = ({ fieldName,
   const { fieldKey, fieldValue } = fieldData
   const [hideEdit, setHideEdit] = useState(true)
   const [err, setErr] = useState('')
-  const { business, update, loading, updateUser } = useBusiness()
+  const { user: currentUser, fetchUser } = useAuth()
+  const { business, update, loading, updateUser, user: cUser, success } = useBusiness()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { reset, ...field } = useField(fieldName, number? 'number' : 'text', fieldValue)
   const [selectedDdvalue, setSelectedDdvalue] = useState<string>(fieldValue as string?? '')
@@ -46,6 +48,9 @@ const ViewOrEdit = ({ fieldName,
     setSelectedDdvalue(event.target.value)
   }
 
+  useEffect(() => {
+    if(cUser?._id === currentUser?._id && success === 'User updated successfully') fetchUser()
+  }, [cUser?._id, currentUser?._id, fetchUser, success])
 
   const handleSave = () => {
     if (dropDownFields) {
@@ -76,9 +81,9 @@ const ViewOrEdit = ({ fieldName,
     } else {
       if (field.value !== '') {
         if (typeof fieldValue === 'number') {
-          update(business!._id, { [fieldKey]: parseInt(field.value as string) })
+          updateUser(user!._id, { [fieldKey]: parseInt(field.value as string) })
         } else {
-          update(business!._id, { [fieldKey]: field.value as string })
+          updateUser(user!._id, { [fieldKey]: field.value as string })
         }
       }
       else if (field.value.trim() === '') {
