@@ -65,6 +65,7 @@
 | **16.02.**  | 3 | Implement edit user UI and functionality, minor refactor on user controller|
 | **18.02.**  | 5 | Implement customers and suppliers backend features and started front end features also |
 | **19.02.**  | 3 | Implement customers and suppliers frontend features  |
-| **Total**  | **164** | |
+| **21.02.**  | 4 |  Implement stocks amd low stock services, reducers and UI |
+| **Total**  | **168** | |
 
 
