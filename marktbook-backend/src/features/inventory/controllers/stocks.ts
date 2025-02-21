@@ -7,14 +7,8 @@ import HTTP_STATUS from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { Request, Response, NextFunction } from 'express'
 import { StockDataSchema, editStockSchema } from '@inventory/schemes/stockValidation'
-import { IuserDocument } from '@users/interfaces/user.interface'
-import { userCache } from '@service/redis/user.cache'
-import { userService } from '@service/db/user.service'
 import { ALLOWED_STOCK_FIELDS, filterStockFields, IStockData, IStockDocument } from '@inventory/interfaces/stock.interfaces'
 import { productService } from '@service/db/product.service'
-import { IBusinessDocument } from '@business/interfaces/business.interface'
-import { businessService } from '@service/db/business.service'
-import { businessCache } from '@service/redis/business.cache'
 import { stockService } from '@service/db/stock.service'
 import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
@@ -22,6 +16,7 @@ import { ILocationDocument, StockMovement } from '@inventory/interfaces/location
 import { locationService } from '@service/db/location.service'
 import { omit } from 'lodash'
 import { movementSchema } from '@inventory/schemes/locationValidation'
+import { supplierService } from '@service/db/supplier.service'
 
 const log = config.createLogger('stockController')
 
@@ -49,8 +44,7 @@ export class Stock {
       // validate incoming data
       this.validateInput(StockDataSchema, req.body)
 
-      // Validate user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
     
       // Sanitize input
       const body = Utils.sanitizeInput(req.body) as IStockData
@@ -65,8 +59,6 @@ export class Stock {
       const stock = await stockService.getByProductID(product._id)
       if (stock) return next(new BadRequestError(`Stock Data already exist for this product ${product.productName}`))
 
-      // Validate business
-      await this.validateBusiness(body.businessId.toString(), existingUser)
 
       const stockId: ObjectId = new ObjectId()
       const locationId: ObjectId = new ObjectId()
@@ -115,7 +107,6 @@ export class Stock {
     }
   }
 
-
   /**
   * Protected method to validate input
   * @param userId string
@@ -132,86 +123,32 @@ export class Stock {
   }
 
   /**
-  * Protected method to validate user status
-  * @param userId string
-  * @returns IuserDocument
-  */
-  protected async validateUser(userId: string): Promise<IuserDocument> {
-    const cachedUser = await userCache.getUserfromCache(userId) as IuserDocument
-    const existingUser = cachedUser ? cachedUser : await userService.getUserById(userId) as IuserDocument
-  
-    if (!existingUser || existingUser.status !== 'active') {
-      throw new NotAuthorizedError('Invalid User')
-    }
-  
-    return existingUser
-  }
-
-  /**
-   * Protected method to validate business and user authorization for it.
-   * @param businessId string
-   *  @param user IuserDocument
-   * @returns IBusinessDocument
-   */
-  protected async validateBusiness(businessId: string, user: IuserDocument): Promise<IBusinessDocument> {
-    const cachedBusiness = await businessCache.getBusinessFromCache(businessId) as IBusinessDocument
-    const existingBusiness = cachedBusiness ? cachedBusiness :
-        await businessService.getBusinessById(businessId) as IBusinessDocument
-    
-    if (!existingBusiness) {
-      throw new NotFoundError('Invalid Business: business not found')
-    } else if (existingBusiness._id.toString() !== user.associatedBusinessesId.toString()) {
-      throw new NotAuthorizedError('Invalid Business: not authorized for this business')
-    }
-          
-    return existingBusiness
-  }
-  
-  /**
   * Constructs the Stock document for a new product.
   * @param data Stock data
   * @param stockId ObjectId of the stock
   * @param userId ObjectId of the user
   * @returns product document conforming to IStockDocument interface
   */
-  private stockData(data: IStockData, 
-    stockId: string | ObjectId, 
-    userId: string | ObjectId, 
-    productId: string | ObjectId ,
-    locationId:  string | ObjectId 
-  ): IStockDocument {
-    const {
-      businessId,
-      unitsAvailable,
-      maxQuantity,
-      minQuantity,
-      thresholdAlert,
-      costPerUnit,
-      notes,
-      totalValue,
-      supplierId,
-      compartment,
-    } = data
-
+  private stockData(data: IStockData, stockId: string | ObjectId, userId: string | ObjectId, productId: string | ObjectId, locationId: string | ObjectId): IStockDocument {
     return {
       _id: stockId,
-      businessId: new ObjectId(businessId),
+      businessId: new ObjectId(data.businessId),
       productId: new ObjectId(productId),
       locationId: new ObjectId(locationId),
-      unitsAvailable,
-      compartment: compartment || '',
-      maxQuantity,
-      minQuantity,
-      thresholdAlert,
-      costPerUnit,
-      notes,
+      unitsAvailable: data.unitsAvailable,
+      compartment: data.compartment || '',
+      maxQuantity: data.maxQuantity,
+      minQuantity: data.minQuantity,
+      thresholdAlert: data.thresholdAlert,
+      costPerUnit: data.costPerUnit,
+      notes: data.notes,
       updatedBy: userId,
       createdBy: userId,
-      totalValue,
-      supplierId
+      totalValue: data.totalValue,
+      supplierId: data.supplierId
     } as IStockDocument
   }
-
+  
 
   /**
   * Constructs the location document for a new product.
@@ -255,14 +192,14 @@ export class Stock {
 
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
-      // validate user 
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
 
       // fetch stockData
       const stockData = await stockService.fetchAll(`${existingUser.associatedBusinessesId}`)
+      const transformedStocks = this.transformStocks(stockData)
 
       const message = stockData.length? 'Stocks data fetched successfully' : 'No stock data found'
-      res.status(HTTP_STATUS.OK).json({ message, data: stockData })
+      res.status(HTTP_STATUS.OK).json({ message, data: transformedStocks })
 
     } catch(error) {
       // Log and forward the error to a centralized error handler
@@ -280,8 +217,7 @@ export class Stock {
   */
   public async fetch(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
-      // validate user 
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
 
       const { productId } = req.params 
 
@@ -335,11 +271,7 @@ export class Stock {
 
       const { productId } = req.params 
 
-      // validate requesting user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
-      if (existingUser.role === 'Staff') {
-        return next(new NotAuthorizedError('Not Authorized: User not authorized to edit stock'))
-      }
+      const existingUser = req.user!
 
       // Check if product exist
       const product = await productService.getById(`${productId}`, `${existingUser.associatedBusinessesId}`)
@@ -353,13 +285,8 @@ export class Stock {
         return next(new NotFoundError('Stock data not found for this product'))
       }
 
-      // sanitize the input data
       const body = Utils.sanitizeInput(req.body)
-
-      // validate business
-      await this.validateBusiness(stock.businessId.toString(), existingUser)
       const filteredData = filterStockFields(body, ALLOWED_STOCK_FIELDS)
-
       filteredData.updatedAt = new Date()
       filteredData.updatedBy = new ObjectId(existingUser._id)
 
@@ -409,8 +336,7 @@ export class Stock {
       this.validateInput(movementSchema, req.body)
       const { productId, movementType, quantity, destination, reason } = Utils.sanitizeInput(req.body)
 
-      // validate requesting user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
 
       // Check if product exist
       const product = await productService.getById(`${productId}`, `${existingUser.associatedBusinessesId}`)
@@ -477,45 +403,14 @@ export class Stock {
 
   public async low(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      // validate user 
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
       if (existingUser.role === 'Staff') {
         return next(new NotAuthorizedError('Not Authorized: User not authorized to fetch low stock data'))
       }
 
       // fetch low stock data
       const stocks = await stockService.lowStock(existingUser.associatedBusinessesId)
-      let transformedStocks: any[] = []
-      if (stocks) {
-        transformedStocks = stocks.map(stock => {
-          const stockData = stock.toJSON()
-          if (stockData.productId) {
-            stockData.product = stockData.productId.productName
-            delete stockData.productId
-          } else {
-            stockData.product = null
-            delete stockData.productId 
-          }
-          if (stockData.locationId) {
-            stockData.location = stockData.locationId.locationName
-            delete stockData.locationId
-          } else {
-            stockData.location = null
-            delete stockData.locationId
-          }
-          if (stockData.supplierId){
-            stockData.supplier = stockData.supplierId.name
-            delete stockData.supplierId
-          } else {
-            stockData.supplier = null
-            delete stockData.supplierId
-          }
-          return omit(stockData, 
-            ['createdBy', 'createdAt', '__v', 'businessId', '_id'])
-        })
-      }
-      // const returnData = stocks.length? stocks.map(data =>
-      //   omit(data.toObject(), ['createdBy', 'createdAt', '__v', 'businessId', '_id'])) : [] 
+      const transformedStocks = this.transformStocks(stocks)
 
       const message = transformedStocks.length? 'Low stocks data fetched successfully' : 'No low stock data found'
       res.status(HTTP_STATUS.OK).json({ message,  data: transformedStocks})
@@ -524,6 +419,61 @@ export class Stock {
       log.error(`Error fetching low stock data: ${error.message}`)
       next(error) 
     }
+  }
+
+
+  public async fetchBySupplier(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { supplierId } = req.params
+      const user = req.user!
+
+      const supplier = await supplierService.findById(new ObjectId(supplierId))
+      if (!supplier) {
+        return next(new NotFoundError('Supplier not found'))
+      }
+      const stocks = await stockService.findBySupplier(new ObjectId(user.associatedBusinessesId), supplier._id)
+      
+      const message = stocks.length? 'stock data fetched successfully' : 'No stock data found for this supplier'
+      res.status(HTTP_STATUS.OK).json({ message,  data: stocks})
+
+    } catch (error: any) {
+      log.error(`Error fetching stock data by supplier: ${error.message}`)
+      next(error) 
+    }
+  }
+
+  private transformStocks(stocks: any[]): any[] {
+    if (!stocks) return []
+  
+    return stocks.map(stock => {
+      const stockData = stock.toJSON()
+  
+      if (stockData.productId) {
+        stockData.product = stockData.productId.productName
+        delete stockData.productId
+      } else {
+        stockData.product = null
+        delete stockData.productId
+      }
+  
+      if (stockData.locationId) {
+        stockData.location = stockData.locationId.locationName
+        delete stockData.locationId
+      } else {
+        stockData.location = null
+        delete stockData.locationId
+      }
+  
+      if (stockData.supplierId) {
+        stockData.supplier = stockData.supplierId.name
+        delete stockData.supplierId
+      } else {
+        stockData.supplier = null
+        delete stockData.supplierId
+      }
+  
+      return omit(stockData, ['createdBy', 'createdAt', '__v', 'businessId', '_id'])
+    })
   }
   
 }

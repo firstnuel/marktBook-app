@@ -1,11 +1,15 @@
 import { Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
+import { IuserDocument } from '@users/interfaces/user.interface'
+import { IBusinessDocument } from '@business/interfaces/business.interface'
 
 
 declare global {
   namespace Express {
     interface Request {
       currentUser?: AuthPayload; 
+      user?: IuserDocument;
+      business?: IBusinessDocument 
     }
   }
 }

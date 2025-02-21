@@ -58,18 +58,21 @@ class AuthMiddleware {
     }
   }
 
-  public checkAuthentication(req: Request, res: Response, next: NextFunction): void {
+  public async checkAuthentication(req: Request, res: Response, next: NextFunction): Promise<void> {
     if (!req.currentUser) {
       return next(new NotAuthorizedError('Authentication is required to access this route'))
     }
+    const cachedUser = await userCache.getUserfromCache(`${req.currentUser?.userId}`) as IuserDocument
+    const user = cachedUser || await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
+
+    req.user = user
     next()
   }
 
   public async validateUserRole (req: Request, res: Response, next: NextFunction): Promise<void> {
-    const cachedUser = await userCache.getUserfromCache(`${req.currentUser?.userId}`) as IuserDocument
-    const user = cachedUser || await userService.getUserById(`${req.currentUser?.userId}`) as IuserDocument
+
     
-    if(user?.status !== 'active' || !( user?.role === 'Owner' || user?.role === 'Manager')) {
+    if(req.user?.status !== 'active' || !(req.user?.role === 'Owner' || req.user?.role === 'Manager')) {
       return next(new NotAuthorizedError('Invalid User: Not authorized for user role')) 
     }
   
@@ -79,6 +82,7 @@ class AuthMiddleware {
   public async validateBusiness (req: Request, res: Response, next: NextFunction): Promise<void> {
 
     const businessId = req.params.businessId || req.body.businessId
+
     if (!Utils.isValidObjectId(businessId)) {
       return next(new BadRequestError('Invalid Business ID: businessId is not valid')) 
     }
@@ -89,11 +93,12 @@ class AuthMiddleware {
     if(!business) {
       return next(new NotFoundError('Invalid Business: Business account not found')) 
     }
-
-    if (businessId !== req.currentUser?.businessId) {
+    const userBusinessId = req.user?.associatedBusinessesId.toString()
+    if (businessId !== userBusinessId) {
       return next(new NotAuthorizedError('Invalid User: Not authorized for Business role'))
     }
 
+    req.business = business
     next()
   }
 }

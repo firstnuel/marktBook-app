@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ILocationDocument, ILocationData, Status, filterLocationFields, EditableFields } from '@inventory/interfaces/location.interfaces'
 import { Stock } from '@inventory/controllers/stocks'
 import { Request, Response, NextFunction } from 'express'
@@ -32,14 +33,7 @@ class Location extends Stock {
     try {
       // Validate input
       this.validateInput(locationSchema, req.body)
-
-      // Validate requestion user
-      const user = await this.validateUser(`${req.currentUser?.userId}`)
-      if (user.role === 'Staff') {
-        return next(new NotAuthorizedError('Not Authorized: User not authorized to fetch low stock data'))
-      }
-
-      // Sanitize input
+      const user = req.user!
       const body: ILocationData = Utils.sanitizeInput(req.body)
 
       const data = {
@@ -92,16 +86,10 @@ class Location extends Stock {
   */
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
-      // Validate requestion user
-      const user = await this.validateUser(`${req.currentUser?.userId}`)
-      if (user.role === 'Staff') {
-        return next(new NotAuthorizedError('Not Authorized: User not authorized to fetch location data'))
-      }
-
+      const user = req.user!
       const locationData = await locationService.fetchAll(new ObjectId(user.associatedBusinessesId))
-      const returnData = locationData.length? locationData.map(data =>
-        omit(data.toObject(), ['createdBy', 'createdAt', '__v', 'businessId', '_id'])) : [] 
 
+      const returnData = this.transformLocation(locationData)
       const message = locationData.length? 'All Location data fetched successfully' : 'No Location data found'
       res.status(HTTP_STATUS.OK).json({ message, data: returnData })
 
@@ -119,8 +107,7 @@ class Location extends Stock {
   */
   public async fetch(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
-      // validate user 
-      const user = await this.validateUser(`${req.currentUser?.userId}`)
+      const user = req.user!
 
       const { id } = req.params 
 
@@ -163,12 +150,7 @@ class Location extends Stock {
       this.validateInput(editLocationSchema, req.body)
         
       const { id } = req.params 
-
-      // validate requesting user
-      const user = await this.validateUser(`${req.currentUser?.userId}`)
-      if (user.role === 'Staff') {
-        return next(new NotAuthorizedError('Not Authorized: User not authorized to edit stock'))
-      }
+      const user = req.user!
 
       // check if location exist
       const location = await locationService.getById(new ObjectId(id))
@@ -178,9 +160,6 @@ class Location extends Stock {
 
       // sanitize the input data
       const body = Utils.sanitizeInput(req.body)
-
-      // validate business
-      await this.validateBusiness(location.businessId.toString(), user)
       const filteredData = filterLocationFields(body, EditableFields) 
 
       if (filteredData.locationName) filteredData.locationName = Utils.firstLetterToUpperCase(filteredData.locationName)
@@ -210,7 +189,42 @@ class Location extends Stock {
       log.error('Error updating location data')
       next(error)
     }
+  }
 
+  private transformLocation(locations: any[]): any[] {
+    if (!locations) return []
+  
+    return locations.map(location => {
+      const locationData = location.toJSON()
+  
+      if (locationData.stocks) {
+        locationData.stocksLength = locationData.stocks.length
+        delete locationData.stocks
+      } else {
+        locationData.stocksLength = 0
+        delete locationData.stocks
+      }
+  
+      if (locationData.manager) {
+        locationData.manager = locationData.manager.name
+        delete locationData.manager
+      } else {
+        locationData.manager  = null
+        delete locationData.manager 
+      }
+  
+      if (locationData.stockMovements.length) {
+        locationData.stockMovements = 
+        locationData.stockMovements.map((sm: any) => {
+          sm.product = sm.productId.productName
+          delete sm.productId
+          delete sm._id
+          return sm
+        })
+      }
+  
+      return omit(locationData, ['createdBy', 'createdAt', '__v', 'businessId', '_id'])
+    })
   }
 }
 

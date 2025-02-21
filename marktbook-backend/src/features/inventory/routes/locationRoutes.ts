@@ -11,10 +11,25 @@ class LocationRoutes {
   }
 
   public locationRoutes(): Router {
-    this.router.post('/locations', authMiddleware.checkAuthentication, location.create)
-    this.router.get('/locations', authMiddleware.checkAuthentication, location.read)
-    this.router.get('/locations/:id', authMiddleware.checkAuthentication, location.fetch)
-    this.router.patch('/locations/:id', authMiddleware.checkAuthentication, location.edit)
+    this.router.post('/locations', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      location.create)
+
+    this.router.get('/locations', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      location.read)
+
+    this.router.get('/locations/:id', 
+      authMiddleware.checkAuthentication, 
+      location.fetch)
+
+    this.router.patch('/locations/:id', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      authMiddleware.validateBusiness,
+      location.edit)
 
     return this.router
   }
