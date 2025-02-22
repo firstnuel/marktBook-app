@@ -39,7 +39,7 @@ class StockRoutes {
       authMiddleware.validateUserRole,
       stock.move)
 
-    this.router.get('/stocks/:supplierId', 
+    this.router.get('/stocks/suppliers/:supplierId', 
       authMiddleware.checkAuthentication, 
       authMiddleware.validateUserRole,
       stock.fetchBySupplier)

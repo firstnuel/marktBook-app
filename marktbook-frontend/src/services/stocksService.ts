@@ -42,6 +42,15 @@ class StocksService {
     }
   }
 
+  public async fetchLocations(): Promise<any> {
+    try {
+      const response = await this.axios.get('/locations')
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while fetching locations.')
+    }
+  }
+
   public async fetchLowStock(): Promise<any> {
     try {
       const response = await this.axios.get('/stocks/low-stock')

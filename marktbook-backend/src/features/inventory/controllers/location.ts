@@ -207,16 +207,16 @@ class Location extends Stock {
   
       if (locationData.manager) {
         locationData.manager = locationData.manager.name
-        delete locationData.manager
       } else {
         locationData.manager  = null
-        delete locationData.manager 
       }
   
       if (locationData.stockMovements.length) {
         locationData.stockMovements = 
         locationData.stockMovements.map((sm: any) => {
           sm.product = sm.productId.productName
+          sm.destination = sm.destination.locationName
+          sm.initiatedBy = sm.initiatedBy.name
           delete sm.productId
           delete sm._id
           return sm

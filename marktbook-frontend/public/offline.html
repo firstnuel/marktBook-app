@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>You're Offline - MarktBook</title>
+    <title>Connection Issue - MarktBook</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
     <style>
@@ -64,9 +64,36 @@
 </head>
 <body>
     <div class="offline-container">
-        <h1>You are Offline</h1>
-        <p>Check your internet connection and try again.</p>
-        <button class="btn-retry" onclick="window.location.reload()">Try Again</button>
+        <h1 id="status-title">Checking Connection...</h1>
+        <p id="status-message">Please wait while we determine the issue.</p>
+        <button class="btn-retry" onclick="window.location.reload()">Retry</button>
     </div>
+
+    <script>
+        function checkConnection() {
+            if (!navigator.onLine) {
+                document.getElementById("status-title").textContent = "You are Offline";
+                document.getElementById("status-message").textContent = "Check your internet connection and try again.";
+            } else {
+                // Simulate a server check by attempting to fetch a small static file or endpoint
+                fetch('/ping')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Server error');
+                        }
+                        document.getElementById("status-title").textContent = "All Systems Operational";
+                        document.getElementById("status-message").textContent = "You are online, and the server is running.";
+                    })
+                    .catch(() => {
+                        document.getElementById("status-title").textContent = "Server is Down";
+                        document.getElementById("status-message").textContent = "We’re currently experiencing issues. Please try again later.";
+                    });
+            }
+        }
+
+        window.addEventListener('load', checkConnection);
+        window.addEventListener('online', checkConnection);
+        window.addEventListener('offline', checkConnection);
+    </script>
 </body>
 </html>

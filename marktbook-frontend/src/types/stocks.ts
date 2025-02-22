@@ -20,7 +20,8 @@ export interface stocksState {
     subOpt: subOption;
     lowStocks: Stock[];
     bySupplier: Stock[];
-    locations: Location[]
+    locations: Location[];
+    movements: StockMovement[];
 }
 
 export interface Stock {
@@ -43,7 +44,8 @@ export interface Stock {
 }
 
 export interface StockMovement {
-    productId: string;
+    product: string;
+    id: string;
     movementType: 'IN' | 'OUT';
     quantity: number;
     destination: string;
@@ -54,7 +56,7 @@ export interface StockMovement {
 
 export interface Location {
     locationType: LocationTypes;
-    stocks: string[];
+    stocksLength: number;
     locationName: string;
     address: string;
     currentLoad?: number;
@@ -64,4 +66,5 @@ export interface Location {
     stockMovements: Array<StockMovement>
     updatedAt: string;
     id: string;
+    businessId?: string
 }

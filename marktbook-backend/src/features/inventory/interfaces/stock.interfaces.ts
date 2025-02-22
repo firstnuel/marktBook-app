@@ -39,6 +39,7 @@ export interface IStockData {
     notes?: string;
     //location Data
     locationName: string;
+    locationId?: string;
     locationType: LocationTypes;
     address: string;
     locationStatus: Status;

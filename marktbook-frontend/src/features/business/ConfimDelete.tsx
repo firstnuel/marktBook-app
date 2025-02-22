@@ -103,7 +103,7 @@ const ConfirmDelete = ({ id='1234', user, deleteFn, loading, contacts, successMs
           {
             success ?
               <Button onClick={handleClose}>Close</Button> :
-              <Button className='danger' onClick={handleDelete}>{loading ? 'Deleting...' :
+              <Button variant='danger'onClick={handleDelete}>{loading ? 'Deleting...' :
                 user ? 'Delete User' : contacts ? 'Delete Account' : 'Delete Business'
               }</Button>
           }

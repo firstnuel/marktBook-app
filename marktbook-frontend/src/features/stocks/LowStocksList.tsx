@@ -1,19 +1,23 @@
 import { useStocks } from '@hooks/useStocks'
 import Container from 'react-bootstrap/Container'
+import Button from 'react-bootstrap/Button'
 import Notify from '@components/Notify'
+import Loading from '@components/Spinner'
 
 
 const LowStockList = () => {
-  const { lowStocks, error, success, clearError } = useStocks()
+  const { lowStocks, error, success, clearError, loading, fetchLowStock } = useStocks()
 
   return (
     <Container className="whole">
       <Notify clearErrFn={clearError} success={success} error={error} />
       <div className="head-info">
         <div className="head-name">⚠️ Low Stock List</div>
+        <Button variant='secondary' onClick={() => fetchLowStock()}>Refresh</Button>
       </div>
       <div className="cat-content">
         <div className="product-info">
+          {loading && <Loading />}
           <table>
             <thead>
               <tr>

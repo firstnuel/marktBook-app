@@ -10,7 +10,7 @@ export const useFetchData = () => {
   const { business, fetchBusiness, fetchBusinessUsers, users } = useBusiness()
   const { fetchProducts, products, setTaxRate } = usePos()
   const { fetchCustomers, fetchSuppliers, customers, suppliers } = useContacts()
-  const { fetchLowStock, fetchStocks, stocks, lowStocks } = useStocks()
+  const { fetchLowStock, fetchStocks, stocks, lowStocks, fetchLocations, locations } = useStocks()
 
   useEffect(() => {
     if (userToken && !user) fetchUser()
@@ -49,4 +49,9 @@ export const useFetchData = () => {
   useEffect(() => {
     if (business?._id && !lowStocks.length) fetchLowStock()
   }, [business?._id, fetchLowStock, lowStocks.length])
+
+  useEffect(() => {
+    if (business?._id && !locations.length) fetchLocations()
+  }, [business?._id, fetchLocations, locations.length])
+
 }

@@ -29,6 +29,7 @@ export class Stock {
     this.fetch = this.fetch.bind(this)
     this.move = this.move.bind(this)
     this.low = this.low.bind(this)
+    this.fetchBySupplier = this.fetchBySupplier.bind(this)
   }
     
   /**
@@ -59,12 +60,14 @@ export class Stock {
       const stock = await stockService.getByProductID(product._id)
       if (stock) return next(new BadRequestError(`Stock Data already exist for this product ${product.productName}`))
 
-
+      // Check if location exist
+      let location: ILocationDocument | null = null
+      if (body.locationId) {
+        location = await locationService.getById(new ObjectId(body.locationId))
+      }
       const stockId: ObjectId = new ObjectId()
       const locationId: ObjectId = new ObjectId()
 
-      // Check if location exist
-      const location = await locationService.findByName(body.locationName, new ObjectId(body.businessId))
       if (location) {
         location.stocks.push(stockId)
         await location.save()
@@ -432,9 +435,10 @@ export class Stock {
         return next(new NotFoundError('Supplier not found'))
       }
       const stocks = await stockService.findBySupplier(new ObjectId(user.associatedBusinessesId), supplier._id)
+      const transformedStocks = this.transformStocks(stocks)
       
-      const message = stocks.length? 'stock data fetched successfully' : 'No stock data found for this supplier'
-      res.status(HTTP_STATUS.OK).json({ message,  data: stocks})
+      const message = transformedStocks.length? 'stock data fetched successfully' : 'No stock data found for this supplier'
+      res.status(HTTP_STATUS.OK).json({ message,  data: transformedStocks})
 
     } catch (error: any) {
       log.error(`Error fetching stock data by supplier: ${error.message}`)
@@ -470,6 +474,12 @@ export class Stock {
       } else {
         stockData.supplier = null
         delete stockData.supplierId
+      }
+
+      if (stockData.updatedBy) {
+        stockData.updatedBy = stockData.updatedBy.name
+      } else {
+        stockData.updatedBy = null
       }
   
       return omit(stockData, ['createdBy', 'createdAt', '__v', 'businessId', '_id'])

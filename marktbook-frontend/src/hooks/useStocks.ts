@@ -5,10 +5,19 @@ import {
   fetchStocks,
   setMainOpt,
   setSubOpt,
+  fetchLocations,
   fetchLowStock } from '@reducers/stocksReducer'
 
 export const useStocks = () => {
-  const { stocks, lowStocks, error, loading, success, mainOpt, subOpt } = useAppSelector(state => state.stocks)
+  const { stocks,
+    lowStocks,
+    error,
+    loading,
+    success,
+    locations,
+    movements,
+    mainOpt,
+    subOpt } = useAppSelector(state => state.stocks)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -27,6 +36,8 @@ export const useStocks = () => {
 
   const fetchLowStockHandler = useCallback(() => dispatch(fetchLowStock()), [dispatch])
 
+  const fetchLocationsHandler = useCallback(() => dispatch(fetchLocations()), [dispatch])
+
   const setMainOption = useCallback((option: string) => dispatch(setMainOpt({ option })), [dispatch])
 
   const setSubOption = useCallback((option: string) => dispatch(setSubOpt({ option })), [dispatch])
@@ -38,11 +49,14 @@ export const useStocks = () => {
     lowStocks,
     error,
     loading,
+    locations,
     success,
+    movements,
     clearError: clearErrorHandler,
     fetchStocks: fetchStocksHandler,
     fetchLowStock: fetchLowStockHandler,
     setMainOpt: setMainOption,
     setSubOpt: setSubOption,
+    fetchLocations: fetchLocationsHandler,
   }
 }

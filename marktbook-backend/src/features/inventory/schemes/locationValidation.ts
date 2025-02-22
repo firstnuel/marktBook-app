@@ -9,7 +9,8 @@ export const locationSchema = z.object({
   capacity: z.number().min(1, { message: 'Capacity can not be less than 1'}).optional(),
   locationStatus: z.nativeEnum(Status),
   manager: z.string().optional(),
-  currentLoad: z.number().optional() 
+  currentLoad: z.number().optional(),
+  businessId: z.string({ required_error: 'businessId is required'})
 })
 
 

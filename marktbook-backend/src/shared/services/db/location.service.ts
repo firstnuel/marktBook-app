@@ -28,6 +28,14 @@ class LocationService {
         path: 'stockMovements.productId', 
         select: 'productName'
       })
+      .populate({
+        path: 'stockMovements.destination',
+        select: 'locationName'
+      })
+      .populate({
+        path: 'stockMovements.initiatedBy',
+        select: 'name'
+      })
       .populate('manager', 'name')
       .exec()
 

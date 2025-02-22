@@ -1,0 +1,41 @@
+.loca-row {
+    &:hover {
+        td {
+            color: var(--primary-color) !important;
+        }
+    }
+}
+
+.n-div {
+    display: flex;
+    gap: 10px;
+
+    .c-div {
+      width: 50%;
+    }
+    .l-div {
+      width: 50%;
+    }   
+}
+
+.role-s {
+    display: flex; 
+    gap: 10px;
+    .role-div {
+        width: 50%;
+    }
+    .status-div {
+        width: 50%;
+    }
+}
+
+#cat-footer > button.c-btn {
+    background-color: var(--primary-color) !important;
+}
+
+body > div.fade.modal.show > div > div > div.modal-body > div > form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+

@@ -12,6 +12,8 @@ import { useField } from '@hooks/useField'
 import { usePos } from '@hooks/usePos'
 import Loading from '@components/Spinner'
 import Notify from '@components/Notify'
+import { useStocks } from '@hooks/useStocks'
+import { useContacts } from '@hooks/useContacts'
 
 const StockForm = () => {
   const { clearError, successMsg,
@@ -23,8 +25,12 @@ const StockForm = () => {
   const [showLForm, setShowLForm] = useState(true)
   const [isChecked, setIsChecked] = useState(stock?.thresholdAlert?? false)
   const [selectedPId, setSelectedPId] = useState('')
+  const { locations } = useStocks()
+  const { suppliers } = useContacts()
   const [selectedLtype, setSelectedLtyped] = useState(stock?.locationData?.locationType?? '')
   const [selectedStatus, setSelectedStatus] = useState('Active')
+  const [selectedLocationId, setSelectedLocationId] = useState(stock?.locationData?.locationName?? '')
+  const [selectedSupplierId, setSelectedSupplierId] = useState(stock?.supplierId?? '')
   const { reset: unitsReset, ...unitsAvailable } = useField('unitsAvailable', 'number', stock?.unitsAvailable?? '')
   const { reset: maxReset, ...maxQuantity } = useField('maxQuantity', 'number', stock?.maxQuantity?? '')
   const { reset: minReset, ...minQuantity } = useField('minQuantity', 'number', stock?.minQuantity?? '')
@@ -69,7 +75,9 @@ const StockForm = () => {
     locationType: selectedLtype as LocationTypes,
     address: address.value as string,
     compartment: compartment.value as string,
-    locationStatus: selectedStatus as Status
+    locationStatus: selectedStatus as Status,
+    supplierId: selectedSupplierId ?? undefined,
+    locationId: selectedLocationId ?? undefined
 
   } : {}
 
@@ -180,6 +188,21 @@ const StockForm = () => {
               rows={2}
             />
           </div>
+          <div className="supplier">
+          <div>
+              Supplier: <span className="optional">optional</span>
+            </div>
+          <Form.Select className="select-location"
+          value={selectedSupplierId}
+          onChange={(e) => setSelectedSupplierId(e.target.value)}
+          required={false}
+          >
+                <option>Choose Supplier</option>
+                {suppliers.map((supplier, idx) => (
+                  <option key={idx} value={supplier._id}>{supplier.name}</option>
+                ))}
+              </Form.Select>
+          </div>
           <div className="section-two">
             <div className="sec-text">Location Info
             {stock && <span className="optional">location data cannot be edited here.</span>}
@@ -236,8 +259,14 @@ const StockForm = () => {
                 </div>
               </div>
             ) : (
-              <Form.Select className="select-location">
-                <option>Choose Location</option>
+              <Form.Select className="select-location"
+              value={selectedLocationId}
+              onChange={stock? () => {} : (e) => setSelectedLocationId(e.target.value)}
+              >
+                <option>{stock?.locationData?.locationName?? 'Choose Location'}</option>
+                {locations.map((location, idx) => (
+                  <option key={idx} value={location.id}>{location.locationName}</option>
+                ))}
               </Form.Select>
             )}
           </div>

@@ -50,7 +50,7 @@ const contactsPersistConfig = {
 const stocksPersistConfig = {
   key: 'stocks',
   storage,
-  whitlist: ['stocks', 'mainOpt', 'subOpt', 'lowStocks', 'locations', 'bySupplier']
+  whitlist: ['stocks', 'mainOpt', 'subOpt', 'lowStocks', 'locations', 'bySupplier', 'movements']
 }
 
 // the base reducer combination
