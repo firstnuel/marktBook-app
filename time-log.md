@@ -66,6 +66,7 @@
 | **18.02.**  | 5 | Implement customers and suppliers backend features and started front end features also |
 | **19.02.**  | 3 | Implement customers and suppliers frontend features  |
 | **21.02.**  | 4 |  Implement stocks amd low stock services, reducers and UI |
-| **Total**  | **168** | |
+| **23.02.**  | 3 |  Implement locations feat, reducers and UI also refactor locations controller to fix authorization issue |
+| **Total**  | **171** | |
 
 
