@@ -54,6 +54,7 @@ export interface ILocationData {
     manager?: ObjectId;
     currentLoad?: number;
     locationStatus?: Status;
+    businessId: string
 }
 
 export const EditableFields: (keyof ILocationDocument)[] = [

@@ -10,7 +10,7 @@ import { ObjectId } from 'mongodb'
 import { locationService } from '@service/db/location.service'
 import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
-import { NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
+import { BadRequestError, NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
 import { omit } from 'lodash'
 
 const log = config.createLogger('locationController')
@@ -21,6 +21,7 @@ class Location extends Stock {
     this.create = this.create.bind(this)
     this.read = this.read.bind(this)
     this.edit = this.edit.bind(this)
+    this.delete = this.delete.bind(this)
   }
 
   /**
@@ -36,10 +37,15 @@ class Location extends Stock {
       const user = req.user!
       const body: ILocationData = Utils.sanitizeInput(req.body)
 
+      // check if Location exist
+      const existingLocation = 
+      await locationService.findByName(Utils.firstLetterToUpperCase(body.locationName), new ObjectId(body.businessId))
+      if(existingLocation) return next(new BadRequestError('Location already exist with this name'))
+
       const data = {
         _id: new ObjectId(),
         stocks: [],
-        businessId: new ObjectId(user.associatedBusinessesId),
+        businessId: new ObjectId(body.businessId),
         locationName: Utils.firstLetterToUpperCase(body.locationName),
         locationType: body.locationType,
         address:  body.address,
@@ -51,7 +57,8 @@ class Location extends Stock {
       } as unknown as ILocationDocument
 
       // save data
-      await locationService.addLocation(data)
+      const location = await locationService.addLocation(data)
+      const transformedLocation  = this.transformLocation([location])
 
       // Log the activity
       const logData = createActivityLog (
@@ -68,7 +75,7 @@ class Location extends Stock {
       // response to client
       res.status(HTTP_STATUS.CREATED).json({
         message: `Created new location '${data.locationName}' successfully`,
-        data,
+        data: transformedLocation[0],
         status: 'success'
       })
 
@@ -165,6 +172,7 @@ class Location extends Stock {
       if (filteredData.locationName) filteredData.locationName = Utils.firstLetterToUpperCase(filteredData.locationName)
       // perform update
       const updatedData = await locationService.editLocation(new ObjectId(location._id), filteredData)
+      const transformedLocation  = this.transformLocation([updatedData])[0]
 
       // log update
       const logData = createActivityLog (
@@ -182,7 +190,7 @@ class Location extends Stock {
       res.status(HTTP_STATUS.OK).json({
         status: 'success',
         message: 'Location data updated successfully',
-        data: updatedData,
+        data: transformedLocation,
       })
 
     } catch (error) {
@@ -190,6 +198,56 @@ class Location extends Stock {
       next(error)
     }
   }
+
+
+  /**
+  * Handles deleting a location by Id
+  * @param req Express Request object
+  * @param res Express Response object
+  * @param next Express NextFunction for error handling
+  */
+  public async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const user = req.user!
+      const { id } = req.params 
+
+      // check if location exists
+      const location = await locationService.getById(new ObjectId(id))
+      if (!location) {
+        return next(new NotFoundError('Location not found'))
+      }
+
+      if (user.associatedBusinessesId.toString() !== location.businessId.toString()) {
+        return next(new NotAuthorizedError('Not Authorized: User cannot delete this location'))
+      }
+
+      // delete location
+      await locationService.delLocation(new ObjectId(id))
+
+      // log delete action
+      const logData = createActivityLog (
+        user._id, 
+        user.username, 
+        user.associatedBusinessesId, 
+        'DELETE' as ActionType, 
+        'LOCATION' as EntityType,
+        `${id}`,
+        `Deleted location '${location.locationName}'`)
+      
+      await logService.createLog(logData)
+
+      // Respond to client
+      res.status(HTTP_STATUS.OK).json({
+        status: 'success',
+        message: `Location '${location.locationName}' deleted successfully`,
+      })
+
+    } catch(error) {
+      log.error('Error deleting location')
+      next(error)
+    }
+  }
+
 
   private transformLocation(locations: any[]): any[] {
     if (!locations) return []

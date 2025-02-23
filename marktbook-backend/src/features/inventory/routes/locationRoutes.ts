@@ -14,11 +14,11 @@ class LocationRoutes {
     this.router.post('/locations', 
       authMiddleware.checkAuthentication, 
       authMiddleware.validateUserRole,
+      authMiddleware.validateBusiness,
       location.create)
 
     this.router.get('/locations', 
       authMiddleware.checkAuthentication, 
-      authMiddleware.validateUserRole,
       location.read)
 
     this.router.get('/locations/:id', 
@@ -30,6 +30,11 @@ class LocationRoutes {
       authMiddleware.validateUserRole,
       authMiddleware.validateBusiness,
       location.edit)
+
+    this.router.delete('/locations/:id', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      location.delete)
 
     return this.router
   }
