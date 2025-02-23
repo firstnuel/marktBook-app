@@ -2,6 +2,7 @@ import emailIcon from '@assets/icons/email-icon.svg'
 import userIcon from '@assets/icons/user-icon.svg'
 import passwordIcon from '@assets/icons/password-icon.svg'
 import arrowBackIcon from '@assets/icons/arrow-back.svg'
+import arrowUpIcon from '@assets/icons/arrow-up.svg'
 import businessIcon from '@assets/icons/business-icon.svg'
 import menuIcon from '@assets/icons/menu-icon.svg'
 import posIcon from '@assets/icons/pos-icon.svg'
@@ -57,6 +58,7 @@ const icons = {
   help: helpIcon,
   logout: logoutIcon,
   arrowDropDown: arrowDropDown,
+  arrowUp: arrowUpIcon,
   date: dateIcon,
   time: timeIcon,
   allCategories: allCatIcon,

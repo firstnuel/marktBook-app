@@ -42,7 +42,7 @@ export const MenuBarUser = ({ name, role, closeFn, userImg }: MBUProps) => {
   return (
     <div className="user-info-div">
       <div className="user-info">
-        <div className="user-details">
+        <div className="user-details"  onClick={() => setShow(!show)}>
           {userImg ?
             <img src={userImg} alt="User profile pic" className='useprofile-img' />
             :
@@ -53,7 +53,7 @@ export const MenuBarUser = ({ name, role, closeFn, userImg }: MBUProps) => {
             <div className="user-role">{role}</div>
           </div>
         </div>
-        <IconBox src={icons.arrowDropDown} clName="user-menu" onClick={() => setShow(!show)}
+        <IconBox src={!show ? icons.arrowDropDown :  icons.arrowUp} clName="user-menu"  onClick={() => setShow(!show)}
           imgClName='usr-icon'/>
       </div>
       {show &&

@@ -6,6 +6,9 @@ import StocksTable from './StocksTable'
 import LowStockList from './LowStocksList'
 import LocationTable from './LocationTable'
 import StockMovements from './StockMovements'
+import ViewSuppliers from './ViewSuppliers'
+import StocksBySupplier from './BySuppliers'
+import EditLocation from './EditLocation'
 
 
 const StocksMangement = () => {
@@ -27,6 +30,9 @@ const StocksMangement = () => {
           {mainOpt === 'Low Stocks' && subOpt === 'None' && <LowStockList/> }
           {mainOpt === 'Movements' && subOpt === 'None' && <StockMovements/> }
           {mainOpt === 'Locations' && subOpt === 'None' && <LocationTable/> }
+          {mainOpt === 'Locations' && subOpt === 'Edit Location' && <EditLocation/> }
+          {mainOpt === 'Stocks By Supplier' && subOpt === 'None' && <ViewSuppliers/> }
+          {mainOpt === 'Stocks By Supplier' && subOpt === 'BySupplier List' && <StocksBySupplier/> }
         </Container>
       </div>
     </div>

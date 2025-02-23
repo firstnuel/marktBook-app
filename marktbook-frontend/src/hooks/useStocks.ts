@@ -1,11 +1,19 @@
 import { useAppDispatch, useAppSelector } from '../store'
 import { useEffect, useCallback } from 'react'
+import { Location } from '@typess/stocks'
 import {
   clearError,
   fetchStocks,
   setMainOpt,
   setSubOpt,
+  fetchStockBySupplier,
+  createLocation,
+  resetSupplier,
   fetchLocations,
+  rmLocation,
+  deleteLocation,
+  editLocation,
+  stLocation,
   fetchLowStock } from '@reducers/stocksReducer'
 
 export const useStocks = () => {
@@ -16,6 +24,8 @@ export const useStocks = () => {
     success,
     locations,
     movements,
+    bySupplier,
+    setLocation,
     mainOpt,
     subOpt } = useAppSelector(state => state.stocks)
   const dispatch = useAppDispatch()
@@ -32,15 +42,30 @@ export const useStocks = () => {
 
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
 
+  const resetSupplierHandler = useCallback(() => dispatch(resetSupplier()), [dispatch])
+
   const fetchStocksHandler = useCallback(() => dispatch(fetchStocks()), [dispatch])
 
   const fetchLowStockHandler = useCallback(() => dispatch(fetchLowStock()), [dispatch])
 
   const fetchLocationsHandler = useCallback(() => dispatch(fetchLocations()), [dispatch])
 
+  const deleteLocationHandler = useCallback((id: string) => dispatch(deleteLocation(id)), [dispatch])
+
+  const editLocationHandler = useCallback((id: string, data: Partial<Location>) =>
+    dispatch(editLocation({ id, data })), [dispatch])
+
+  const fetchBySupplierHandler = useCallback((supplierId: string) => dispatch(fetchStockBySupplier(supplierId)), [dispatch])
+
+  const createLocationHandler = useCallback((data: Partial<Location>) => dispatch(createLocation(data)), [dispatch])
+
   const setMainOption = useCallback((option: string) => dispatch(setMainOpt({ option })), [dispatch])
 
   const setSubOption = useCallback((option: string) => dispatch(setSubOpt({ option })), [dispatch])
+
+  const setLocationHandler = useCallback((location: Location) => dispatch(stLocation({ location })), [dispatch])
+
+  const rmLocationHandler = useCallback(() => dispatch(rmLocation()), [dispatch])
 
   return {
     mainOpt,
@@ -52,11 +77,20 @@ export const useStocks = () => {
     locations,
     success,
     movements,
+    bySupplier,
+    setLocation,
+    resetSupplier: resetSupplierHandler,
     clearError: clearErrorHandler,
     fetchStocks: fetchStocksHandler,
     fetchLowStock: fetchLowStockHandler,
     setMainOpt: setMainOption,
+    fetchStockBySupplier: fetchBySupplierHandler,
+    createLocation: createLocationHandler,
     setSubOpt: setSubOption,
+    rmLocation: rmLocationHandler,
     fetchLocations: fetchLocationsHandler,
+    stLocation: setLocationHandler,
+    deleteLocation: deleteLocationHandler,
+    editLocation: editLocationHandler,
   }
 }

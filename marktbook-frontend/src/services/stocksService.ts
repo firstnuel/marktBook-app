@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance } from 'axios'
 import { Token } from './authService'
-// import { Stock } from '@typess/stocks'
+import { Location } from '@typess/stocks'
 
 class StocksService {
   private readonly BASE_PATH: string = import.meta.env.VITE_API_URL
@@ -51,6 +51,24 @@ class StocksService {
     }
   }
 
+  public async editLocation(id: string, data: Partial<Location>): Promise<any> {
+    try {
+      const response = await this.axios.patch(`/locations/${id}`, data)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while editing location.')
+    }
+  }
+
+  public async deleteLocation(id: string): Promise<any> {
+    try {
+      const response = await this.axios.delete(`/locations/${id}`)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while delete location.')
+    }
+  }
+
   public async fetchLowStock(): Promise<any> {
     try {
       const response = await this.axios.get('/stocks/low-stock')
@@ -60,6 +78,23 @@ class StocksService {
     }
   }
 
+  public async fetchStocksBySupplier(supplierId: string): Promise<any> {
+    try {
+      const response = await this.axios.get(`/stocks/suppliers/${supplierId}`)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while fetching stocks by supplier.')
+    }
+  }
+
+  public async createLocation(data: Partial<Location>): Promise<any> {
+    try {
+      const response = await this.axios.post('/locations', data)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while creating new location.')
+    }
+  }
 
 }
 

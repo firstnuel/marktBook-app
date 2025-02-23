@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import IconBox from '@components/IconBox'
@@ -17,14 +17,15 @@ import './index.scss'
 
 const LocationTable = () => {
   const [show, setShow] = useState(false)
-  const { locations, fetchLocations, loading, error, clearError, success } = useStocks()
+  const { locations, fetchLocations, loading, error, clearError, success,
+    stLocation, mainOpt, setSubOpt, setLocation } = useStocks()
   const [sort, setSort] = useState<{ key: keyof typeof hFields; dir: 'asc' | 'desc' }>({ key: 'Location Name', dir: 'asc' })
 
   const hFields: { [key: string]: keyof Location } = {
     'Location Name': 'locationName',
     'Location Type': 'locationType',
     Address: 'address',
-    'Current Load': 'currentLoad',
+    'Current Load': 'stocksLength',
     Capacity: 'capacity',
     Manager: 'manager',
     'Location Status': 'locationStatus',
@@ -67,7 +68,7 @@ const LocationTable = () => {
         location.locationName || '-',
         location.locationType || '-',
         location.address || '-',
-        location.currentLoad || 0,
+        location.stocksLength || 0,
         location.capacity || 0,
         location.manager || '-',
         location.locationStatus || '-',
@@ -83,6 +84,12 @@ const LocationTable = () => {
   }
 
   const csvHeaders = Object.keys(hFields).map(label => ({ label, key: hFields[label] }))
+
+  useEffect(() => {
+    if (mainOpt === 'Locations' && setLocation){
+      setSubOpt('Edit Location')
+    }
+  })
 
   return (
     <>
@@ -119,11 +126,11 @@ const LocationTable = () => {
           <tbody>
             {sortedLocations.length > 0 ? (
               sortedLocations.map((location) => (
-                <tr key={location.id} className='loca-row'>
+                <tr key={location.id} className='loca-row' onClick={() => stLocation(location)}>
                   <td>{location.locationName ?? '-'}</td>
                   <td>{location.locationType ?? '-'}</td>
                   <td>{location.address ?? '-'}</td>
-                  <td>{location.currentLoad ?? '-'}</td>
+                  <td>{location.currentLoad === 0? location.stocksLength : location.currentLoad || '-'}</td>
                   <td>{location.capacity ?? '-'}</td>
                   <td>{location.manager ?? '-'}</td>
                   <td>{location.locationStatus ?? '-'}</td>

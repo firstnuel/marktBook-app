@@ -1,5 +1,6 @@
 import { useStocks } from '@hooks/useStocks'
 import Container from 'react-bootstrap/Container'
+import Button from 'react-bootstrap/Button'
 import Notify from '@components/Notify'
 import Loading from '@components/Spinner'
 import { formatDate } from '@utils/helpers'
@@ -12,6 +13,7 @@ const StockMovements = () => {
       <Notify clearErrFn={clearError} success={success} error={error} />
       <div className="head-info">
         <div className="head-name">📦 Stock Movements</div>
+        <Button variant='primary' onClick={() => {}}>New Movement</Button>
       </div>
       <div className="cat-content">
         <div className="product-info">

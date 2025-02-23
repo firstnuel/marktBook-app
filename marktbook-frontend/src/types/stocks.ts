@@ -10,6 +10,8 @@ type mainOption =
 
 type subOption =
     | 'None'
+    | 'BySupplier List'
+    | 'Edit Location'
 
 export interface stocksState {
     stocks: Stock[];
@@ -21,6 +23,7 @@ export interface stocksState {
     lowStocks: Stock[];
     bySupplier: Stock[];
     locations: Location[];
+    setLocation: Location | null;
     movements: StockMovement[];
 }
 
@@ -33,7 +36,7 @@ export interface Stock {
     costPerUnit: number;
     totalValue: number;
     notes: string;
-    updatedBy: { _id: string, name: string };
+    updatedBy: string;
     lastRestocked: string;
     updatedAt: string;
     computedTotalValue: number;

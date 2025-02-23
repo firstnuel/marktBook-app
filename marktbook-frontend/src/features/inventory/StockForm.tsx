@@ -197,7 +197,11 @@ const StockForm = () => {
           onChange={(e) => setSelectedSupplierId(e.target.value)}
           required={false}
           >
-                <option>Choose Supplier</option>
+              <option>{
+              stock?.supplierId ?
+              suppliers.find(supplier => supplier._id === stock.supplierId)?.name :
+              'Select Supplier'
+                }</option>
                 {suppliers.map((supplier, idx) => (
                   <option key={idx} value={supplier._id}>{supplier.name}</option>
                 ))}

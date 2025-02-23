@@ -66,7 +66,7 @@ const NewLocation = ({ show, setShow }: NewLocationProps) => {
     if (capacity.value) {
       formData.capacity = Number(capacity.value)
     }
-    console.log(formData)
+    createLocation(formData)
   }
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const NewLocation = ({ show, setShow }: NewLocationProps) => {
                   value={selectedLocationType}
                   onChange={handleLocationType}
                 >
-                  {['Warehouse', 'Storefront', 'Office'].map((type, idx) => (
+                  {Object.values(LocationTypes).map((type, idx) => (
                     <option key={idx} value={type}>
                       {type}
                     </option>

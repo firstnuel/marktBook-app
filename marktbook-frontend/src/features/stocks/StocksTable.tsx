@@ -88,7 +88,7 @@ const StocksTable = () => {
         stock.maxQuantity,
         stock.costPerUnit.toFixed(2),
         stock.totalValue.toFixed(2),
-        stock.updatedBy.name,
+        stock.updatedBy,
         formatDate(stock.lastRestocked),
         formatDate(stock.updatedAt),
       ]),
@@ -110,7 +110,7 @@ const StocksTable = () => {
     { label: 'Max Quantity', key: 'maxQuantity' },
     { label: 'Cost per Unit', key: 'costPerUnit' },
     { label: 'Total Value', key: 'totalValue' },
-    { label: 'Updated By', key: 'updatedBy.name' },
+    { label: 'Updated By', key: 'updatedBy' },
     { label: 'Last Restocked', key: 'lastRestocked' },
     { label: 'Updated At', key: 'updatedAt' },
   ]
@@ -163,7 +163,7 @@ const StocksTable = () => {
                   <td>{stock.maxQuantity}</td>
                   <td>{`${getCurrencySymbol('USD')} ${stock.costPerUnit}`}</td>
                   <td>{`${getCurrencySymbol('USD')} ${stock.totalValue}`}</td>
-                  <td>{stock.updatedBy.name}</td>
+                  <td>{stock.updatedBy}</td>
                   <td>{formatDate(stock.lastRestocked)}</td>
                   <td>{formatDate(stock.updatedAt)}</td>
                 </tr>
