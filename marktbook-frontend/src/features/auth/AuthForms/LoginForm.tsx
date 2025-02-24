@@ -92,10 +92,10 @@ const LoginForm = () => {
           </Button >
         </Form>
         <div className='forgot-password'>
-          <NavLink to='/forgot-password' className='register-link'>Forgot Password ?</NavLink>
+          <NavLink to='/forgot-password' className='register-link'>Forgot password?</NavLink>
         </div>
         <div className='register'>
-          <p>No Account Yet? <NavLink to='/register' className='register-link'>Register</NavLink></p>
+          <p>No account yet? <NavLink to='/register' className='register-link'>Register</NavLink></p>
         </div>
       </Container>
     </div>
@@ -103,4 +103,3 @@ const LoginForm = () => {
 }
 
 export default LoginForm
-

@@ -4,16 +4,19 @@ import Button from 'react-bootstrap/Button'
 import Notify from '@components/Notify'
 import Loading from '@components/Spinner'
 import { formatDate } from '@utils/helpers'
+import { useState } from 'react'
+import NewMovements from './NewMovements'
 
 const StockMovements = () => {
   const { movements, error, success, clearError, loading } = useStocks()
+  const [show, setShow] = useState(false)
 
   return (
     <Container className="whole">
       <Notify clearErrFn={clearError} success={success} error={error} />
       <div className="head-info">
         <div className="head-name">📦 Stock Movements</div>
-        <Button variant='primary' onClick={() => {}}>New Movement</Button>
+        <Button variant='primary' onClick={() => setShow(true)}>New Movement</Button>
       </div>
       <div className="cat-content">
         <div className="product-info">
@@ -52,6 +55,7 @@ const StockMovements = () => {
           </table>
         </div>
       </div>
+      <NewMovements show={show} setShow={setShow} />
     </Container>
   )
 }

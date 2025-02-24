@@ -41,7 +41,10 @@ export interface Stock {
     updatedAt: string;
     computedTotalValue: number;
     id: string;
-    product: string;
+    product: {
+        name: string,
+        id: string
+    } | null;
     location: string;
     supplier: string | null;
 }

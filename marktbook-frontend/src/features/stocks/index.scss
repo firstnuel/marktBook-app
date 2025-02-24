@@ -57,3 +57,14 @@ body > div.fade.modal.show > div > div > div.modal-body > div > form {
     height: 43px;
     align-self: center;
 } 
+
+.movement-quantity {
+    display: flex;
+    gap: 10px;
+    .quantity {
+        width: 50%;
+    }
+    .movement {
+        width: 50%;
+    }
+}

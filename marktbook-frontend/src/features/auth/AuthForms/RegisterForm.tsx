@@ -141,7 +141,7 @@ const RegisterForm = () => {
         </Form>
 
         <div className='login'>
-          <p>Have An Account? <NavLink to='/login' className='register-link'>Login</NavLink></p>
+          <p>Have an account? <NavLink to='/login' className='register-link'>Login</NavLink></p>
         </div>
       </Container>
     </div>

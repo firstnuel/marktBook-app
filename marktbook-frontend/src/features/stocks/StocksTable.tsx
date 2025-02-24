@@ -22,7 +22,7 @@ const StocksTable = () => {
   useEffect(() => {
     if (search.length > 2) {
       setFilteredStocks(
-        stocks.filter(stock => stock.product.toLowerCase().includes(search.toLowerCase()))
+        stocks.filter(stock => stock.product?.name.toLowerCase().includes(search.toLowerCase()))
       )
     } else {
       setFilteredStocks(stocks)
@@ -80,7 +80,7 @@ const StocksTable = () => {
     autoTable(doc, {
       head: [header],
       body: stocks.map(stock => [
-        stock.product,
+        stock.product?.name || '',
         stock.location,
         stock.compartment,
         stock.unitsAvailable,
@@ -102,7 +102,7 @@ const StocksTable = () => {
   }
 
   const csvHeaders = [
-    { label: 'Product', key: 'product' },
+    { label: 'Product', key: 'product.name' },
     { label: 'Location', key: 'location' },
     { label: 'Compartment', key: 'compartment' },
     { label: 'Units Available', key: 'unitsAvailable' },
@@ -155,7 +155,7 @@ const StocksTable = () => {
             {sortedStocks.length > 0 ? (
               sortedStocks.map((stock) => (
                 <tr key={stock.id} style={{ cursor: 'default' }}>
-                  <td className="body-row">{cutName(stock.product, 25)}</td>
+                  <td className="body-row">{cutName(stock.product?.name ?? '', 25)}</td>
                   <td>{stock.location}</td>
                   <td>{stock.compartment}</td>
                   <td>{stock.unitsAvailable}</td>

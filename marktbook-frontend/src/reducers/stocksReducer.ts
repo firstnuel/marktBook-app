@@ -1,4 +1,4 @@
-import { stocksState, Location } from '@typess/stocks'
+import { stocksState, Location, StockMovement } from '@typess/stocks'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { stocksService } from '@services/stocksService'
 
@@ -72,7 +72,14 @@ export const editLocation = createAsyncThunk('stocks/editLocation', async({ id, 
   return { location: response.data, successMsg: response.message }
 })
 
-
+export const createMovement = createAsyncThunk('stocks/createMovement', async(data: Partial<StockMovement>) => {
+  const response = await stocksService.newMovement(data)
+  if (response.status !== 'success') {
+    throw new Error(response.message)
+  }
+  const locations = await stocksService.fetchLocations()
+  return { locations: locations.data, successMsg: response.message }
+})
 
 const stockSlice = createSlice({
   name: 'stocks',
@@ -178,6 +185,25 @@ const stockSlice = createSlice({
         state.movements = []
         state.error = action.error.message as string ||
     'Location could not be created, try again later'
+      })
+    // Create Movement
+    builder
+      .addCase(createMovement.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(createMovement.fulfilled, (state, action) => {
+        state.loading = false
+        state.error = null
+        state.locations = action.payload.locations
+        state.movements = state.locations
+          .flatMap((location: Location) => location.stockMovements)
+        state.success = action.payload.successMsg
+      })
+      .addCase(createMovement.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message as string ||
+  'Movement could not be completed, try again later'
       })
       // Edit Location
     builder

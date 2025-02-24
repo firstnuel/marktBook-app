@@ -18,6 +18,7 @@ import { omit } from 'lodash'
 import { movementSchema } from '@inventory/schemes/locationValidation'
 import { supplierService } from '@service/db/supplier.service'
 
+
 const log = config.createLogger('stockController')
 
 export class Stock {
@@ -352,13 +353,20 @@ export class Stock {
       if (movementType === 'OUT' && quantity > stock.unitsAvailable) {
         return next(new BadRequestError('Insufficient stock for the requested movement'))
       }
-      
+  
       // Fetch location data
       const location = await locationService.getById(new ObjectId(stock.locationId))
       if (!location) {
         return next(new NotFoundError('location data not found for this product'))
       }
 
+      const destinationLocation =  await locationService.getById(new ObjectId(destination))
+      if (!destinationLocation) {
+        return next(new NotFoundError('location data not found for this destination'))
+      }
+
+      stock.unitsAvailable =  stock.unitsAvailable - quantity
+      await stock.save()
       // Update stock movement
       location.stockMovements.push(
         {
@@ -373,6 +381,10 @@ export class Stock {
       // Save location changes
       await location.save()
 
+      destinationLocation.stocks.push(stock._id)
+      // Save location changes
+      await destinationLocation.save()
+
       // Log the activity
       const logData = createActivityLog (
         existingUser._id, 
@@ -384,13 +396,25 @@ export class Stock {
         `Updated stock movement for product '${product?.productName}'`)
 
       await logService.createLog(logData)
+      const locationData = location.toJSON()
+      if (locationData.stockMovements.length) {
+        locationData.stockMovements = 
+        locationData.stockMovements.map((sm: any) => {
+          sm.product = sm.productId.productName
+          sm.destination = sm.destination.locationName
+          sm.initiatedBy = sm.initiatedBy.name
+          delete sm.productId
+          delete sm._id
+          return sm
+        })
 
-      // Respond to client
-      res.status(HTTP_STATUS.OK).json({
-        status: 'success',
-        message: `Updated stock movement for product '${product?.productName}' successfully`,
-        data: omit(location.toJSON(), ['_id', 'createdAt', '__v"']),
-      }) 
+        // Respond to client
+        res.status(HTTP_STATUS.OK).json({
+          status: 'success',
+          message: `Updated stock movement for product '${product?.productName}' successfully`,
+          data: omit(locationData, ['_id', 'createdAt', '__v"']),
+        }) 
+      }
     } catch (error: any) {
       log.error(`Error moving stock: ${error.message}`)
       next(error)
@@ -453,7 +477,10 @@ export class Stock {
       const stockData = stock.toJSON()
   
       if (stockData.productId) {
-        stockData.product = stockData.productId.productName
+        stockData.product = {
+          name: stockData.productId.productName,
+          id: stockData.productId._id
+        }
         delete stockData.productId
       } else {
         stockData.product = null

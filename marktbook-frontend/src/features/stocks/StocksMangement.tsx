@@ -21,8 +21,8 @@ const StocksMangement = () => {
         <Container className='sec'>
           <SecOption name='Stocks' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
           <SecOption name='Low Stocks' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
-          <SecOption name='Movements' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
           <SecOption name='Stocks By Supplier'mainOpt={mainOpt} setMainOpt={setMainOpt}/>
+          <SecOption name='Movements' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
           <SecOption name='Locations' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
         </Container>
         <Container className='sec-show'>

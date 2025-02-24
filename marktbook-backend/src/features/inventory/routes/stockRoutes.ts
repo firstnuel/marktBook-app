@@ -37,6 +37,7 @@ class StockRoutes {
     this.router.post('/stocks/movements', 
       authMiddleware.checkAuthentication, 
       authMiddleware.validateUserRole,
+      authMiddleware.validateBusiness,
       stock.move)
 
     this.router.get('/stocks/suppliers/:supplierId', 

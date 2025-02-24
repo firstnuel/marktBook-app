@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance } from 'axios'
 import { Token } from './authService'
-import { Location } from '@typess/stocks'
+import { Location, StockMovement } from '@typess/stocks'
 
 class StocksService {
   private readonly BASE_PATH: string = import.meta.env.VITE_API_URL
@@ -93,6 +93,15 @@ class StocksService {
       return response.data
     } catch (error) {
       this.handleAxiosError(error, 'An error occurred while creating new location.')
+    }
+  }
+
+  public async newMovement(data: Partial<StockMovement>): Promise<any> {
+    try {
+      const response = await this.axios.post('/stocks/movements', data)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while moving stocks.')
     }
   }
 

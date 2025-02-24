@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../store'
 import { useEffect, useCallback } from 'react'
-import { Location } from '@typess/stocks'
+import { Location, StockMovement } from '@typess/stocks'
 import {
   clearError,
   fetchStocks,
@@ -12,6 +12,7 @@ import {
   fetchLocations,
   rmLocation,
   deleteLocation,
+  createMovement,
   editLocation,
   stLocation,
   fetchLowStock } from '@reducers/stocksReducer'
@@ -59,6 +60,8 @@ export const useStocks = () => {
 
   const createLocationHandler = useCallback((data: Partial<Location>) => dispatch(createLocation(data)), [dispatch])
 
+  const createMovementHandler = useCallback((data: Partial<StockMovement>) => dispatch(createMovement(data)), [dispatch])
+
   const setMainOption = useCallback((option: string) => dispatch(setMainOpt({ option })), [dispatch])
 
   const setSubOption = useCallback((option: string) => dispatch(setSubOpt({ option })), [dispatch])
@@ -92,5 +95,6 @@ export const useStocks = () => {
     stLocation: setLocationHandler,
     deleteLocation: deleteLocationHandler,
     editLocation: editLocationHandler,
+    createMovement: createMovementHandler,
   }
 }

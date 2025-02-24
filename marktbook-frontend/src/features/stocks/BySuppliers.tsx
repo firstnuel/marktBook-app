@@ -45,7 +45,7 @@ const StocksBySupplier = () => {
 
                   return (
                     <tr key={idx}>
-                      <td className="prdname">{stock.product}</td>
+                      <td className="prdname">{stock.product?.name}</td>
                       <td>{stock.location}</td>
                       <td>{stock.compartment}</td>
                       <td> {stock.unitsAvailable}</td>
