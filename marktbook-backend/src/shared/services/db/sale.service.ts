@@ -11,12 +11,18 @@ class SaleService {
 
   // Fetch all sales for a business
   public async getAll(businessId: ObjectId): Promise<ISaleDocument[]> {
-    return await SaleModel.find({ businessId }).sort({ createdAt: -1 }).exec()
+    return await SaleModel.find({ businessId }).sort({ createdAt: -1 })
+      .populate('customer', ['name', 'businessName',  'address'])
+      .populate('initiatedBy', 'name')
+      .exec()
   }
 
   // Get a single sale by ID
   public async getById(saleId: ObjectId, businessId: ObjectId): Promise<ISaleDocument | null> {
-    return await SaleModel.findOne({ _id: saleId, businessId }).exec()
+    return await SaleModel.findOne({ _id: saleId, businessId })
+      .populate('customer', ['name', 'businessName',  'address'])
+      .populate('initiatedBy', 'name')
+      .exec()
   }
 
   public async updateStatus( saleId: ObjectId, businessId: ObjectId, updateData: Partial<ISaleDocument>): 

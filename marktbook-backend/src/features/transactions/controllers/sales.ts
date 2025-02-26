@@ -38,11 +38,13 @@ class Sale extends Product {
 
       // validate input
       this.validateInput(salesDataSchema, req.body)
-
       const user = req.user!
 
       // Sanitize input
       const body = Utils.sanitizeInput(req.body) as ISaleData
+
+      // Check stock
+      await this.checkStock(body.saleItems)
 
       // update stock 
       await this.updateStock(body.saleItems)
@@ -77,8 +79,7 @@ class Sale extends Product {
   private saleData(data: ISaleData, saleId: ObjectId, user: IuserDocument): ISaleDocument {
     return {
       _id: saleId,
-      customerId: data.customerId ?? undefined,
-      customerName: data.customerName,
+      customer: data.customer ? new ObjectId(data.customer) : null,
       businessId: new ObjectId(user.associatedBusinessesId),
       initiatedBy: new ObjectId(user._id),
       completedBy: undefined,
@@ -97,23 +98,18 @@ class Sale extends Product {
   }
   
 
-  protected async checkStock(saleItems: SaleItem[]): Promise<boolean> {
+  protected async checkStock(saleItems: SaleItem[]): Promise<void> {
     for (const { productId, quantity, productName } of saleItems) {
       const stock = await stockService.getByProductID(productId)
       if (!stock) {
         throw new NotFoundError(`No stock data found for product '${productName}'`)
       } else if (stock.unitsAvailable < quantity) {
-        throw new BadRequestError(
-          `Insufficient stock for '${productName}'. Requested quantity exceeds available units.`
-        )
+        throw new BadRequestError(`Insufficient stock for '${productName}'. Requested quantity exceeds available units.`)
       }
     }
-    return true
   }
   
   protected async updateStock(saleItems: SaleItem[]): Promise<void> {
-    const isStockAvailable = await this.checkStock(saleItems)
-    if (!isStockAvailable) return
   
     const bulkOperations = saleItems.map(({ productId, quantity }) => ({
       updateOne: {
@@ -128,6 +124,7 @@ class Sale extends Product {
     await stockService.bulkUpdate(bulkOperations)
   }
   
+
   /**
    * Handles fetching all sales data
    * @param req Express Request object
@@ -145,7 +142,7 @@ class Sale extends Product {
 
       //remove sensitive fields
       const salesData = sales
-        .map(sale => omit(sale.toJSON(), ['businessId', 'customerId', 'initiatedBy', 'updatedAt']))
+        .map(sale => omit(sale.toJSON(), ['businessId', 'customerId', 'updatedAt']))
 
       res.status(HTTP_STATUS.OK).json({ 
         status: sales.length? 'success': undefined,
