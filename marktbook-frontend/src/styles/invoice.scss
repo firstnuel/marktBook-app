@@ -1,7 +1,7 @@
 
 
 .page {
-    width: 210mm;
+
     padding: 2.5em;
 
     .calculations {
@@ -24,6 +24,7 @@
 
     .table {
         margin-top: 4em;
+        border: 1px solid black;
         thead {
             th {
                 font-weight: bold;
@@ -94,7 +95,7 @@
         .logo {
             width: 6em;
             height: 6em;
-            border: 2px solid black;
+
             img {
                 width: 100%;
                 height: 100%;

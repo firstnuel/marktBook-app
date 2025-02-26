@@ -35,6 +35,7 @@ export const usePos = () => {
     category,
     priceInfo,
     successMsg,
+    taxRate,
   } = useAppSelector(state => state.pos)
 
   // Automatically clear error or success message after 5 seconds
@@ -112,6 +113,7 @@ export const usePos = () => {
     error,
     priceInfo,
     successMsg,
+    taxRate,
     customer,
     selectPaymentMethod: selectPaymentHandler,
     setTaxRate: setTaxRateHandler,

@@ -7,15 +7,21 @@ import '@styles/price-info.scss'
 import { getCurrencySymbol } from '@utils/helpers'
 import { useBusiness } from '@hooks/useBusiness'
 import { PaymentMethod } from '@typess/pos'
+import ProcessPayment from './ProcessPayment'
+import Notify from '@components/Notify'
+import { useTrans } from '@hooks/useTrans'
 
 
 const PriceInfo = () => {
   const { cartItems, priceInfo, updateDiscount, selectPaymentMethod } = usePos()
+  const { clearError, success, error } = useTrans()
   const { business } = useBusiness()
   const [clearCart, setClearCart] = useState(false)
+  const [processPayment, setProcessPayment] = useState(false)
 
   return(
     <>
+      <Notify error={error} success={success} clearErrFn={clearError}/>
       <div className="subtotal-info">
         <div className="subtotal">Subtotal</div>
         <div className="amount-info">
@@ -62,13 +68,16 @@ const PriceInfo = () => {
       <div className="pay-btn">
         <Button variant="primary"
           disabled={cartItems.length===0}
-          onClick={() => {}}>
+          onClick={() => setProcessPayment(true)}>
           {priceInfo.total? `Payment - ${getCurrencySymbol(business!.currency?? 'USD')}${priceInfo.total.toFixed(2)}`: 'Payment'}
         </Button>
       </div>
       <ClearCart
         handleClose={() => setClearCart(false)}
         show={clearCart} />
+      <ProcessPayment
+        handleClose={() => setProcessPayment(false)}
+        show={processPayment} />
     </>
   )
 }

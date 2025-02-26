@@ -18,6 +18,7 @@ import invReducer from '@reducers/invReducer'
 import businessReducer from '@reducers/businessReducer'
 import contactsReducer from '@reducers/contactsReducer'
 import stocksReducer from '@reducers/stocksReducer'
+import transReducer from '@reducers/transReducer'
 
 // Add RESET_ALL action type
 export const RESET_ALL = 'RESET_ALL'
@@ -47,6 +48,12 @@ const contactsPersistConfig = {
   whitelist: ['mainOpt', 'subOpt', 'suppliers', 'contacts' ]
 }
 
+const transPersistConfig = {
+  key: 'trans',
+  storage,
+  whitelist: ['mainOpt', 'subOpt', 'invoices', 'sales', 'salesReturn', 'purchases', 'purchaseReturn']
+}
+
 const stocksPersistConfig = {
   key: 'stocks',
   storage,
@@ -56,11 +63,12 @@ const stocksPersistConfig = {
 // the base reducer combination
 const combinedReducer = combineReducers({
   'auth': persistReducer(authPersistConfig, authReducer),
-  'pos': persistReducer({ key: 'pos', storage, whitelist: ['cartItems', 'customer'] }, posReducer),
+  'pos': persistReducer({ key: 'pos', storage, whitelist: ['cartItems', 'customer', 'priceInfo'] }, posReducer),
   'business': persistReducer({ key: 'business', storage, whitelist: ['business'] }, businessReducer),
   'inv': persistReducer(invPersistConfig, invReducer),
   'contacts': persistReducer(contactsPersistConfig, contactsReducer),
-  'stocks': persistReducer(stocksPersistConfig, stocksReducer)
+  'stocks': persistReducer(stocksPersistConfig, stocksReducer),
+  'trans': persistReducer(transPersistConfig, transReducer),
 })
 
 // root reducer with reset capability

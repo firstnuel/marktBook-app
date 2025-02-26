@@ -12,6 +12,7 @@ import { useFetchData } from '@hooks/useFetchData'
 import Settings from '@features/business/BusinessSettings'
 import { memo } from 'react'
 import Contacts from '@features/contacts/Contacts'
+import Transactions from '@features/transactions/Transactions'
 
 
 // Memoize ProtectedRoute to prevent unnecessary re-renders
@@ -50,6 +51,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Inventory />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/transactions"
+        element={
+          <ProtectedRoute>
+            <Transactions />
           </ProtectedRoute>
         }
       />

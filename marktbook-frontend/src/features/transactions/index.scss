@@ -1,0 +1,6 @@
+table > tbody > tr > td.paid {
+    color: var(--tertiary-color);
+}
+table > tbody > tr > td.unpaid {
+    color: var(--secondary-color);
+}

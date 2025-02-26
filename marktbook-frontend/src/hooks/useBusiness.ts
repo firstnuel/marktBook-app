@@ -60,7 +60,7 @@ export const useBusiness = () => {
   const updateUserHandler = useCallback((userId: string, data: Partial<User>) =>
     dispatch(updateUser({ userId, data })), [dispatch])
 
-  return{
+  return {
     mainOpt,
     business,
     loading,

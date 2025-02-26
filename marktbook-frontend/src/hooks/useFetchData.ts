@@ -4,9 +4,11 @@ import { useBusiness } from '@hooks/useBusiness'
 import { usePos } from '@hooks/usePos'
 import { useContacts } from '@hooks/useContacts'
 import { useStocks } from '@hooks/useStocks'
+import { useTrans } from './useTrans'
 
 export const useFetchData = () => {
   const { user, fetchUser, userToken } = useAuth()
+  const { fetchSales, sales } = useTrans()
   const { business, fetchBusiness, fetchBusinessUsers, users } = useBusiness()
   const { fetchProducts, products, setTaxRate } = usePos()
   const { fetchCustomers, fetchSuppliers, customers, suppliers } = useContacts()
@@ -37,6 +39,10 @@ export const useFetchData = () => {
   useEffect(() => {
     if (business?._id && !suppliers.length) fetchSuppliers()
   }, [business?._id, fetchSuppliers, suppliers.length])
+
+  useEffect(() => {
+    if (business?._id && !sales.length) fetchSales()
+  }, [business?._id, fetchSales, sales.length])
 
   useEffect(() => {
     if (business?.taxRate) setTaxRate(business.taxRate)

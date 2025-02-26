@@ -90,7 +90,7 @@ class Sale extends Product {
       currency: data.currency,
       paymentMethod: data.paymentMethod,
       discount: data.discount,
-      status: data.status,
+      status: data.paymentMethod === 'CASH' ? 'COMPLETED' : 'PENDING',
       refundStatus: 'NONE',
       saleItems: data.saleItems,
       totalPrice: data.totalPrice,

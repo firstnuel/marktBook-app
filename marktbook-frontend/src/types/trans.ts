@@ -1,3 +1,32 @@
+
+
+type mainOption =
+  | 'Sales'
+  | 'Invoices'
+  | 'Sales Return'
+  | 'Purchases'
+  | 'Purchase Return'
+
+type subOption =
+  | 'None'
+
+export interface transState {
+  sales: Sale[]
+  invoices: Sale[]
+  salesReturn: Sale[]
+  purchases: []
+  purchaseReturn: []
+  error: string | null,
+  success: string | null,
+  loading: boolean,
+  mainOpt: mainOption
+  subOpt: subOption,
+  sale: Sale | null,
+}
+
+
+
+
 interface Customer {
     _id: string;
     name: string;
@@ -26,7 +55,7 @@ interface Customer {
   }
 
 export interface Sale {
-    customer: Customer;
+    customer: Customer | null;
     initiatedBy: InitiatedBy;
     subtotalAmount: number;
     taxAmount: number;

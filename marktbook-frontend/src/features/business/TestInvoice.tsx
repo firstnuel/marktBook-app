@@ -1,5 +1,7 @@
 import Invoice from '@components/Invoice'
-import { Sale } from '@typess/sale'
+import { Sale } from '@typess/trans'
+import { useState } from 'react'
+
 
 
 const mockInvoiceData: Sale = {
@@ -48,21 +50,73 @@ const mockInvoiceData: Sale = {
 }
 
 
+
 const InvoiceDemo = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const openModal = () => setIsOpen(true)
+  const closeModal = () => setIsOpen(false)
 
 
 
   return (
+    <>
+      <button onClick={openModal} style={buttonStyle}>Open Invoice</button>
 
-      <Invoice  sale={mockInvoiceData}/>
-
-
-
-
-
+      {isOpen && (
+        <div style={modalBackgroundStyle}>
+          <div style={modalStyle}>
+            <button onClick={closeModal} style={closeButtonStyle}>Close</button>
+            <Invoice sale={mockInvoiceData} />
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
+
+// Inline styles
+const buttonStyle = {
+  padding: '10px 20px',
+  backgroundColor: '#4CAF50',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+}
+
+const modalBackgroundStyle: React.CSSProperties = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
+
+const modalStyle = {
+  backgroundColor: 'white',
+  border: '2px solid black',
+  padding: '20px',
+  borderRadius: '10px',
+  width: '50%',
+  height: '70%',
+  overflow: 'scroll',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+}
+
+const closeButtonStyle = {
+  marginTop: '10px',
+  padding: '8px 15px',
+  backgroundColor: '#f44336',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+}
+
 export default InvoiceDemo
-
-

@@ -27,7 +27,6 @@ export const salesDataSchema = z.object({
   paymentMethod: z.nativeEnum(PaymentMethod),
   paymentRef: z.string().optional(),
   discount,
-  status: z.nativeEnum(SaleStatus),
   saleItems: z.array(saleItems),
   totalPrice: z.number({ required_error: 'totalPrice value is required'}),
   businessId: z.string(),

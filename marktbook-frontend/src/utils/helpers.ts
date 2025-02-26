@@ -24,35 +24,44 @@ export const cutName = (name: string, amount: number=0): string => {
   return name
 }
 
-export const calculatePrice = (cartItems: CartItemProps[], tx: number=10, paymentMethod: PaymentMethod ): PriceInfo => {
-  let subtotal: number = 0, total: number = 0, discount: number = 0
+export const calculatePrice = (cartItems: CartItemProps[], tx: number = 10, paymentMethod: PaymentMethod): PriceInfo => {
+  let subtotal = 0, discount = 0
 
   for (const { product, quantity } of cartItems) {
     subtotal += product.basePrice * quantity
     discount += product.discount * quantity
-    total += product.salePrice * quantity
   }
 
+  discount = Math.min(discount, subtotal)
+  const discountedSubtotal = subtotal - discount
+  const tax = Math.round(discountedSubtotal * (tx / 100) * 100) / 100
+  const total = discountedSubtotal + tax
+
   return {
-    subtotal,
-    discount: Math.max(0, Math.round(discount)),
-    total: total + (total * (tx/100)),
-    tax: Math.max(0, Math.round(total * (tx/100))),
+    subtotal: Math.round(subtotal * 100) / 100,
+    discount: Math.round(discount * 100) / 100,
+    total: Math.round(total * 100) / 100,
+    tax,
     paymentMethod
   }
 }
 
-export const updateDiscount = (priceinfo: PriceInfo, newDiscount: number, tx: number=10,  paymentMethod: PaymentMethod ): PriceInfo => {
-  const newTotal = priceinfo.subtotal - newDiscount
+export const updateDiscount = (priceinfo: PriceInfo, newDiscount: number, tx: number = 10, paymentMethod: PaymentMethod): PriceInfo => {
+
+  const validDiscount = Math.min(newDiscount, priceinfo.subtotal)
+  const discountedSubtotal = priceinfo.subtotal - validDiscount
+  const tax = Math.round(discountedSubtotal * (tx / 100) * 100) / 100
+  const total = discountedSubtotal + tax
 
   return {
-    subtotal: priceinfo.subtotal,
-    discount: newDiscount,
-    total: newTotal + (newTotal * (tx/100)),
-    tax: Math.max(0, Math.round(newTotal * (tx/100))),
+    subtotal: Math.round(priceinfo.subtotal * 100) / 100,
+    discount: Math.round(validDiscount * 100) / 100,
+    total: Math.round(total * 100) / 100,
+    tax,
     paymentMethod
   }
 }
+
 
 export const countByCategoryList = (products: Product[]) => {
   const counts = products.reduce((acc: { [key: string]: number }, product) => {
