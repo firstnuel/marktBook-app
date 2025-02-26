@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, ChangeEvent } from 'react'
 import { useAppDispatch, useAppSelector } from '../store'
 import {
   clearCart,
@@ -13,11 +13,12 @@ import {
   setTaxRate,
   searchByCategory,
   searchByKeyandPhrase,
+  selectPaymentMethod,
 } from '@reducers/posReducers'
 import { CartItemProps, ProductCategory, SearchKeys } from '@typess/pos'
 import { Customer } from '@typess/contacts'
 
-
+type CE = ChangeEvent<HTMLSelectElement>
 
 export const usePos = () => {
   const dispatch = useAppDispatch()
@@ -47,12 +48,15 @@ export const usePos = () => {
   }, [error, dispatch, successMsg])
 
 
-  // Memoized functions to avoid unnecessary re-creations
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
 
   const rmCustomerHandler = useCallback(() => dispatch(rmCustomer()), [dispatch])
 
   const fetchProductsHandler = useCallback(() => dispatch(fetchProducts()), [dispatch])
+
+  const selectPaymentHandler = useCallback(
+    (e: CE) => dispatch(selectPaymentMethod({ paymentMathod: e.target.value })),
+    [dispatch])
 
   const searchByCategoryHandler = useCallback(
     (category: ProductCategory | 'ALL') => dispatch(searchByCategory({ category })),
@@ -109,6 +113,7 @@ export const usePos = () => {
     priceInfo,
     successMsg,
     customer,
+    selectPaymentMethod: selectPaymentHandler,
     setTaxRate: setTaxRateHandler,
     setCustomer: setCustomerHandler,
     rmCustomer: rmCustomerHandler,

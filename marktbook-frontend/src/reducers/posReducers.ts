@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { inventoryService } from '@services/inventoryService'
 import { PosState } from '@typess/pos'
 import { calculatePrice, updateDiscount } from '@utils/helpers'
-import { ProductCategory } from '@typess/pos'
+import { ProductCategory, PaymentMethod } from '@typess/pos'
 
 const initialState: PosState = {
   products: [],
@@ -19,7 +19,8 @@ const initialState: PosState = {
     subtotal: 0,
     total: 0,
     discount: 0,
-    tax: 0
+    tax: 0,
+    paymentMethod: PaymentMethod.Cash
   },
   taxRate: null
 }
@@ -39,19 +40,22 @@ const posSlice = createSlice({
     setTaxRate: (state, action) => {
       state.taxRate = action.payload.taxRate
     },
+    selectPaymentMethod:(state, action) => {
+      state.priceInfo.paymentMethod = action.payload.paymentMathod
+    },
     addToCart: (state, action) => {
       const cartItem = action.payload.cartItem
       const itemExist = state.cartItems.find(item => item.product.id === cartItem.product.id)
       if (itemExist) {
         state.cartItems = state.cartItems.map(item =>
           item.product.id === cartItem.product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + cartItem.quantity }
             : item
         )
-        state.priceInfo = calculatePrice(state.cartItems)
+        state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined, state.priceInfo.paymentMethod)
       } else {
         state.cartItems = [...state.cartItems, cartItem]
-        state.priceInfo = calculatePrice(state.cartItems)
+        state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined, state.priceInfo.paymentMethod)
       }
     },
     searchByCategory: (state, action) => {
@@ -114,24 +118,33 @@ const posSlice = createSlice({
           item.product.id === productId ? { ...item, quantity: item.quantity + 1 }
             : item
         )
-        state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined)
+        state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined, state.priceInfo.paymentMethod)
       }
     },
     subQuantity: (state, action) => {
       const productId = action.payload.productId
       const itemExist = state.cartItems.find(item => item.product.id === productId)
       if (itemExist) {
-        state.cartItems = state.cartItems.map(item =>
-          item.product.id === productId ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined)
+        state.cartItems = state.cartItems.map(item => {
+          if (item.product.id === productId) {
+            item.quantity = item.quantity - 1
+            if (item.quantity < 1) {
+              return undefined
+            } else {
+              return item
+            }
+          } else {
+            return item
+          }
+        }).filter(item => item !== undefined)
+
+        state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined, state.priceInfo.paymentMethod)
       }
     },
     updatePrice: (state, action) => {
       const newDiscount = action.payload.discount
       state.priceInfo = { ...state.priceInfo, discount: newDiscount }
-      state.priceInfo = updateDiscount(state.priceInfo, newDiscount, state.taxRate ?? undefined)
+      state.priceInfo = updateDiscount(state.priceInfo, newDiscount, state.taxRate ?? undefined, state.priceInfo.paymentMethod)
     },
     clearError: (state) => {
       state.error = null
@@ -139,7 +152,7 @@ const posSlice = createSlice({
     },
     clearCart: (state) => {
       state.cartItems = []
-      state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined)
+      state.priceInfo = calculatePrice(state.cartItems, state.taxRate ?? undefined, state.priceInfo.paymentMethod)
       state.customer = null
     },
     setCustomer: (state, action) => {
@@ -183,6 +196,7 @@ export const {
   subQuantity,
   updatePrice,
   searchByCategory,
-  searchByKeyandPhrase
+  searchByKeyandPhrase,
+  selectPaymentMethod
 } = posSlice.actions
 export default posSlice.reducer

@@ -2,36 +2,17 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useState } from 'react'
 import { usePos } from '@hooks/usePos'
-import ConfirmAction from '@components/ConfimAction'
+import ClearCart from '@features/pos/ClearCart'
 import '@styles/price-info.scss'
 import { getCurrencySymbol } from '@utils/helpers'
 import { useBusiness } from '@hooks/useBusiness'
+import { PaymentMethod } from '@typess/pos'
 
 
 const PriceInfo = () => {
-  const { cartItems, priceInfo, updateDiscount } = usePos()
+  const { cartItems, priceInfo, updateDiscount, selectPaymentMethod } = usePos()
   const { business } = useBusiness()
-  const [show, setShow] = useState(false)
-  const [payInfo, setpayInfo] = useState({})
-
-  const clearPay = () => {
-    setShow(false)
-    setpayInfo({})
-  }
-
-  const payinfo = {
-    // demo test data
-    amount: priceInfo.total,
-    method: 'Cash',
-    payment: true,
-    salesId: 1234567,
-    clearPay
-  }
-
-  const handlePay = () => {
-    setpayInfo(payinfo)
-    setShow(true)
-  }
+  const [clearCart, setClearCart] = useState(false)
 
   return(
     <>
@@ -52,7 +33,7 @@ const PriceInfo = () => {
       <div className="discount-info">
         <div className="discount">Discount</div>
         <div className="amount-info">
-          <div className="dc-currency">-</div>
+          <div className="dc-currency">{getCurrencySymbol(business!.currency?? 'USD')}</div>
           <Form.Control
             value={priceInfo.discount.toFixed(2)}
             type='text'
@@ -68,30 +49,26 @@ const PriceInfo = () => {
         </div>
       </div>
       <div className="payment-option">
-        <Form.Select>
-          <option>Payment method</option>
-          <option value="Card">Card</option>
-          <option value="BankTransfer">Bank Transfer</option>
-          <option value="Cash">Cash</option>
-          <option value="Credit">Credit</option>
+        <Form.Select value={priceInfo.paymentMethod}
+          onChange={(e) => selectPaymentMethod(e)}>
+          {Object.values(PaymentMethod).map((method, idx) => (
+            <option key={idx} value={method}>{method}</option>
+          ))}
         </Form.Select>
         <Button variant="secondary"
           disabled={cartItems.length===0}
-          onClick={() => setShow(true)}>Clear</Button>
+          onClick={() => setClearCart(true)}>Clear</Button>
       </div>
       <div className="pay-btn">
         <Button variant="primary"
           disabled={cartItems.length===0}
-          onClick={handlePay}>
+          onClick={() => {}}>
           {priceInfo.total? `Payment - ${getCurrencySymbol(business!.currency?? 'USD')}${priceInfo.total.toFixed(2)}`: 'Payment'}
         </Button>
       </div>
-      <ConfirmAction
-        handleClose={() => setShow(false)}
-        show={show}
-        message='This action will clear the cart'
-        {...payInfo}
-      />
+      <ClearCart
+        handleClose={() => setClearCart(false)}
+        show={clearCart} />
     </>
   )
 }

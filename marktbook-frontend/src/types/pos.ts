@@ -34,6 +34,7 @@ export interface PriceInfo {
   total: number,
   discount: number
   tax: number
+  paymentMethod: PaymentMethod
 }
 
 export enum SearchKeys {
@@ -47,6 +48,12 @@ export enum Currency {
     Naira = 'NGN',
     Dollars = 'USD',
     Euros = 'EUR'
+}
+
+export enum PaymentMethod {
+  Cash = 'CASH',
+  Card = 'CARD',
+  BankTransfer = 'BANK_TRANSFER'
 }
 export interface ProductAttributes {
     color?: string;

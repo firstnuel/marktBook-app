@@ -1,5 +1,5 @@
 import { ZodError } from 'zod'
-import { PriceInfo, CartItemProps, Product } from '@typess/pos'
+import { PriceInfo, CartItemProps, Product, PaymentMethod } from '@typess/pos'
 import { timeDay } from 'd3-time'
 
 
@@ -24,12 +24,12 @@ export const cutName = (name: string, amount: number=0): string => {
   return name
 }
 
-export const calculatePrice = (cartItems: CartItemProps[], tx: number=10): PriceInfo => {
+export const calculatePrice = (cartItems: CartItemProps[], tx: number=10, paymentMethod: PaymentMethod ): PriceInfo => {
   let subtotal: number = 0, total: number = 0, discount: number = 0
 
   for (const { product, quantity } of cartItems) {
     subtotal += product.basePrice * quantity
-    discount += product.discountPercentage * quantity
+    discount += product.discount * quantity
     total += product.salePrice * quantity
   }
 
@@ -37,18 +37,20 @@ export const calculatePrice = (cartItems: CartItemProps[], tx: number=10): Price
     subtotal,
     discount: Math.max(0, Math.round(discount)),
     total: total + (total * (tx/100)),
-    tax: Math.max(0, Math.round(total * (tx/100)))
+    tax: Math.max(0, Math.round(total * (tx/100))),
+    paymentMethod
   }
 }
 
-export const updateDiscount = (priceinfo: PriceInfo, newDiscount: number, tx: number=10): PriceInfo => {
+export const updateDiscount = (priceinfo: PriceInfo, newDiscount: number, tx: number=10,  paymentMethod: PaymentMethod ): PriceInfo => {
   const newTotal = priceinfo.subtotal - newDiscount
 
   return {
     subtotal: priceinfo.subtotal,
     discount: newDiscount,
     total: newTotal + (newTotal * (tx/100)),
-    tax: Math.max(0, Math.round(newTotal * (tx/100)))
+    tax: Math.max(0, Math.round(newTotal * (tx/100))),
+    paymentMethod
   }
 }
 

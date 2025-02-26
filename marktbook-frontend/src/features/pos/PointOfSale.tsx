@@ -20,6 +20,7 @@ import { countByCategoryList } from '@utils/helpers'
 import { useContacts } from '@hooks/useContacts'
 import Notify from '@components/Notify'
 
+
 const PointOfSale = () => {
   const [selectValue, setSelectValue] = useState('SKU')
   const { reset, ...searchProduct } = useField('searchProduct', 'text')

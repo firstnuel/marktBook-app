@@ -14,7 +14,7 @@ import { useAuth } from '@hooks/useAuth'
 import { usePos } from '@hooks/usePos'
 import Notify from '@components/Notify'
 import { useBusiness } from '@hooks/useBusiness'
-import ConfirmAction from '@components/ConfimAction'
+import ConfirmAction from '@features/pos/ClearCart'
 
 
 interface ProductForm {

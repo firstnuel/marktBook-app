@@ -5,7 +5,6 @@ import { cutName } from '@utils/helpers'
 
 
 interface InfoProps {
-
     salesId: number | string
 }
 
