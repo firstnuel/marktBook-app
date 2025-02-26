@@ -67,6 +67,8 @@
 | **19.02.**  | 3 | Implement customers and suppliers frontend features  |
 | **21.02.**  | 4 |  Implement stocks amd low stock services, reducers and UI |
 | **23.02.**  | 3 |  Implement locations feat, reducers and UI also refactor locations controller to fix authorization issue |
-| **Total**  | **171** | |
+| **25.02.**  | 2 |  Implement payment processing feature |
+| **26.02.**  | 3 |  Extended payment processing feature, services, reducers and UI |
+| **Total**  | **176** | |
 
 
