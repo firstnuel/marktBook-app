@@ -7,6 +7,7 @@ import { useTrans } from '@hooks/useTrans'
 import Loading from '@components/Spinner'
 import { Sale } from '@typess/trans'
 import { useStocks } from '@hooks/useStocks'
+import Invoice from '@components/Invoice'
 
 interface ActionProps {
   handleClose: () => void
@@ -14,9 +15,9 @@ interface ActionProps {
 }
 
 const ProcessPayment = ({ show, handleClose }: ActionProps) => {
-  const { cartItems, priceInfo, taxRate, customer, clearCart, clearError, fetchProducts } = usePos()
+  const { cartItems, priceInfo, taxRate, customer, clearCart, fetchProducts } = usePos()
   const { fetchStocks } = useStocks()
-  const { loading, success, processSale, rmSale, sale, error, fetchSales } = useTrans()
+  const { loading, success, processSale, rmSale, sale, error, fetchSales, clearError } = useTrans()
   const { business } = useBusiness()
 
   if (!show) return null
@@ -67,9 +68,9 @@ const ProcessPayment = ({ show, handleClose }: ActionProps) => {
       <div className={styles.modal}>
         <div className={styles.header}>
           <h2>{`Confirm Payment of ${priceInfo.total} ${business?.currency}?`}</h2>
-          <button className={styles.closeButton} onClick={handleClose}>
+          {!sale && <button className={styles.closeButton} onClick={handleClose}>
             &times;
-          </button>
+          </button>}
         </div>
 
         <div className={styles.body}>
@@ -85,7 +86,8 @@ const ProcessPayment = ({ show, handleClose }: ActionProps) => {
             </p>
           )}
 
-          {sale && <p className="success">✅ Sale successfully processed.</p>}
+          {sale && <p className="success">✅ Sale successfully processed. </p>}
+          {sale && <Invoice sale={sale} hide />}
           {!customer && !loading && !sale && (
             <p className={styles.warn}>⚠️ No customer information is linked to this sale.</p>
           )}

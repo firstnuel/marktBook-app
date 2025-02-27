@@ -57,7 +57,8 @@ const transPersistConfig = {
 const stocksPersistConfig = {
   key: 'stocks',
   storage,
-  whitlist: ['stocks', 'mainOpt', 'subOpt', 'lowStocks', 'locations', 'bySupplier', 'movements']
+  whitlist: ['stocks', 'mainOpt', 'subOpt', 'lowStocks',
+    'locations', 'bySupplier', 'movements', 'sale']
 }
 
 // the base reducer combination

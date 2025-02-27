@@ -10,7 +10,7 @@ const CloseShop = () => {
       <div className="power-box" >
         <div className='power-text'>
           <div className='power-dot'></div>
-          <div className="power-word">Close Shop</div>
+          <div className="power-word">Network Up</div>
         </div>
         <IconBox src={icons.power} clName="power-bar"/>
       </div>

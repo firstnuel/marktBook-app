@@ -1,5 +1,3 @@
-
-
 type mainOption =
   | 'Sales'
   | 'Invoices'
@@ -9,6 +7,7 @@ type mainOption =
 
 type subOption =
   | 'None'
+  | 'View Invoice'
 
 export interface transState {
   sales: Sale[]
@@ -23,9 +22,6 @@ export interface transState {
   subOpt: subOption,
   sale: Sale | null,
 }
-
-
-
 
 interface Customer {
     _id: string;
@@ -69,5 +65,6 @@ export interface Sale {
     saleItems: SaleItem[];
     createdAt: string;
     id: string;
+    updateBy?: InitiatedBy
   }
 

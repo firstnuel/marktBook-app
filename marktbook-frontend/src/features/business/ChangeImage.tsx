@@ -64,7 +64,7 @@ const ChangeImage = ({ imageSrc, loading, setShow, show, usr, updateBLogo, id, u
         </div>
       </Modal.Body>
       <Modal.Footer id='cat-footer'>
-        <Button variant="Success" onClick={handleSave}>
+        <Button id='save-btn' variant="Success" onClick={handleSave}>
           {loading? 'Saving...' :'Save'}
         </Button>
       </Modal.Footer>

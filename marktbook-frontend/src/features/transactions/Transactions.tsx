@@ -4,11 +4,12 @@ import SecOption from '@components/SecOption'
 import { useTrans } from '@hooks/useTrans'
 import SalesTable from './SalesTable'
 import InvoiceTable from './InvoiceTable'
+import Invoice from '@components/Invoice'
 import './index.scss'
 
 
 const Transactions = () => {
-  const { mainOpt, setMainOpt, } = useTrans()
+  const { mainOpt, setMainOpt, sale, subOpt } = useTrans()
 
   return(
     <div className="main-container-inv">
@@ -23,7 +24,9 @@ const Transactions = () => {
         </Container>
         <Container className='sec-show'>
           {mainOpt === 'Sales' && <SalesTable />}
-          {mainOpt === 'Invoices' && <InvoiceTable />}
+          {mainOpt === 'Invoices' && subOpt === 'None' && <InvoiceTable />}
+          {mainOpt === 'Invoices' && subOpt === 'View Invoice' && sale &&
+          <Invoice sale={sale}/>}
         </Container>
       </div>
     </div>

@@ -1,12 +1,18 @@
 import Container from 'react-bootstrap/Container'
 import Notify from '@components/Notify'
 import { useTrans } from '@hooks/useTrans'
-import { Link } from 'react-router-dom'
 import { getCurrencySymbol } from '@utils/helpers'
+import { useEffect } from 'react'
 
 
 const InvoiceTable = () => {
-  const { invoices, clearError, success, error } = useTrans()
+  const { invoices, clearError, success, error, setSale, mainOpt, sale, setSubOpt } = useTrans()
+
+  useEffect(() => {
+    if( mainOpt === 'Invoices' && sale) {
+      setSubOpt('View Invoice')
+    }
+  }, [mainOpt, setSubOpt, sale])
 
 
   return (
@@ -34,7 +40,7 @@ const InvoiceTable = () => {
           <tbody>
             {invoices.length ?
               invoices.map((invoice, idx) => (
-                <tr key={idx}>
+                <tr key={idx} style={{ height: '2em' }}>
                   <td className='body-row'>{invoice.customer?.name ?? '-'}</td>
                   <td>{new Date(invoice.createdAt).toLocaleDateString()}</td>
                   <td>{invoice.status}</td>
@@ -42,9 +48,7 @@ const InvoiceTable = () => {
                   <td>{`${getCurrencySymbol(invoice.currency)} ${invoice.subtotalAmount}`}</td>
                   <td className={invoice.status === 'COMPLETED' ? 'paid' : 'unpaid'}>
                     {invoice.status === 'COMPLETED' ? 'paid' : 'unpaid'}</td>
-                  <td className='actions'>
-                    <Link to={`/invoices/${invoice.id}`} className='view-invoice'>View Invoice</Link>
-                  </td>
+                  <td className='actions' onClick={() => setSale(invoice)}>view invoice</td>
                 </tr>
               ))
               : (

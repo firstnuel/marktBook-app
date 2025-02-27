@@ -3,11 +3,12 @@ import {
   clearError,
   setMainOpt,
   setSubOpt,
+  setSale,
   processSale,
   rmSale,
 } from '@reducers/transReducer'
 import { useAppDispatch, useAppSelector } from '../store'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Sale } from '@typess/trans'
 
 
@@ -29,6 +30,15 @@ export const useTrans = () => {
   const dispatch = useAppDispatch()
 
 
+  useEffect(() => {
+    if (error || success === 'Sales data fetched successfully' ) {
+      const timer = setTimeout(() => {
+        dispatch(clearError())
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [error, dispatch, success ])
+
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch])
 
   const rmSaleHandler = useCallback(() => dispatch(rmSale()), [dispatch])
@@ -38,6 +48,8 @@ export const useTrans = () => {
   const setMainOption = useCallback((option: string) => dispatch(setMainOpt({ option })), [dispatch])
 
   const setSubOption = useCallback((option: string) => dispatch(setSubOpt({ option })), [dispatch])
+
+  const setSaleHandler = useCallback((sale: Sale) => dispatch(setSale({ sale })), [dispatch])
 
   const processSaleHandler = useCallback((data: Partial<Sale>) => dispatch(processSale(data)), [dispatch])
 
@@ -54,6 +66,7 @@ export const useTrans = () => {
     purchases,
     sale,
     rmSale: rmSaleHandler,
+    setSale: setSaleHandler,
     clearError: clearErrorHandler,
     setMainOpt: setMainOption,
     setSubOpt: setSubOption,

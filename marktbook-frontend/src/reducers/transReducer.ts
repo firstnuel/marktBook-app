@@ -47,8 +47,12 @@ const transSlice = createSlice({
     setSubOpt: (state, action) => {
       state.subOpt = action.payload.option
     },
+    setSale: (state, action) => {
+      state.sale = action.payload.sale
+    },
     rmSale: (state) => {
       state.sale = null
+      state.subOpt = 'None'
     }
   },
   extraReducers: (builder) => {
@@ -70,6 +74,8 @@ const transSlice = createSlice({
         state.loading = false
         state.error = action.error.message || 'Sales data could not be fetched, try again later'
         state.success = null
+        state.sales = []
+        state.invoices = []
       })
     // Process sale
     builder
@@ -93,5 +99,5 @@ const transSlice = createSlice({
   }
 })
 
-export const { clearError, setMainOpt, setSubOpt, rmSale } = transSlice.actions
+export const { clearError, setMainOpt, setSubOpt, rmSale, setSale } = transSlice.actions
 export default transSlice.reducer

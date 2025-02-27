@@ -169,11 +169,14 @@ img.userr-img {
 
 }
 
-
 #cat-footer > button {
     background-color: var(--secondary-color) !important;
     }
-
+#cat-footer{
+    #save-btn {
+        background-color: var(--primary-color) !important;
+    }
+}  
 
 .confim-delete {
     margin: 1em 0;

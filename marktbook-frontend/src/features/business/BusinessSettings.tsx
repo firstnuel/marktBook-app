@@ -6,8 +6,6 @@ import { useBusiness } from '@hooks/useBusiness'
 import ManageUsers from './ManageUsers'
 import EditUser from './EditUser'
 import EditNotifications from './EditNotifications'
-import InvoiceDemo from './TestInvoice'
-
 
 const Settings = () => {
   const { mainOpt, setMainOpt, subOpt } = useBusiness()
@@ -27,7 +25,6 @@ const Settings = () => {
           {mainOpt === 'Manage Accounts' && subOpt === 'None'  && <ManageUsers />}
           {mainOpt === 'Manage Accounts' && subOpt === 'Edit User'  && <EditUser />}
           {mainOpt === 'Notifications' && <EditNotifications />}
-          {mainOpt === 'Payments' && <InvoiceDemo />}
         </Container>
       </div>
     </div>

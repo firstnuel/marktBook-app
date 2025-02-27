@@ -4,3 +4,8 @@ table > tbody > tr > td.paid {
 table > tbody > tr > td.unpaid {
     color: var(--secondary-color);
 }
+
+.actions {
+    color: var(--primary-color);
+    cursor: pointer;
+}

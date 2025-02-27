@@ -1,8 +1,18 @@
+.hide {
+    display: none;
+}
 
 
 .page {
-
     padding: 2.5em;
+
+    .account, .status {
+        margin-top: 7em;
+        align-self: start;
+        height: min-content;
+        width: 60%;
+        font-size: .8em;
+    }
 
     .calculations {
         display: flex;
@@ -67,7 +77,7 @@
             }
         }
         .invinfo {
-            width: 30%;
+            width: 37%;
             height: 8em;
             display: flex;
             flex-direction: column;
