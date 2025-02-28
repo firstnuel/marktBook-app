@@ -25,12 +25,13 @@
 
         .sec-show {
             width: 80%;
-            height: 100%;
+            height: 98%;
             border-radius: 1em;
             background-color: var(--white-color);
             display: flex;
             flex-direction: column;
             gap: .5em;
+            padding-bottom: .5em;
 
             .main-content {
                 height: 93dvh;

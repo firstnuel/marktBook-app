@@ -43,8 +43,10 @@
             border-radius: 1em;
 
             img {
-                width: 80%;
+
                 height: 100%;
+                object-fit: cover;
+                object-position: top;
             }
         }
         .location, .category, .type, .attribute, .long-des{
@@ -152,8 +154,6 @@
             }
         }
     }
-
-
 
 
 

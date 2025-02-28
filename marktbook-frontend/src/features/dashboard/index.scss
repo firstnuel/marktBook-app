@@ -1,0 +1,113 @@
+div.main-con-db {
+    width: 100dvw;
+    height: 100dvh;
+    background-color: var(--light-gray);
+    padding: 0 1em;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    gap: 0.5em;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    div.mid-body {
+        width: 100%;
+        height: 55dvh;
+        display: flex;
+        gap: .5em;
+
+        .graph {
+            width: 70%;
+            height: 100%;
+            border-radius: 1em;
+            background-color: var(--white-color);
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+
+    }
+
+    div.sub-head {
+        width: 100%;
+        height: 7vh;
+        border-radius: 1em;
+        background-color: var(--white-color);
+        display: flex;
+        align-items: center;
+        padding: 0 1em;
+        justify-content: space-between;
+
+        div.actns, div.greet {
+            display: flex;
+            align-items: center;
+            gap: .5em;
+
+            strong {
+                font-size: 1.2em;
+            }
+            div.date-box {
+                display: flex !important;
+                justify-content: space-between;
+                width : 9em;
+                padding: 0 .3em;
+                border: 2px solid var(--light-gray);
+                cursor: pointer;
+
+                .date-text {
+                    margin-left: 1em;
+                }
+            }
+            .refresh {
+                cursor: pointer;
+                border: 2px solid var(--light-gray);
+                border-radius: 50%;
+                padding: .4em;
+            }
+            div.select-div{
+                width: 7em;
+                height: max-content;
+                border-radius: .5em;
+                display: flex;
+                flex-direction: column;
+                gap: .3em;
+                border: 1px solid var(--dark-gray);
+                background-color: var(--white-color);
+                cursor: pointer;
+                position: absolute;
+                top: 15%;
+                right: 5%;
+
+                .opt {
+                    padding: 0 .5em;
+                    cursor: pointer;
+                    &:hover {
+                        background-color: var(--light-gray);
+                    }
+                }
+            }
+        }
+    }
+
+    div.head {
+        width: 100% ;
+        height: 8vh ;
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+
+        div.date-time, div.menu-name {
+            height: 100% ;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap:1em;
+
+            .name {
+                font-size: 1.3em;
+                
+            }
+        }
+    }
+}

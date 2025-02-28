@@ -12,10 +12,11 @@ import Notify from '@components/Notify'
 import { useTrans } from '@hooks/useTrans'
 import { formatDate, getCurrencySymbol } from '@utils/helpers'
 import { Sale } from '@typess/trans'
-import { Link } from 'react-router-dom'
+
 
 const SalesTable = () => {
-  const { sales, fetchSales, loading, error, clearError, success } = useTrans()
+  const { sales, fetchSales, loading, error,
+    clearError, success, setSale, sale, mainOpt, setSubOpt } = useTrans()
   const [sort, setSort] = useState({ key: 'Customer Name', dir: 'asc' })
   const [search, setSearch] = useState('')
   const [filteredSales, setFilteredSales] = useState(sales)
@@ -29,6 +30,12 @@ const SalesTable = () => {
       setFilteredSales(sales)
     }
   }, [search, sales])
+
+  useEffect(() => {
+    if( mainOpt === 'Sales' && sale) {
+      setSubOpt('Details')
+    }
+  }, [mainOpt, setSubOpt, sale])
 
   const hFields = {
     'Customer Name': 'customer.name',
@@ -145,11 +152,7 @@ const SalesTable = () => {
                   <td className={sale.status === 'COMPLETED' ? 'paid' : 'unpaid'}>
                     {sale.status === 'COMPLETED' ? 'paid' : 'unpaid'}</td>
                   <td>{sale.initiatedBy.name}</td>
-                  <td>
-                    <Link to={`/sales/${sale.id}`} className="details-link">
-                      Details
-                    </Link>
-                  </td>
+                  <td className='actions' onClick={() => setSale(sale)}>Details</td>
                 </tr>
               ))
             ) : (

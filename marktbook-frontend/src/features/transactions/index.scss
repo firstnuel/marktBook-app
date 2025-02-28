@@ -5,7 +5,11 @@ table > tbody > tr > td.unpaid {
     color: var(--secondary-color);
 }
 
-.actions {
+tr > td.actions {
     color: var(--primary-color);
     cursor: pointer;
+}
+
+div.head-info > input {
+    width: 40%;
 }

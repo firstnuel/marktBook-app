@@ -10,13 +10,14 @@ import Home from '@features/home/home'
 import { useAuth } from '@hooks/useAuth'
 import { useFetchData } from '@hooks/useFetchData'
 import Settings from '@features/business/BusinessSettings'
-import { memo } from 'react'
+import { memo, ReactNode } from 'react'
 import Contacts from '@features/contacts/Contacts'
 import Transactions from '@features/transactions/Transactions'
+import Dashboard from '@features/dashboard/Dashboard'
 
 
 // Memoize ProtectedRoute to prevent unnecessary re-renders
-const ProtectedRoute = memo(({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = memo(({ children }: { children: ReactNode }) => {
   const { user } = useAuth()
 
   if (!user) {
@@ -51,6 +52,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Inventory />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
           </ProtectedRoute>
         }
       />

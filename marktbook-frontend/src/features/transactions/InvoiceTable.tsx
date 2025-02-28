@@ -2,11 +2,14 @@ import Container from 'react-bootstrap/Container'
 import Notify from '@components/Notify'
 import { useTrans } from '@hooks/useTrans'
 import { getCurrencySymbol } from '@utils/helpers'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import Form from 'react-bootstrap/Form'
 
 
 const InvoiceTable = () => {
   const { invoices, clearError, success, error, setSale, mainOpt, sale, setSubOpt } = useTrans()
+  const [filteredInvoices, setFilteredInvoices] = useState(invoices)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     if( mainOpt === 'Invoices' && sale) {
@@ -14,14 +17,32 @@ const InvoiceTable = () => {
     }
   }, [mainOpt, setSubOpt, sale])
 
+  useEffect(() => {
+    if (search.length > 2) {
+      setFilteredInvoices(
+        invoices.filter((invoice) =>
+          invoice.customer?.name.toLowerCase().includes(search.toLowerCase())
+        )
+      )
+    } else {
+      setFilteredInvoices(invoices)
+    }
+  }, [search, invoices])
+
 
   return (
     <Container>
       <Notify clearErrFn={clearError} success={success} error={error} />
       <div className="head-info">
-        <div className="name-desc">
+        <div className="name-desc inc">
           <div className="name">All Invoices</div>
         </div>
+        <Form.Control
+          type="text"
+          placeholder="Search customer"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
       <Container className='table-container'>
@@ -38,8 +59,8 @@ const InvoiceTable = () => {
             </tr>
           </thead>
           <tbody>
-            {invoices.length ?
-              invoices.map((invoice, idx) => (
+            {filteredInvoices.length ?
+              filteredInvoices.map((invoice, idx) => (
                 <tr key={idx} style={{ height: '2em' }}>
                   <td className='body-row'>{invoice.customer?.name ?? '-'}</td>
                   <td>{new Date(invoice.createdAt).toLocaleDateString()}</td>
