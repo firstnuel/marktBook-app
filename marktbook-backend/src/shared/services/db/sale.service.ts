@@ -5,8 +5,12 @@ import { ObjectId } from 'mongodb'
 
 class SaleService {
   // Create a new sale
-  public async newSale(saleData: ISaleDocument): Promise<ISaleDocument> {
-    return await SaleModel.create(saleData)
+  public async newSale(saleData: ISaleDocument): Promise<ISaleDocument | null> {
+    const sale = await SaleModel.create(saleData)
+    return await SaleModel.findOne({ _id: sale._id })
+      .populate('customer', ['name', 'businessName', 'address'])
+      .populate('initiatedBy', 'name')
+      .exec()
   }
 
   // Fetch all sales for a business

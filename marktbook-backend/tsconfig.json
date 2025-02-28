@@ -41,6 +41,6 @@
         "@root/*": ["src/*"]
       },
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "src/features/dashboard"],
     "exclude": ["node_modules", "build"]
   }

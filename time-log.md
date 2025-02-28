@@ -69,6 +69,7 @@
 | **23.02.**  | 3 |  Implement locations feat, reducers and UI also refactor locations controller to fix authorization issue |
 | **25.02.**  | 2 |  Implement payment processing feature |
 | **26.02.**  | 3 |  Extended payment processing feature, services, reducers and UI |
-| **Total**  | **176** | |
+| **28.02.**  | 3 |  Started implemeting dashboard UI |
+| **Total**  | **179** | |
 
 

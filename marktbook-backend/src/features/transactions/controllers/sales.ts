@@ -60,7 +60,10 @@ class Sale extends Product {
       const savedData = await saleService.newSale(salesData)
 
       // Remove sensitive fields before sending response
-      const resData = omit(savedData.toJSON(), ['businessId', 'customerId', 'initiatedBy', 'updatedAt'])
+      if (!savedData) {
+        return next(new BadRequestError('Failed to save sale data'))
+      }
+      const resData = omit(savedData.toJSON(), ['businessId', 'updatedAt'])
 
       // Send success response
       res.status(HTTP_STATUS.CREATED).json({
