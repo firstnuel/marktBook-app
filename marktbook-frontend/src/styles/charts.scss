@@ -1,0 +1,105 @@
+.graph {
+    width: 70%;
+    height: 100%;
+    border-radius: 1em;
+    background-color: var(--white-color);
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: .5em;
+
+    .bottom {
+        height: 35%;
+        width: 100%;
+        display: flex;
+        gap: .8em;
+
+        div.b-childs {
+            width: calc(100% / 3);
+            height: 100%;
+            display: flex;
+            border: 3px solid var(--light-gray);
+            border-radius: 1em;
+            flex-direction: column;
+            gap: .3em;
+            padding: .5em;
+            .tttl {
+                font-size: .8em;
+                font-weight: 500;
+                color: var(--dark-gray);
+            }
+
+            .amt-cur {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .amt {
+                    font-size: 1.5em;
+                    font-weight: 500;
+                    display: flex;
+                    gap: .3em;
+                    align-items: center;
+                    span {
+                        color: var(--tertiary-color);
+                    }
+                }
+                .cur {
+                    font-weight: 500;
+                    color: var(--dark-gray);
+                }
+            }
+        }
+
+    }
+
+    .g-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .5em;
+        
+        .select-gh {
+            width: fit-content;
+            height: max-content;
+            display: flex;
+            border: 2px solid var(--light-gray);
+            border-radius: 2em;
+            gap: .5em;
+            padding: .8em;
+            
+            .icon {
+                width: 1.5em;
+                height: 1.5em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background-color: var(--light-gray);
+
+                img {
+                    width: 1em;
+                    height: 1em;
+                }
+            }
+        }
+
+        .g-ttl-point {
+            height: 12%;
+            display: flex;
+            align-items: center;
+            gap: .5em;
+            padding: 0 1em;
+            .point {
+                height: .5em;
+                width: .5em;
+                border-radius: 50%;
+                background-color: var(--primary-color);
+            }
+            .g-ttl {
+                font-size: 1.2em;
+                font-weight: 400;
+            }
+        }
+    }
+}

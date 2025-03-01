@@ -8,6 +8,11 @@ import ShowBox from '@components/ShowBox'
 import FavProductSection from './FavProductSec'
 import './index.scss'
 import Charts from './Charts'
+import Summary from './Summary'
+import LowStock from './LowStock'
+import ActiveUsers from './ActiveUsers'
+import RecentSale from './RecentSales'
+import TopCategories from './TopCategories'
 
 const Dashboard = () => {
 
@@ -75,8 +80,15 @@ const Dashboard = () => {
         <Charts />
         <FavProductSection />
       </div>
-
-
+      <div className="summaries">
+        <LowStock />
+        <Summary />
+        <ActiveUsers />
+      </div>
+      <div className="recent-activity">
+        <RecentSale />
+        <TopCategories />
+      </div>
     </div>
   )
 }

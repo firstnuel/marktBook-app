@@ -1,0 +1,46 @@
+#s-div {
+    width: 40%;
+    height: 100%;
+    border-radius: 1em;
+    padding: .5em;
+    background-color: var(--white-color);
+    margin-top: .5em;
+
+    .body {
+        width: 100%;
+        height: 92%;
+        display: flex;
+        gap: .5em;
+        padding: .5em 1em;
+        justify-content: space-between;
+        align-items: center;
+
+        .sales {
+            height: 100%;
+            width: 50%;
+            padding: 1em;
+            border-left: 3px solid var(--light-gray);
+            gap: 1em;
+            display: flex;
+            flex-direction: column;
+
+            .sale-amt {
+                display: flex;
+                justify-content: space-between;
+                gap: .3em;
+                align-items: center;
+                flex-direction: column;
+                border-bottom: 1px solid var(--light-gray);
+                
+                .name {
+                    font-size: 1.2em;
+                    font-weight: 500;
+                    color: var(--primary-color);
+                }
+                .amt {
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+}
