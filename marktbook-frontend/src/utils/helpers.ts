@@ -123,3 +123,41 @@ export const handleFullScreen = () => {
 export const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString()
 }
+
+
+export const formattedNumber = (numArray: number[], secondNumArray?: number[]) => {
+  let sum = numArray.reduce((acc, val) => acc + val, 0)
+  if (secondNumArray) sum = sum - secondNumArray.reduce((acc, val) => acc + val, 0)
+
+  return sum.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
+}
+
+export const sumNumber = (numArray: number[], secondNumArray?: number[]) => {
+  let sum = numArray.reduce((acc, val) => acc + val, 0)
+  if (secondNumArray) sum = sum - secondNumArray.reduce((acc, val) => acc + val, 0)
+
+  return sum.toString()
+}
+
+
+export const percentageOf = (numArray: number[], secondNumArray: number[]): number => {
+  const sum1 = numArray.reduce((acc, val) => acc + val, 0)
+  const sum2 = secondNumArray.reduce((acc, val) => acc + val, 0)
+
+  if (sum1 === 0 && sum2 > 0) {
+    return -100
+  }
+
+  if (sum2 === 0 && sum1 > 0) {
+    return 100
+  }
+
+  if (sum2 === 0) {
+    return 0  // return 0 if both are 0, or no valid percentage can be calculated
+  }
+
+  return (sum1 / sum2) * 100
+}

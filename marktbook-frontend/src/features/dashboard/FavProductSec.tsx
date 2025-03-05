@@ -1,8 +1,12 @@
 import '@styles/fav-prd.scss'
 import testImage from '@assets/images/file.png'
+import { Product } from '@typess/pos'
 
+interface PdProps {
+  pddata: { product: Product; amountSold: number; }[] | null;
+}
 
-const FavProductSection = () => (
+const FavProductSection = ({ pddata }: PdProps) => (
 
 
   <div className="fav-prd">
@@ -19,23 +23,23 @@ const FavProductSection = () => (
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-            <div className="pd-img">
-              <img src={testImage} alt="" />
-            </div>
-          </td>
-          <td>
-            <div className="pd-name-av">
-              <div className="pd-name">Nike Air Max</div>
-              <div className="av up">available</div>
-            </div>
-          </td>
-          <td>
-            <div className='amt'>183</div>
-            <div className='suffix'>Sales</div>
-          </td>
-        </tr>
+        {pddata ?
+          pddata.map(({ product, amountSold }, idx) =>
+            (<tr key={idx}>
+              <td>
+                <div className="pd-img">
+                  <img src={product.productImage ?? testImage} alt="" />
+                </div>
+              </td>
+              <td>
+                <div className="name-av">{product.productName}</div>
+              </td>
+              <td>
+                <div className='amt'>{amountSold}</div>
+                <div className='suffix'>Sales</div>
+              </td>
+            </tr>))
+          : <tr><td colSpan={3}>No data available</td></tr>}
       </tbody>
     </table>
   </div>

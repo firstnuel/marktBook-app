@@ -4,7 +4,9 @@ import { useBusiness } from '@hooks/useBusiness'
 import { usePos } from '@hooks/usePos'
 import { useContacts } from '@hooks/useContacts'
 import { useStocks } from '@hooks/useStocks'
-import { useTrans } from './useTrans'
+import { useTrans } from '@hooks/useTrans'
+import { useDashboard } from '@hooks/useDashboard'
+
 
 export const useFetchData = () => {
   const { user, fetchUser, userToken } = useAuth()
@@ -13,6 +15,7 @@ export const useFetchData = () => {
   const { fetchProducts, products, setTaxRate } = usePos()
   const { fetchCustomers, fetchSuppliers, customers, suppliers } = useContacts()
   const { fetchLowStock, fetchStocks, stocks, lowStocks, fetchLocations, locations } = useStocks()
+  const {  period, fetchSummary } = useDashboard()
 
   useEffect(() => {
     if (userToken && !user) fetchUser()
@@ -23,6 +26,10 @@ export const useFetchData = () => {
       fetchBusiness(user.associatedBusinessesId)
     }
   }, [user?.associatedBusinessesId, business, fetchBusiness])
+
+  useEffect(() => {
+    if (business?._id) fetchSummary(business._id, period)
+  }, [business?._id, fetchSummary, period])
 
   useEffect(() => {
     if (business?._id && !products.length) fetchProducts()

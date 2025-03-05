@@ -19,6 +19,7 @@ import businessReducer from '@reducers/businessReducer'
 import contactsReducer from '@reducers/contactsReducer'
 import stocksReducer from '@reducers/stocksReducer'
 import transReducer from '@reducers/transReducer'
+import dashReducer from '@reducers/dashReducer'
 
 // Add RESET_ALL action type
 export const RESET_ALL = 'RESET_ALL'
@@ -70,6 +71,7 @@ const combinedReducer = combineReducers({
   'contacts': persistReducer(contactsPersistConfig, contactsReducer),
   'stocks': persistReducer(stocksPersistConfig, stocksReducer),
   'trans': persistReducer(transPersistConfig, transReducer),
+  'dash': persistReducer({ key: 'dash', storage, whitelist: ['data', 'period'] }, dashReducer)
 })
 
 // root reducer with reset capability

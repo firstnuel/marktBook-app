@@ -1,5 +1,6 @@
 import express, { Router } from 'express'
 import { sale } from '@transactions/controllers/sales'
+import { summary } from '@transactions/controllers/summaries'
 import { authMiddleware } from '@global/helpers/auth-middleware'
 
 
@@ -18,6 +19,10 @@ class SaleRoutes {
     this.router.get('/sales', authMiddleware.checkAuthentication, sale.read)
     this.router.get('/sales/:id', authMiddleware.checkAuthentication, sale.fetch)
     this.router.patch('/sales/:id', authMiddleware.checkAuthentication, sale.updateStatus)
+    this.router.get('/sales/summary/:businessId', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateBusiness,
+      summary.read)
 
     return this.router
   }

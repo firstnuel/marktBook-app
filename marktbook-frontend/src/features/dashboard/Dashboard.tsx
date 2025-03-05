@@ -13,15 +13,22 @@ import LowStock from './LowStock'
 import ActiveUsers from './ActiveUsers'
 import RecentSale from './RecentSales'
 import TopCategories from './TopCategories'
+import { useBusiness } from '@hooks/useBusiness'
+import { useAuth } from '@hooks/useAuth'
+import { useDashboard } from '@hooks/useDashboard'
+import { formattedNumber, percentageOf, sumNumber } from '@utils/helpers'
 
 const Dashboard = () => {
+  const { business } = useBusiness()
+  const { user } = useAuth()
+  const { fetchSummary, period, data } = useDashboard()
 
   return(
     <div className='main-con-db'>
       <div className='head'>
         <div className="menu-name">
           <MenuBar />
-          <div className='name'> LoveTech Inc </div>
+          <div className='name'> {business?.businessName ?? 'Dashboard'} </div>
         </div>
         <div className="date-time">
           <DateBox />
@@ -31,54 +38,60 @@ const Dashboard = () => {
       </div>
       <div className="sub-head">
         <div className="greet">
-          <strong>👋 Hello Emmanuel,</strong>
+          <strong>{`👋 Hello ${user?.username ?? 'User'},`}</strong>
           <span> here’s what’s happening in your store today.</span>
         </div>
         <div className="actns">
           <PeriodBox />
-          <IconBox src={icons.refresh} clName='refresh'/>
+          <IconBox src={icons.refresh} clName='refresh'
+            onClick={() => business?._id && fetchSummary(business._id, period)}
+          />
         </div>
       </div>
       <div className="show-box-div">
         <ShowBox
           tittleIcon={icons.user}
           title='Total Sales Amount'
-          amount='12,650.00'
-          currency='USD'
-          trendAmt='1,543.30'
-          trendPct={10}
-          up
+          amount={formattedNumber(data?.totalSales ?? []) as string}
+          currency={business?.currency?? 'USD'}
+          trendAmt={formattedNumber(data?.totalSales ?? [], data?.lastTotalSales ?? []) as string}
+          trendPct={percentageOf(data?.totalSales ?? [], data?.lastTotalSales ?? [])}
+          up={percentageOf(data?.totalSales ?? [], data?.lastTotalSales ?? []) > 0}
         />
         <ShowBox
           tittleIcon={icons.user}
           title='Total Product Sales'
-          amount='1,250'
+          amount={sumNumber(data?.totalProductSales ?? []) }
           unit='Items'
-          trendAmt='1,543.30'
-          trendPct={10}
-          up
+          trendAmt={sumNumber(data?.totalProductSales ?? [], data?.lastTotalPdSales ?? [])}
+          trendPct={percentageOf(data?.totalProductSales ?? [], data?.lastTotalPdSales ?? [])}
+          up={percentageOf(data?.totalProductSales ?? [], data?.lastTotalPdSales ?? []) > 0}
         />
         <ShowBox
           tittleIcon={icons.user}
           title='Total Customers'
-          amount='400'
+          amount={sumNumber(data?.totalCustomers ?? []) }
           unit='Persons'
-          trendAmt='5'
-          trendPct={0.02}
+          trendAmt={sumNumber(data?.totalCustomers ?? [], data?.lastTotalCustomers ?? [])}
+          trendPct={percentageOf(data?.totalCustomers ?? [], data?.lastTotalCustomers ?? [])}
+          up={percentageOf(data?.totalCustomers ?? [], data?.lastTotalPdSales ?? []) > 0}
         />
         <ShowBox
           tittleIcon={icons.user}
-          title='Total Sales Amount'
-          amount='12,650.00'
-          currency='USD'
-          trendAmt='3,792'
-          trendPct={0.3}
-          up
+          title='Net Profit'
+          amount={formattedNumber(data?.netProfit ?? []) as string}
+          currency={business?.currency?? 'USD'}
+          trendAmt={formattedNumber(data?.netProfit ?? [], data?.lastNetProfit ?? []) as string}
+          trendPct={percentageOf(data?.netProfit ?? [], data?.lastNetProfit ?? [])}
+          up={percentageOf(data?.netProfit ?? [], data?.lastNetProfit ?? []) > 0}
         />
       </div>
       <div className="mid-body">
-        <Charts />
-        <FavProductSection />
+        <Charts period={period.slice(0, period.length - 2)}
+          currentData={data?.totalProductSales ?? []}
+          lastData={data?.lastTotalPdSales ?? []}
+        />
+        <FavProductSection pddata={data?.highestSellingProduct?? null} />
       </div>
       <div className="summaries">
         <LowStock />

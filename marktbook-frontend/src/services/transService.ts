@@ -2,6 +2,7 @@
 import axios, { AxiosInstance } from 'axios'
 import { Token } from './authService'
 import { Sale } from '@typess/trans'
+import { QueryPeriod } from '@typess/dashboard'
 
 
 class TransService {
@@ -49,6 +50,16 @@ class TransService {
       return response.data
     } catch (error) {
       this.handleAxiosError(error, 'An error occurred while processing sales')
+    }
+  }
+
+
+  public async fetchSummary(businessId: string, period: QueryPeriod): Promise<any> {
+    try {
+      const response = await this.axios.get(`/sales/summary/${businessId}`, { params: { period } })
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while fetching summary data.')
     }
   }
 

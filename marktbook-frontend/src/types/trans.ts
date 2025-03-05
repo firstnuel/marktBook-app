@@ -67,4 +67,3 @@ export interface Sale {
     id: string;
     updateBy?: InitiatedBy
   }
-
