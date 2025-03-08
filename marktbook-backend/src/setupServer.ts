@@ -13,7 +13,7 @@ import { CustomError, IErrorResponse } from '@global/helpers/error-handlers'
 
 const log: Logger = config.createLogger('server')
 
-const PORT = 5001
+const PORT = config.PORT || 8080
 
 export class MarktBookServer {
   private readonly app: Application
