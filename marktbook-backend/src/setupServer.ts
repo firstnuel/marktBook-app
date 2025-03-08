@@ -94,7 +94,5 @@ export class MarktBookServer {
       log.info(`Server running on ${PORT}`)
     })
   }
-
-
 }
 
