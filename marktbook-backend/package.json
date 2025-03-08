@@ -6,6 +6,7 @@
     "test": "jest ",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "test:ci": "jest --forceExit --detectOpenHandles --maxWorkers=50%",
+    "start": "node -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "lint": "eslint 'src/**/*.ts' --fix",
     "lint:check": "eslint 'src/**/*.ts'",
     "seeds": "npx ts-node src/seeds.ts"
