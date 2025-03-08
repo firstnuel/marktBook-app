@@ -32,9 +32,21 @@ jobs:
       - name: Install backend dependencies
         working-directory: marktbook-backend
         run: npm install
+
+      - name: Run backend style check
+        working-directory: marktbook-backend
+        run: npm run lint
       
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+      - name: Run backend tests
+        continue-on-error: true
+        working-directory: marktbook-backend
+        env:
+          JWT_SECRET: ${{ env.JWT_SECRET }}
+        run: npm run test:ci
+
+      # Zip only the backend files (marktbook-backend directory)
+      - name: Zip backend for deployment
+        run: zip -r release.zip marktbook-backend/*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -58,9 +70,9 @@ jobs:
         with:
           name: node-app
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-      
+      - name: Unzip backend artifact
+        run: unzip release.zip -d backend
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -74,5 +86,4 @@ jobs:
         with:
           app-name: 'marktbook'
           slot-name: 'Production'
-          package: .
-          
+          package: ./backend  # Path to the extracted backend files

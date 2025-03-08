@@ -31,15 +31,4 @@ jobs:
         working-directory: marktbook-backend
         run: npm install
 
-      - name: Run backend style check
-        working-directory: marktbook-backend
-        run: npm run lint
-      
-
-      - name: Run backend tests
-        continue-on-error: true
-        working-directory: marktbook-backend
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: npm run test:ci
 
