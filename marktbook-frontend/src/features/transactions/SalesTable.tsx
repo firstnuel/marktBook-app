@@ -39,7 +39,7 @@ const SalesTable = () => {
 
   const hFields = {
     'Customer Name': 'customer.name',
-    Date: 'date',
+    'Date & Time': 'date & time',
     Status: 'status',
     Subtotal: 'subtotal',
     Total: 'total',
@@ -87,8 +87,8 @@ const SalesTable = () => {
         sale.customer?.name || '-',
         formatDate(sale.createdAt),
         sale.status,
-        getCurrencySymbol('USD') + sale.subtotalAmount.toFixed(2),
-        getCurrencySymbol('USD') + sale.totalPrice.toFixed(2),
+        getCurrencySymbol(sale.currency) + sale.subtotalAmount.toFixed(2),
+        getCurrencySymbol(sale.currency) + sale.totalPrice.toFixed(2),
         sale.status === 'COMPLETED' ? 'paid' : 'unpaid',
         sale.initiatedBy.name,
         '',

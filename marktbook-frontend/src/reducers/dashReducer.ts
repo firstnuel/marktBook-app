@@ -4,7 +4,7 @@ import { transService } from '@services/transService'
 
 const initialState: dashboardState = {
   data:  null,
-  period: 'monthly',
+  period: 'yearly',
   success: null,
   error: null,
   loading: false,

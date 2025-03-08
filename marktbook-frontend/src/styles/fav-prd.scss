@@ -123,11 +123,15 @@
     }
 }
 
-.apoint {
+.uinactive, .uactive {
     height: .5em;
     width: .5em;
     border-radius: 50%;
     background-color: var(--secondary-color);
+}
+
+.uactive {
+    background-color: var(--tertiary-color);
 }
 
 .name-av {

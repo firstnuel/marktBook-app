@@ -1,29 +1,12 @@
 import { PieChart, Pie,  ResponsiveContainer, } from 'recharts'
 import '@styles/summary.scss'
-
-const productStock01 = [
-  { name: 'Laptop', stock: 400 },
-  { name: 'Smartphone', stock: 300 },
-  { name: 'Tablet', stock: 300 },
-  { name: 'Smartwatch', stock: 200 },
-  { name: 'Headphones', stock: 278 },
-  { name: 'Camera', stock: 189 }
-]
-
-const productStock02 = [
-  { name: 'Laptop', stock: 2400 },
-  { name: 'Smartphone', stock: 4567 },
-  { name: 'Tablet', stock: 1398 },
-  { name: 'Smartwatch', stock: 9800 },
-  { name: 'Headphones', stock: 3908 },
-  { name: 'Camera', stock: 4800 }
-]
-
-
-
+import { usePos } from '@hooks/usePos'
+import { useStocks } from '@hooks/useStocks'
 
 
 const Summary = () => {
+  const { products } = usePos()
+  const { stocks } = useStocks()
 
   return(
     <div className="s-div">
@@ -34,23 +17,19 @@ const Summary = () => {
       <div className="body">
         <ResponsiveContainer width="100%" height={300}>
           <PieChart width={730} height={250}>
-            <Pie data={productStock01} dataKey="stock" nameKey="name" cx="50%" cy="50%" outerRadius={50} fill="#2D71F8" />
-            <Pie data={productStock02} dataKey="stock" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#82ca9d" label />
+            <Pie data={products} dataKey="stock[unitsAvailable]" nameKey="productName" cx="50%" cy="50%" outerRadius={50} fill="#2D71F8" />
+            <Pie data={stocks} dataKey="unitsAvailable" nameKey="product[name]" cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#82ca9d" label />
           </PieChart>
         </ResponsiveContainer>
       </div>
       <div className="summaries">
         <div className="totls">
           <div className='name'>Total Products</div>
-          <div className='amt'>90</div>
+          <div className='amt'>{products.length}</div>
         </div>
         <div className="totls">
-          <div className='name s'>Total Stock</div>
-          <div className='amt'>80</div>
-        </div>
-        <div className="totls">
-          <div className='name c'>Total Category</div>
-          <div className='amt'>90</div>
+          <div className='name s'>Total Products in Stock</div>
+          <div className='amt'>{stocks.length}</div>
         </div>
       </div>
     </div>

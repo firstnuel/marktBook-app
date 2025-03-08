@@ -111,7 +111,7 @@ const Categories = () => {
           </div>
         </Modal.Body>
         <Modal.Footer id='cat-footer'>
-          <Button variant="Success" onClick={handleSubmit}>
+          <Button id='save-btn' onClick={handleSubmit}>
             Create
           </Button>
         </Modal.Footer>

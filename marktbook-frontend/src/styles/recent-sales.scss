@@ -1,9 +1,18 @@
 #sales-dv {
     width: 60%;
     padding: .5em;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    &::-webkit-scrollbar {
+        width: .5em;
+    }
+
 
     .pd-head {
         margin: .5em 0;
+        position: sticky;
+        top: 0;
+        background-color: var(--white-color);
     }
 
 
@@ -46,6 +55,10 @@
                 div.up {
                     background-color: var(--light-green);
                     color: var(--tertiary-color);
+                }
+                div.down {
+                    background-color: var(--secondary-red);
+                    color: var(--secondary-color);
                 }
             }
 

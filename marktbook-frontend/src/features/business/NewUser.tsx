@@ -146,7 +146,7 @@ const NewUser = ({ show, setShow }: NewUserProps) => {
         </Container>
       </Modal.Body>
       <Modal.Footer id='cat-footer'>
-        <Button variant="Success" onClick={handleCreate}>
+        <Button id='save-btn'onClick={handleCreate}>
           {loading? 'Loading...' :'Create User'}
         </Button>
       </Modal.Footer>

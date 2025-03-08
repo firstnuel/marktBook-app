@@ -131,7 +131,7 @@ const NewCustomer = ({ show, setShow }: NewCustomerProps) => {
         </Container>
       </Modal.Body>
       <Modal.Footer id="cat-footer">
-        <Button variant="success" onClick={handleCreate}>
+        <Button id='save-btn' onClick={handleCreate}>
           {loading ? 'Loading...' : 'Create Customer'}
         </Button>
       </Modal.Footer>

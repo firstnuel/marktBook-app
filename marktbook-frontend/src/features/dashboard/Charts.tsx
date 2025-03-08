@@ -1,15 +1,16 @@
 import { LineChart, Line, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import '@styles/charts.scss'
-import IconBox from '@components/IconBox'
-import icons from '@assets/icons'
+import { percentageOf, sumNumber } from '@utils/helpers'
+
 
 interface ChartProps {
   period: string;
   currentData: number[];
   lastData: number[];
+  currency?: string
 }
 
-const SalesChart = ({ period, currentData, lastData }: ChartProps) => {
+const SalesChart = ({ period, currentData, lastData, currency }: ChartProps) => {
   // Generating data for the chart with dynamic keys based on period
   const data = currentData.map((current, index) => ({
     name: `Period ${index + 1}`,
@@ -25,8 +26,7 @@ const SalesChart = ({ period, currentData, lastData }: ChartProps) => {
           <div className="g-ttl">Report Graph</div>
         </div>
         <div className="select-gh">
-          <div className="select-name">Total Amount Sales</div>
-          <IconBox src={icons.arrowUp} clName="icon" />
+          <div className="select-name">Total Product Sales</div>
         </div>
       </div>
 
@@ -45,24 +45,24 @@ const SalesChart = ({ period, currentData, lastData }: ChartProps) => {
         <div className="b-childs">
           <div className="tttl">Amount</div>
           <div className="amt-cur">
-            <div className="amt">12,6500.00</div>
-            <div className="cur">USD</div>
+            <div className="amt">{sumNumber(currentData?? [])}</div>
+            <div className="cur">{currency?? 'USD'}</div>
           </div>
         </div>
         <div className="b-childs">
           <div className="tttl">Growth</div>
           <div className="amt-cur">
             <div className="amt">
-              <span>&#43;</span>1,543.30
+              <span>&#43;</span>{sumNumber(currentData?? [], lastData?? [])}
             </div>
-            <div className="cur">USD</div>
+            <div className="cur">{currency?? 'USD'}</div>
           </div>
         </div>
         <div className="b-childs">
           <div className="tttl">Growth</div>
           <div className="amt-cur">
             <div className="amt">
-              <span>&#8593;</span>12.2
+              <span>&#8593;</span>{percentageOf(currentData?? [], lastData?? [])}
             </div>{' '}
             {/* &#8595; */}
             <div className="cur">Percent(%)</div>

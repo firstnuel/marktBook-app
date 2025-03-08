@@ -90,6 +90,7 @@ const Dashboard = () => {
         <Charts period={period.slice(0, period.length - 2)}
           currentData={data?.totalProductSales ?? []}
           lastData={data?.lastTotalPdSales ?? []}
+          currency={business?.currency?? 'USD'}
         />
         <FavProductSection pddata={data?.highestSellingProduct?? null} />
       </div>
@@ -100,7 +101,7 @@ const Dashboard = () => {
       </div>
       <div className="recent-activity">
         <RecentSale />
-        <TopCategories />
+        <TopCategories catData={data?.higestSellingCategories ?? []} />
       </div>
     </div>
   )
