@@ -4,10 +4,10 @@
   "main": "app.js",
   "scripts": {
     "test": "jest ",
-   "build": "ts-patch install -s && tsc",
+    "build": "ts-patch install -s && tsc",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "test:ci": "jest --forceExit --detectOpenHandles --maxWorkers=50%",
-    "start": "node -r tsconfig-paths/register dist/app.js | ./node_modules/.bin/bunyan",
+    "start": "node -r tsconfig-paths/register dist/app.js",
     "lint": "eslint 'src/**/*.ts' --fix",
     "lint:check": "eslint 'src/**/*.ts'",
     "seeds": "npx ts-node src/seeds.ts"
