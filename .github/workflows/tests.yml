@@ -34,6 +34,7 @@ jobs:
       - name: Run backend style check
         working-directory: marktbook-backend
         run: npm run lint
+      
 
       - name: Run backend tests
         continue-on-error: true
