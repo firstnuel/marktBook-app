@@ -20,6 +20,7 @@ class Config {
   public SENDGRID_API_KEY: string | undefined
   public SENDGRID_SENDER_EMAIL: string | undefined
   public API_URL: string | undefined
+  public PORT: string | undefined
 
 
   constructor() {
@@ -38,6 +39,7 @@ class Config {
     this.SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
     this.SENDGRID_SENDER_EMAIL = process.env.SENDGRID_SENDER_EMAIL
     this.API_URL = process.env.API_URL
+    this.PORT = process.env.PORT
   }
 
   public createLogger(name: string): bunyan {
