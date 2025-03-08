@@ -4,9 +4,10 @@
   "main": "app.js",
   "scripts": {
     "test": "jest ",
+    "build": "tsc",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "test:ci": "jest --forceExit --detectOpenHandles --maxWorkers=50%",
-    "start": "node -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
+    "start": "ts-node --transpile-only -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "lint": "eslint 'src/**/*.ts' --fix",
     "lint:check": "eslint 'src/**/*.ts'",
     "seeds": "npx ts-node src/seeds.ts"
@@ -75,6 +76,7 @@
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.2",
     "@types/nodemailer": "^6.4.17",
+    "@types/redis-info": "^3.0.3",
     "@types/sanitize-html": "^2.13.0",
     "@types/supertest": "^6.0.2",
     "@types/yamljs": "^0.2.34",
