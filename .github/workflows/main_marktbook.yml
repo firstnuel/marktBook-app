@@ -5,6 +5,7 @@ on:
           - main
         types: [opened, synchronize]
     workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,9 +26,7 @@ jobs:
               ${{ runner.os }}-node-backend-
       - name: Install backend dependencies
         working-directory: marktbook-backend
-        run: |    
-          rm -rf node_modules
-          npm install
+        run: npm install
 
       - name: Run backend style check
         working-directory: marktbook-backend
