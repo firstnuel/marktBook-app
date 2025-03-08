@@ -25,16 +25,14 @@ class BusinessCache extends Basecache {
       email,
       admins,
       businessLogo,
+      currency,
       uId,
       businessCategory,
       businessAddress,
       businessType,
       businessAccount,
-      businessBio,
+      phoneNumber,
       notifications,
-      social,
-      bgImageVersion,
-      bgImageId,
     } = createdBusiness
       
     const firstList: string[] = [
@@ -42,6 +40,7 @@ class BusinessCache extends Basecache {
       'businessName', businessName || '',
       'email', email || '',
       'uId', uId || '',
+      'currency', currency || 'USD', 
     ]
       
     const secondList: string[] = [
@@ -51,16 +50,13 @@ class BusinessCache extends Basecache {
       'businessAddress', businessAddress || '',
       'businessType', JSON.stringify(businessType || ''),
       'businessAccount', JSON.stringify(businessAccount || {}),
-      'businessBio', businessBio || '',
+      'phoneNumber', phoneNumber || '',
     ]
       
     const thirdList: string[] = [
       'admins', JSON.stringify(admins || []),
       'businessLogo', businessLogo || '',
       'notifications', JSON.stringify(notifications || {}),
-      'social', JSON.stringify(social || {}),
-      'bgImageVersion', bgImageVersion || '',
-      'bgImageId', bgImageId || '',
       'createdAt', createdAt.toISOString(),
     ]
         
@@ -106,13 +102,10 @@ class BusinessCache extends Basecache {
         businessAddress: cacheData['businessAddress'] || undefined,
         businessType: JSON.parse(cacheData['businessType']),
         businessAccount: JSON.parse(cacheData['businessAccount']),
-        businessBio: cacheData['businessBio'] || undefined,
+        phoneNumber: cacheData['phoneNumber'] || undefined,
         admins: JSON.parse(cacheData['admins']),
         businessLogo: cacheData['businessLogo'] || undefined,
         notifications: JSON.parse(cacheData['notifications']),
-        social: JSON.parse(cacheData['social']),
-        bgImageVersion: cacheData['bgImageVersion'],
-        bgImageId: cacheData['bgImageId'],
         createdAt: new Date(cacheData['createdAt']),
       } as IBusinessDocument
     
@@ -122,8 +115,6 @@ class BusinessCache extends Basecache {
       throw new ServerError('Error retrieving business data from cache, try again')
     }
   }
-    
-
 }
 
 

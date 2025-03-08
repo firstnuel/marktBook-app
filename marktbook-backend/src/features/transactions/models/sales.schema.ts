@@ -34,9 +34,9 @@ const saleItemSchema = new Schema(
 // Main sales schema
 const salesSchema: Schema<ISaleDocument> = new Schema(
   {
-    customerId: {
+    customer: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Customer',
     },
     businessId: {
       type: Schema.Types.ObjectId,
@@ -76,7 +76,6 @@ const salesSchema: Schema<ISaleDocument> = new Schema(
     },
     totalPrice: { type: Number, required: true },
     paymentRef: { type: String },
-    customerName: { type: String },
     discount: { type: discountSchema },
     saleItems: { type: [saleItemSchema], required: true },
   },

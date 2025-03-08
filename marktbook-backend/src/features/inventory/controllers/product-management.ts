@@ -39,15 +39,13 @@ class ProductManagement extends Product {
    */
   public async fetch(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
-      // validate user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
-
+      const existingUser = req.user!
       const { productId } = req.params
 
       // fetch product
       const product = await productService.getById(`${productId}`, `${existingUser?.associatedBusinessesId}`)
       const filterdProduct = omit(product?.toJSON(), ['createdBy', 'updatedBy', '_v'])
-      const message = product? 'Products data fetched successfully' : 'No product found'
+      const message = product? 'Product data fetched successfully' : 'No product found'
       res.status(HTTP_STATUS.OK).json({ message, data: filterdProduct })
 
 
@@ -71,9 +69,7 @@ class ProductManagement extends Product {
       this.validateInput(productSchema, req.body)
 
       const { productId } = req.params
-
-      // validate requesting user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
 
       // Check if product exist
       const product = await productService.getById(`${productId}`, `${existingUser.associatedBusinessesId}`)
@@ -81,12 +77,7 @@ class ProductManagement extends Product {
         return next(new NotFoundError('Product not found'))
       }
 
-      // Extract and sanitize the input data
       const body = Utils.sanitizeInput(req.body)
-
-      // validate business
-      await this.validateBusiness(body.businessId as string, existingUser)
-
       const filterKeys = existingUser.role === 'Staff'? ALLOWED_STAFF_FIELDS : ALLOWED_ALL_FIELDS
       const filteredData = filterProductFields(body, filterKeys)
 
@@ -135,7 +126,7 @@ class ProductManagement extends Product {
       const { productId } = req.params
 
       // Validate requesting user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
       if (!(existingUser.role == 'Owner' || existingUser.role == 'Manager')) {
         return next(new NotAuthorizedError('Invalid User'))
       }
@@ -178,10 +169,7 @@ class ProductManagement extends Product {
       next(error)
     }
   }
-
 }
-
-
 
 
 export const productManagement = new ProductManagement()

@@ -76,8 +76,8 @@ export class Register {
       // Prepare authentication data
       const authData: IAuthDocument = this.registerBusinessData({
         _id: authObjectId,
-        uIds: { userUId, businessUId },
         email,
+        businessId: businessObjectId,
         adminFullName,
         username,
         password,
@@ -162,7 +162,6 @@ export class Register {
         businessId: businessId.toHexString(),
         email: data.email,
         username: data.username,
-        uId: data.uIds
       },
       config.JWT_SECRET!,
       { expiresIn: '1h' } // Set appropriate expiration
@@ -175,32 +174,18 @@ export class Register {
    * @returns Authentication document conforming to IAuthDocument interface
    */
   private registerBusinessData(data: IRegisterBusinessData): IAuthDocument {
-    const {
-      businessName,
-      email,
-      password,
-      uIds,
-      _id,
-      username,
-      adminFullName,
-      businessAddress,
-      businessType,
-      businessCategory,
-      businessLogo,
-    } = data
-
     return {
-      _id,
-      uIds,
-      email: Utils.lowerCase(email),
-      adminFullName: Utils.firstLetterToUpperCase(adminFullName),
-      password, // Ensure hashing before storage
-      username: Utils.firstLetterToUpperCase(username),
-      businessName: Utils.firstLetterToUpperCase(businessName),
-      businessAddress,
-      businessType,
-      businessCategory,
-      businessLogo,
+      _id: data._id,
+      email: Utils.lowerCase(data.email),
+      businessId: data.businessId,
+      adminFullName: Utils.firstLetterToUpperCase(data. adminFullName),
+      password: data.password,
+      username: Utils.firstLetterToUpperCase(data.username),
+      businessName: Utils.firstLetterToUpperCase(data.businessName),
+      businessAddress: data.businessAddress,
+      businessType: data.businessType,
+      businessCategory: data.businessCategory,
+      businessLogo: data.businessLogo,
       createdAt: new Date(),
     } as IAuthDocument
   }
@@ -213,15 +198,7 @@ export class Register {
    * @returns Business document conforming to IBusinessDocument interface
    */
   private BusinessData(data: IAuthDocument, businessObjectId: ObjectId, ownerId: ObjectId): IBusinessDocument {
-    const {
-      businessName,
-      email,
-      username,
-      uIds,
-      businessAddress,
-      businessType,
-      businessCategory,
-    } = data
+    const { businessName, email, username, businessAddress, businessType, businessCategory, } = data
 
     return {
       _id: businessObjectId,
@@ -241,9 +218,10 @@ export class Register {
         }
       ],
       businessLogo: '',
-      uId: uIds?.businessUId?? '',
+      businessImg: '',
       businessCategory,
       businessAddress,
+      currency: 'USD',
       businessType,
       businessAccount: {
         accountName: '',
@@ -251,22 +229,13 @@ export class Register {
         bankName: '',
         accountType: '',
       },
-      businessBio: '',
+      phoneNumber: '',
       notifications: {
         sales: true,
         stockLevel: true,
         dueCreditSales: true,
         userDataChange: true,
       },
-      social: {
-        facebook: '',
-        instagram: '',
-        twitter: '',
-        youtube: '',
-        website: '',
-      },
-      bgImageVersion: '',
-      bgImageId: '',
       createdAt: new Date(),
     } as IBusinessDocument
   }
@@ -279,12 +248,11 @@ export class Register {
    * @returns User document conforming to IuserDocument interface
    */
   private UserData(data: IAuthDocument, userObjectId: ObjectId, businessObjectId: ObjectId): IuserDocument {
-    const { username, adminFullName, uIds, email, _id, } = data
+    const { username, adminFullName, email, _id, } = data
 
     return {
       _id: userObjectId,
       name: adminFullName,
-      uId: uIds?.userUId ?? '',
       authId: _id,
       email,
       mobileNumber: null,

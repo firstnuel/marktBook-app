@@ -1,25 +1,28 @@
-import { ProductAttributes, ProductCategory, ProductType, ProductVariants } from './pos'
+import { ProductAttributes, ProductCategory, CustomCategory, ProductType, ProductVariants, Product } from './pos'
 
 type MainOption =
     | 'Products'
     | 'Create Products'
-    | 'Add Stock Data'
+    | 'Stock Data'
     | 'Products Variants'
     | 'Categories'
-    | 'Print QR codes'
+    | 'Print Codes'
 
 type SubOption =
     | 'Product List'
     | 'Edit Product'
+    | 'Product By Cat'
 
 export interface invState {
     mainOpt: MainOption
     subOpt: SubOption
+    productsByCat: Product[]
     product: IProduct | null
     stock: IStock | null
     error: string | null
     loading: boolean
     success: boolean
+    successMsg: string | null
 }
 
 export interface IProduct {
@@ -31,7 +34,7 @@ export interface IProduct {
     businessId: string;
     longDescription: string;
     shortDescription: string;
-    productCategory: ProductCategory;
+    productCategory: ProductCategory | CustomCategory;
     productType: ProductType;
     barcode?: string;
     productVariants: ProductVariants[];
@@ -95,7 +98,6 @@ export enum Unit {
 }
 
 export interface IStock {
-    _id: string;
     businessId: string;
     productId: string;
     locationId?: string;
@@ -113,8 +115,8 @@ export interface IStock {
     updatedAt?: Date;
     createdBy: string;
     updatedBy?: string;
+    locationData? : ILocationData
 }
-
 
 export interface IStockData {
     businessId: string;
@@ -135,7 +137,6 @@ export interface IStockData {
     locationStatus: Status;
     capacity?: number;
 }
-
 
 export interface ILocation {
     _id: string;
@@ -184,9 +185,20 @@ export interface StockMovement {
 export interface ILocationData {
     locationName: string;
     locationType: LocationTypes;
-    address: string;
+    address?: string;
     capacity?: number;
     manager?: string;
     currentLoad?: number;
     locationStatus?: Status;
+}
+
+export interface EditStockData {
+    businessId: string;
+    compartment?: string;
+    unitsAvailable?: number;
+    maxQuantity?: number;
+    minQuantity?: number;
+    thresholdAlert?: boolean;
+    costPerUnit: number;
+    notes?: string;
 }

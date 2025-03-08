@@ -3,8 +3,7 @@ import { ObjectId } from 'mongodb'
 
 export interface ISaleDocument extends Document {
     _id: ObjectId;
-    customerId?: ObjectId;
-    customerName: string;
+    customer: ObjectId | null;
     businessId: ObjectId;
     createdAt: Date;
     updatedAt: Date;
@@ -31,8 +30,7 @@ export interface ISaleDocument extends Document {
 
 
 export interface ISaleData {
-    customerId?: ObjectId;
-    customerName: string;
+    customer: string | null;
     subtotalAmount: number; // before tax
     taxAmount?: number;
     taxRate?: number;
@@ -47,6 +45,7 @@ export interface ISaleData {
     status: SaleStatus;
     saleItems: [SaleItem, ...SaleItem[]]; // Ensure at least one item
     totalPrice: number;
+    businessId: string;
 }
 
 

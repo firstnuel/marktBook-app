@@ -4,12 +4,18 @@ import { ObjectId } from 'mongodb'
 
 
 class LocationService {
-  public async addLocation(data: ILocationDocument): Promise<void> {
-    await LocationModel.create(data)
-  }
+  public async addLocation(data: ILocationDocument): Promise<ILocationDocument> {
+    const location = await LocationModel.create(data)
+    await location.populate('manager', 'name')
+    return location
+  }  
 
   public async deleteLocation( stockId: ObjectId): Promise<void> {
     await LocationModel.deleteOne({ stockId }).exec()
+  }
+
+  public async delLocation( id: ObjectId): Promise<void> {
+    await LocationModel.findByIdAndDelete(id).exec()
   }
 
   public async findByName(name: string, businessId: ObjectId): Promise<ILocationDocument | null> {
@@ -23,7 +29,22 @@ class LocationService {
   }
 
   public async fetchAll(businessId: ObjectId): Promise<ILocationDocument[] | []> {
-    const result = await LocationModel.find({ businessId }).exec()
+    const result = await LocationModel.find({ businessId })
+      .populate({
+        path: 'stockMovements.productId', 
+        select: 'productName'
+      })
+      .populate({
+        path: 'stockMovements.destination',
+        select: 'locationName'
+      })
+      .populate({
+        path: 'stockMovements.initiatedBy',
+        select: 'name'
+      })
+      .populate('manager', 'name')
+      .exec()
+
     return result
   }
 

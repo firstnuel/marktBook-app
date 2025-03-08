@@ -1,0 +1,14 @@
+.reset {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+    font-weight: 400;
+    position: relative;
+    right: 3%;
+    align-self: center;
+    font-size: 1.2rem;
+    color: var(--dark-gray);
+    cursor: pointer;
+    z-index: 1000;
+}

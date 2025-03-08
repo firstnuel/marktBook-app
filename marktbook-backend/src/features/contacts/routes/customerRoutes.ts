@@ -17,6 +17,26 @@ class CustomerRoutes {
       customer.create
     )
 
+    this.router.get('/customers', 
+      authMiddleware.checkAuthentication, 
+      customer.read
+    )
+
+    this.router.patch('/customers/:id', 
+      authMiddleware.checkAuthentication, 
+      customer.edit
+    )
+
+    this.router.delete('/customers/:id', 
+      authMiddleware.checkAuthentication, 
+      customer.delete
+    )
+
+    this.router.get('/customers/:id', 
+      authMiddleware.checkAuthentication, 
+      customer.fetch
+    )
+
     return this.router
   }
 }

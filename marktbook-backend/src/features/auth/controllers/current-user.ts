@@ -24,13 +24,10 @@ class CurrentUser {
     if (existingUser && Object.keys(existingUser).length) {
       isUser = true
       token = req.session?.jwt
-      user = omit(existingUser.toJSON(), [
-        'authId',
-        '__v',
-        'createdAt',
-        'updatedAt',
-        'emergencyContact',
-      ])
+      
+      // If existingUser is a Mongoose model instance, call toJSON, else just omit
+      user = existingUser.toJSON ? omit(existingUser.toJSON(), ['authId', '__v', 'createdAt', 'updatedAt', 'emergencyContact']) 
+        : omit(existingUser, ['authId', '__v', 'createdAt', 'updatedAt', 'emergencyContact'])
     }
 
 

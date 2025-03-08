@@ -1,0 +1,210 @@
+.sec-show{
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+span.err {
+    color: red;
+    font-size: .8em;
+    font-style: italic;
+    margin-left: .5em;
+}
+
+#mod-body {
+    div.container {
+        height: max-content;
+        margin: .5em 0; 
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: .5em;
+
+            .role-status, .username-phone {   
+                display: flex;
+                gap: .5em;
+
+                .role-div, .username-div,
+                .phone-div, .status-div {
+                    width: 50%;
+                }
+                .status-div {
+                    span {
+                        font-size: .7em;
+                        font-style: italic;
+                        color: var(--dark-gray);
+                        margin-left: .5em;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.head-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--white-color);
+    .name-desc {
+        display: flex;
+        flex-direction: column;
+        gap: .2em;
+        padding: 1em;   
+
+        .name {
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+        .desc {
+            font-size: 1.1em;
+            color: var(--dark-gray);
+        }
+    }
+    .business-logo {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        width: 5em;
+        height: 5em;
+        background-position: center;
+        background-size: cover;
+        border-radius: 50%;
+    
+        img {
+            width: 20%;
+            height: 20%;
+            margin-bottom: 1em;
+            &:hover {
+                width: 25%;
+                height: 25%;
+                cursor: pointer;
+                }
+    
+            }
+        }
+}
+
+
+
+.mod-body {
+    display: flex;
+    gap: 1em;
+    flex-direction: row !important;
+    align-items: center;
+
+    div.logo-img {
+        width: 30%;
+        border: 2px solid var(--light-gray);
+        border-radius: 50%;
+
+        img.logo-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+    div.info-input {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        gap: .5em;
+
+        input {
+            width: 28%;
+            padding: .2em;
+            border: 1px solid var(--dark-gray);
+            border-radius: 5px;
+        }
+
+    }
+}
+
+img.userr-img {
+    margin-right: 1em;
+    border: 2px solid var(--dark-gray);
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+}
+
+
+.no-user {
+    font-size: 1.1em;
+    color: var(--dark-gray);
+    text-align: center;
+}
+
+
+
+.edit-con {
+    div.user-pic {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        width: 5em;
+        height: 5em;
+        background-position: center;
+        background-size: cover;
+        border-radius: 50%;
+    
+        img {
+            width: 20%;
+            height: 20%;
+            margin-bottom: 1em;
+            &:hover {
+                width: 25%;
+                height: 25%;
+                cursor: pointer;
+            }
+    
+        }
+    }
+
+}
+
+#cat-footer > button {
+    background-color: var(--secondary-color) !important;
+    }
+#cat-footer{
+    #save-btn {
+        background-color: var(--primary-color) !important;
+    }
+}  
+
+.confim-delete {
+    margin: 1em 0;
+    padding: 0.5em 0;
+    align-items: center;
+    display: flex;
+    justify-content: end !important;
+
+    button {
+        background-color: var(--secondary-color) !important;
+        border: 1px solid var(--secondary-color) ;
+        padding: 0.5em 1em;
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+  }
+  
+  body > div.fade.modal.show > div > div > div.modal-body > .err {
+    border: 1px solid var(--secondary-color) !important;
+    animation: shake 0.3s ease-in-out;
+  }
+  
+
+#custom-switch {
+    max-width: 2.5em !important;
+}

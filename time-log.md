@@ -50,7 +50,27 @@
 |   | 4  | Implement filtering product by search keys, search phrase and categories on POS page |
 | **18.01.**  | 4 | Implemented Product list table in inventory page, including state management and data filtering |
 | **19.01.**  | 4 | Implemented forms, services and UI components to facilitaed product edit and update |
-| **Total**  | **124** | |
+| **23.01.**  | 3 | Implemented forms, services and UI components for adding stock data |
+| **24.01.**  | 3 | Implemented forms, services and UI components for editing stock data |
+| **24.01.**  | 2 | Implemented notification UI component to handle errors and success |
+| **2.02.**  | 3 | Implemented barcode generator and print feature |
+|  | 2 | Refactored business model, interface, controller and cache to allow creating custom product categories |
+|  | 2 |  Implemented reducers, hooks and interfaces to handle business  |
+| **4.02.**  | 2 | Implemented UI, reducers and services to fetch product by category |
+|  | 2 |  Major refactor of inventory UI  |
+| **12.02.**  | 3 | Implemented UI for account management |
+| **13.02.**  | 2 | Completed UI for account management |
+| **14.02.**  | 2 | refactored user controller to move user and business validation from user controller to middleware |
+| **15.02.**  | 3 | Implement manage users pages and its UI, services and slices|
+| **16.02.**  | 3 | Implement edit user UI and functionality, minor refactor on user controller|
+| **18.02.**  | 5 | Implement customers and suppliers backend features and started front end features also |
+| **19.02.**  | 3 | Implement customers and suppliers frontend features  |
+| **21.02.**  | 4 |  Implement stocks amd low stock services, reducers and UI |
+| **23.02.**  | 3 |  Implement locations feat, reducers and UI also refactor locations controller to fix authorization issue |
+| **25.02.**  | 2 |  Implement payment processing feature |
+| **26.02.**  | 3 |  Extended payment processing feature, services, reducers and UI |
+| **28.02.**  | 3 |  Started implemeting dashboard UI |
+| **Total**  | **179** | |
 
 
 

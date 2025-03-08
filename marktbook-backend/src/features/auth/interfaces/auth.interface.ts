@@ -1,11 +1,15 @@
 import { Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
+import { IuserDocument } from '@users/interfaces/user.interface'
+import { IBusinessDocument } from '@business/interfaces/business.interface'
 
 
 declare global {
   namespace Express {
     interface Request {
       currentUser?: AuthPayload; 
+      user?: IuserDocument;
+      business?: IBusinessDocument 
     }
   }
 }
@@ -38,7 +42,6 @@ export enum BusinessCategory {
 export interface AuthPayload {
   userId: string; 
   businessId: string; 
-  uId:  {userUId: string, businessUId: string}; 
   email: string; 
   username: string; 
   iat?: number; 
@@ -47,7 +50,7 @@ export interface AuthPayload {
 // Interface for authentication documents
 export interface IAuthDocument extends Document {
   _id: string | ObjectId; 
-  uIds?: {userUId: string, businessUId: string}; 
+  businessId: string | ObjectId; 
   adminFullName: string; 
   businessName: string; 
   email: string; 
@@ -68,7 +71,7 @@ export interface IAuthDocument extends Document {
 // Interface for registering business data
 export interface IRegisterBusinessData {
   _id: ObjectId;
-  uIds: {userUId: string, businessUId: string}; 
+  businessId: string | ObjectId; 
   email: string; 
   adminFullName: string; 
   username: string;

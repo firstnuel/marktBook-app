@@ -1,0 +1,158 @@
+.hide {
+    display: none;
+}
+
+
+.page {
+    padding: 2.5em;
+
+    .account, .status {
+        margin-top: 7em;
+        align-self: start;
+        height: min-content;
+        width: 60%;
+        font-size: .8em;
+    }
+
+    .calculations {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        flex-direction: column;
+        padding-right: 2em;
+        .totals{
+            font-weight: bold;
+        }
+        .subtotal, .tax, .total, .discount {
+            display: flex;
+            justify-content: space-between;
+            width: 30%;
+            font-weight: bold;
+            background-color: var(--light-gray);
+        }
+    }
+
+    .table {
+        margin-top: 4em;
+        border: 1px solid black;
+        thead {
+            th {
+                font-weight: bold;
+                background-color: var(--light-gray);
+            }
+            th.qty {
+                width: 10%;
+            }
+            th.desc {
+                width: 50%;
+            }
+            th.unit {
+                width: 20%;
+            }
+            th.total {
+                width: 20%;
+            }
+        }
+    }
+
+    .head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 2em;
+        font-weight: bolder;
+    }
+
+    .customer-invinfo {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 3em;
+        height: 6em;
+        margin-bottom: 2em;
+        .customer {
+            width: 40%;
+            height: 8em;
+            .bill-to {
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+        }
+        .invinfo {
+            width: 37%;
+            height: 8em;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+
+            .inv-ref, .inv-date {
+                display: flex;
+                gap: 1em;
+                justify-content: space-between;
+            }
+            .field {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .contact-logo {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1em;
+        .contact {
+            width: 40%;
+            height: 8em;
+        }
+        .logo {
+            width: 6em;
+            height: 6em;
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
+
+
+@media print {
+    body * {
+        visibility: hidden;
+      }
+    
+      .invoice, .invoice * {
+        visibility: visible;
+      }
+    
+      .invoice {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    .a4-paper {
+      width: 210mm;
+      height: 297mm;
+    }
+  }
+  
+  @page {
+    margin: 0;
+    size: A4;
+  }
+  
+  @media print {
+    body {
+      -webkit-print-color-adjust: exact; /* Ensures color accuracy */
+      print-color-adjust: exact; /* Ensures color accuracy */
+    }
+  
+    /* Hide browser default headers/footers */
+    @page :left {
+      margin: 0;
+    }
+    @page :right {
+      margin: 0;
+    }
+  }
+  

@@ -1,6 +1,7 @@
 import { Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
 import { BusinessCategory, BusinessType } from '@auth/interfaces/auth.interface'
+import { Currency } from '@inventory/interfaces/products.interface'
 
 export interface IBusinessDocument extends Document {
   _id: string | ObjectId;
@@ -10,29 +11,33 @@ export interface IBusinessDocument extends Document {
   username: string;
   email: string;
   admins: IBusinessAdmin[];
+  currency: Currency;
+  customCategories?: string[];
   businessLogo?: string;
+  businessImg?: string;
+  taxRate?: number;
   uId?: string;
   businessCategory?: BusinessCategory;
   businessAddress?: string;
   businessType?: BusinessType;
   businessAccount?: IBusinessBankAccount;
-  businessBio?: string;
+  phoneNumber?: string;
   notifications?: INotificationSettings;
-  social?: ISocialLinks;
-  bgImageVersion: string;
-  bgImageId: string;
   createdAt?: Date;
 }
 
 export const EDIT_BUSINESS_FIELDS: (keyof IBusinessDocument)[] = [
   'businessLogo',
   'businessAddress',
-  'businessBio',
   'businessAccount',
-  'social',
-  'bgImageVersion',
-  'bgImageId',
-  'notifications'
+  'notifications',
+  'customCategories',
+  'currency',
+  'taxRate',
+  'businessCategory',
+  'businessType',
+  'phoneNumber',
+  'businessName',
 ] 
 
 export interface IBusinessBankAccount {
@@ -54,14 +59,6 @@ export interface INotificationSettings {
   stockLevel: boolean;
   dueCreditSales: boolean;
   userDataChange: boolean;
-}
-
-export interface ISocialLinks {
-  facebook?: string;
-  instagram?: string;
-  twitter?: string;
-  youtube?: string;
-  website?: string;
 }
 
 export enum BusinessRole {

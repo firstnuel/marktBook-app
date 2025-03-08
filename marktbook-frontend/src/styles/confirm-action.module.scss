@@ -11,6 +11,13 @@
   z-index: 1000;
 }
 
+.warn {
+  margin-top: 1em !important;
+  color: var(--secondary-color) !important;
+  font-style: italic !important;
+  font-size: .9em !important;
+}
+
 .modal {
   background-color: #fff;
   border-radius: 1em;

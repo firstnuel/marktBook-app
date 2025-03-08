@@ -26,8 +26,8 @@ class UserService {
 
   public async getAllUsers(businessId: string | ObjectId): Promise<IuserDocument[]> {
     const result = await UserModel.find({ associatedBusinessesId: businessId }) 
-      .select(['name', '_id', 'email', 'username', 'status', 'profilePicture', 'role', 'associatedBusinessesId'])
-      
+      .select(['name', '_id', 'email', 'username', 'status', 'lastLogin',
+        'profilePicture', 'role', 'associatedBusinessesId'])
     return result
   }
 
@@ -38,9 +38,11 @@ class UserService {
   public async deleteUserById(userId: string): Promise<void> {
     await UserModel.findByIdAndDelete(userId).exec()
   }
-  
-  
-  
+
+  public async deleteAllUsers(businessId: string | ObjectId): Promise<void> {
+
+    await UserModel.deleteMany({ associatedBusinessesId: businessId }).exec()
+  }
 
 }
 

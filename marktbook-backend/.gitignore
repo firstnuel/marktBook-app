@@ -5,3 +5,6 @@ build/
 .env.production
 coverage/
 marktbook-backend/coverage
+.gitignore
+endpoints/
+auth.http

@@ -12,14 +12,40 @@ class ProductRoutes {
   }
 
   public productRoutes(): Router {
-    this.router.post('/products', authMiddleware.checkAuthentication, product.create)
-    this.router.get('/products', authMiddleware.checkAuthentication, product.read)
-    this.router.post('/products/batch', authMiddleware.checkAuthentication, product.batch)
-    this.router.get('/products/categories/:category', authMiddleware.checkAuthentication, product.categories)
-    this.router.get('/products/search', authMiddleware.checkAuthentication, product.search)
-    this.router.get('/products/:productId', authMiddleware.checkAuthentication, productManagement.fetch)
-    this.router.patch('/products/:productId', authMiddleware.checkAuthentication, productManagement.editProduct)
-    this.router.delete('/products/:productId', authMiddleware.checkAuthentication, productManagement.deleteProduct)
+    this.router.post('/products', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateBusiness,
+      product.create)
+
+    this.router.get('/products', 
+      authMiddleware.checkAuthentication, 
+      product.read)
+
+    this.router.post('/products/batch/:businessId', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateBusiness,
+      product.batch)
+
+    this.router.get('/products/categories/:category', 
+      authMiddleware.checkAuthentication, 
+      product.categories)
+
+    this.router.get('/products/search', 
+      authMiddleware.checkAuthentication, 
+      product.search)
+
+    this.router.get('/products/:productId', 
+      authMiddleware.checkAuthentication, 
+      productManagement.fetch)
+
+    this.router.patch('/products/:productId', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateBusiness,
+      productManagement.editProduct)
+    
+    this.router.delete('/products/:productId', 
+      authMiddleware.checkAuthentication, 
+      productManagement.deleteProduct)
 
     return this.router
   }

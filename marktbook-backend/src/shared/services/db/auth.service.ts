@@ -58,6 +58,11 @@ class AuthService {
     return user || null
   }
 
+  public async getUserByUsername(username: string): Promise<IAuthDocument | null> {
+    const user  =  await AuthModel.findOne({ username: Utils.firstLetterToUpperCase(username) }).exec() as IAuthDocument
+    return user || null
+  }
+
   public async getUserByEmail(email: string): Promise<IAuthDocument | null> {
     const user  =  await AuthModel.findOne({ email: Utils.lowerCase(email) }).exec() as IAuthDocument
     return user || null
@@ -71,6 +76,13 @@ class AuthService {
     return user || null
   }
 
+  public async deleteAuth(authId: string): Promise<void> {
+    await AuthModel.findByIdAndDelete(authId).exec()
+  }
+
+  public async deleteAllAuth(businessId: string | ObjectId): Promise<void> {
+    await AuthModel.deleteMany({ businessId }).exec()
+  }
 }
 
 export const authService: AuthService = new AuthService()

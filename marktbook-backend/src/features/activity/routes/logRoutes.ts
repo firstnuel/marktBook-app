@@ -10,7 +10,7 @@ class LogsRoutes {
     this.router = express.Router()
   }
 
-  public LogsRoutes(): Router {
+  public logsRoutes(): Router {
     this.router.get('/logs', authMiddleware.checkAuthentication, logs.read.bind(logs))
 
 

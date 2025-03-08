@@ -55,7 +55,9 @@ export class MarktBookServer {
     app.use(hpp())
     app.use(
       cors({
-        origin: config.CLIENT_URL,
+        origin: (origin, callback) => {
+          callback(null, true)
+        },
         credentials: true,
         optionsSuccessStatus: 200,
         methods: ['GET', 'PUT', 'DELETE', 'POST', 'PATCH','OPTIONS']
@@ -81,18 +83,13 @@ export class MarktBookServer {
   private async startServer(app: Application): Promise<void> {
     try {
       const httpServer: http.Server = new http.Server(app)
-      // const socketIo: Server = await this.createSocketIO(httpServer)
       this.startHttpServer(httpServer)
-      // this.socketIoConnections(socketIo)
     } catch (error) {
       log.error(error)
     }
   }
-  // private async createSocketIO(httpServer: http.Server): Promise<Server> {}
-
 
   private startHttpServer(httpServer: http.Server): void {
-    //    log.info(`server started with process ${process.pid}`)
     httpServer.listen(PORT, () => {
       log.info(`Server running on ${PORT}`)
     })

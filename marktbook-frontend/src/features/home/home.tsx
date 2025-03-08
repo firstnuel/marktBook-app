@@ -1,11 +1,12 @@
 import MenuBar from '@components/MenuBar'
 
-const Home = () => {
 
+const Home = () => {
 
   return(
     <>
       <MenuBar />
+
       <p>My Likkle Home page for now</p>
     </>
   )

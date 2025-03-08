@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 interface IconBoxProps {
     src: string;
+    id?: string;
     clName?: string;
     imgClName?: string;
     alt?: string;
@@ -11,7 +12,7 @@ interface IconBoxProps {
     tt?: boolean;
 }
 
-const IconBox = ({ clName, onClick, src, imgClName, alt, title, tt }: IconBoxProps) => {
+const IconBox = ({ clName, onClick, src, imgClName, alt, title, tt, id }: IconBoxProps) => {
   const[show, setShow] = useState(false)
 
   const handleShow = () => setShow(true)
@@ -19,7 +20,7 @@ const IconBox = ({ clName, onClick, src, imgClName, alt, title, tt }: IconBoxPro
 
 
   return(
-    <div className={ clName} onClick={onClick} onMouseEnter={handleShow} onMouseLeave={handleClose}>
+    <div id={id} className={clName} onClick={onClick} onMouseEnter={handleShow} onMouseLeave={handleClose}>
       <img src={src} alt={alt} className={imgClName} />
       { title && show &&  <span className={tt? 'tt' : 'tooltip-text'}>{title}</span> }
     </div>

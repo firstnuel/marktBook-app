@@ -15,6 +15,11 @@ import { encryptTransform } from 'redux-persist-transform-encrypt'
 import posReducer from '@reducers/posReducers'
 import authReducer from '@reducers/authReducer'
 import invReducer from '@reducers/invReducer'
+import businessReducer from '@reducers/businessReducer'
+import contactsReducer from '@reducers/contactsReducer'
+import stocksReducer from '@reducers/stocksReducer'
+import transReducer from '@reducers/transReducer'
+import dashReducer from '@reducers/dashReducer'
 
 // Add RESET_ALL action type
 export const RESET_ALL = 'RESET_ALL'
@@ -32,17 +37,41 @@ const authPersistConfig = {
   blacklist: ['loading', 'error', 'registered', 'reset', 'updated']
 }
 
-const posPersistConfig = {
-  key: 'pos',
+const invPersistConfig = {
+  key: 'inv',
   storage,
-  whitelist: ['cartItems']
+  whitelist: ['mainOpt', 'subOpt', 'product', 'productsByCat', 'stock' ]
+}
+
+const contactsPersistConfig = {
+  key: 'contacts',
+  storage,
+  whitelist: ['mainOpt', 'subOpt', 'suppliers', 'contacts' ]
+}
+
+const transPersistConfig = {
+  key: 'trans',
+  storage,
+  whitelist: ['mainOpt', 'subOpt', 'invoices', 'sales', 'salesReturn', 'purchases', 'purchaseReturn']
+}
+
+const stocksPersistConfig = {
+  key: 'stocks',
+  storage,
+  whitlist: ['stocks', 'mainOpt', 'subOpt', 'lowStocks',
+    'locations', 'bySupplier', 'movements', 'sale']
 }
 
 // the base reducer combination
 const combinedReducer = combineReducers({
   'auth': persistReducer(authPersistConfig, authReducer),
-  'pos': persistReducer(posPersistConfig, posReducer),
-  'inv': invReducer
+  'pos': persistReducer({ key: 'pos', storage, whitelist: ['cartItems', 'customer', 'priceInfo'] }, posReducer),
+  'business': persistReducer({ key: 'business', storage, whitelist: ['business'] }, businessReducer),
+  'inv': persistReducer(invPersistConfig, invReducer),
+  'contacts': persistReducer(contactsPersistConfig, contactsReducer),
+  'stocks': persistReducer(stocksPersistConfig, stocksReducer),
+  'trans': persistReducer(transPersistConfig, transReducer),
+  'dash': persistReducer({ key: 'dash', storage, whitelist: ['data', 'period'] }, dashReducer)
 })
 
 // root reducer with reset capability
@@ -50,6 +79,9 @@ const rootReducer = (state: RootState | undefined, action: Action) => {
   if (action.type === RESET_ALL) {
     // This will reset all reducers to their initial state
     state = undefined
+  }
+  if (action.type === 'STORE_RESET') {
+    combinedReducer(undefined, action)
   }
   return combinedReducer(state, action)
 }

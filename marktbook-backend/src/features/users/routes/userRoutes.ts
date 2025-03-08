@@ -11,12 +11,31 @@ class UsersRoutes {
     this.router = express.Router()
   }
 
-  public UsersRoutes(): Router {
-    this.router.post('/users', authMiddleware.checkAuthentication, users.create.bind(users))
-    this.router.get('/users', authMiddleware.checkAuthentication, users.read.bind(users))
-    this.router.get('/users/:id', authMiddleware.checkAuthentication, userManagement.getUser.bind(users))
-    this.router.patch('/users/:id', authMiddleware.checkAuthentication, userManagement.editUser.bind(users))
-    this.router.delete('/users/:id', authMiddleware.checkAuthentication, userManagement.deleteUser.bind(users))
+  public usersRoutes(): Router {
+    this.router.post('/users', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      authMiddleware.validateBusiness,
+      users.create)
+
+    this.router.get('/users', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      users.read)
+
+    this.router.get('/users/:id', 
+      authMiddleware.checkAuthentication,
+      authMiddleware.validateUserRole,
+      userManagement.getUser)
+
+    this.router.patch('/users/:id', 
+      authMiddleware.checkAuthentication, 
+      userManagement.editUser)
+
+    this.router.delete('/users/:id', 
+      authMiddleware.checkAuthentication, 
+      authMiddleware.validateUserRole,
+      userManagement.deleteUser)
 
 
     return this.router

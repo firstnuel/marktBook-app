@@ -1,0 +1,77 @@
+@keyframes fadeInSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  
+  .notify-error-div,
+  .notify-success-div {
+    background-color: var(--secondary-red);
+    color: var(--secondary-color);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--secondary-red);
+    border-radius: 5px;
+    width: max-content;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    animation: fadeInSlideDown 0.5s ease-out; /* Add animation on appearance */
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  
+    .error-msg,
+    .success-msg {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+  
+    .clear-err-btn,
+    .clear-success-btn {
+      background-color: var(--secondary-red);
+      color: var(--secondary-color);
+      border: 1px solid var(--secondary-red);
+      border-radius: 50%;
+      height: 1em;
+      width: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      cursor: pointer;
+    }
+  }
+  
+  .notify-success-div {
+    background-color: var(--light-green);
+    border: 1px solid var(--light-green);
+    color: var(--tertiary-color);
+  
+    .clear-success-btn {
+      background-color: var(--light-green);
+      border: 1px solid var(--light-green);
+      color: var(--tertiary-color);
+    }
+  }
+  
+  .notify-box {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: max-content;
+    height: fit-content;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+  

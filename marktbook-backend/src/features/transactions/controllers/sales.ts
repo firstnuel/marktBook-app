@@ -38,12 +38,13 @@ class Sale extends Product {
 
       // validate input
       this.validateInput(salesDataSchema, req.body)
-
-      // Validate user
-      const user = await this.validateUser(`${req.currentUser?.userId}`)
+      const user = req.user!
 
       // Sanitize input
       const body = Utils.sanitizeInput(req.body) as ISaleData
+
+      // Check stock
+      await this.checkStock(body.saleItems)
 
       // update stock 
       await this.updateStock(body.saleItems)
@@ -59,7 +60,10 @@ class Sale extends Product {
       const savedData = await saleService.newSale(salesData)
 
       // Remove sensitive fields before sending response
-      const resData = omit(savedData.toJSON(), ['businessId', 'customerId', 'initiatedBy', 'updatedAt'])
+      if (!savedData) {
+        return next(new BadRequestError('Failed to save sale data'))
+      }
+      const resData = omit(savedData.toJSON(), ['businessId', 'updatedAt'])
 
       // Send success response
       res.status(HTTP_STATUS.CREATED).json({
@@ -78,8 +82,7 @@ class Sale extends Product {
   private saleData(data: ISaleData, saleId: ObjectId, user: IuserDocument): ISaleDocument {
     return {
       _id: saleId,
-      customerId: data.customerId ?? undefined,
-      customerName: data.customerName,
+      customer: data.customer ? new ObjectId(data.customer) : null,
       businessId: new ObjectId(user.associatedBusinessesId),
       initiatedBy: new ObjectId(user._id),
       completedBy: undefined,
@@ -90,7 +93,7 @@ class Sale extends Product {
       currency: data.currency,
       paymentMethod: data.paymentMethod,
       discount: data.discount,
-      status: data.status,
+      status: data.paymentMethod === 'CASH' ? 'COMPLETED' : 'PENDING',
       refundStatus: 'NONE',
       saleItems: data.saleItems,
       totalPrice: data.totalPrice,
@@ -98,32 +101,32 @@ class Sale extends Product {
   }
   
 
-  protected async updateStock(saleItems: SaleItem[]): Promise<void> {
-    // validate stock quantity
+  protected async checkStock(saleItems: SaleItem[]): Promise<void> {
     for (const { productId, quantity, productName } of saleItems) {
       const stock = await stockService.getByProductID(productId)
-      if(!stock) {
+      if (!stock) {
         throw new NotFoundError(`No stock data found for product '${productName}'`)
-      } else if(stock.unitsAvailable < quantity) {
+      } else if (stock.unitsAvailable < quantity) {
         throw new BadRequestError(`Insufficient stock for '${productName}'. Requested quantity exceeds available units.`)
       }
     }
-
-    // bulk update stock
+  }
+  
+  protected async updateStock(saleItems: SaleItem[]): Promise<void> {
+  
     const bulkOperations = saleItems.map(({ productId, quantity }) => ({
       updateOne: {
         filter: {
           productId,
-          unitsAvailable: { $gte: quantity }
+          unitsAvailable: { $gte: quantity },
         },
         update: { $inc: { unitsAvailable: -quantity } },
-
-      }
+      },
     }))
-
+  
     await stockService.bulkUpdate(bulkOperations)
-
   }
+  
 
   /**
    * Handles fetching all sales data
@@ -135,14 +138,14 @@ class Sale extends Product {
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // Validate user
-      const user = await this.validateUser(`${req.currentUser?.userId}`)
+      const user = req.user!
 
       const sales = await saleService.getAll(new ObjectId(user.associatedBusinessesId))
       const message = sales.length? 'Sales data fetched successfully' : 'No sales data found'
 
       //remove sensitive fields
       const salesData = sales
-        .map(sale => omit(sale.toJSON(), ['businessId', 'customerId', 'initiatedBy', 'updatedAt']))
+        .map(sale => omit(sale.toJSON(), ['businessId', 'customerId', 'updatedAt']))
 
       res.status(HTTP_STATUS.OK).json({ 
         status: sales.length? 'success': undefined,
@@ -165,7 +168,7 @@ class Sale extends Product {
   public async fetch(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // Validate user
-      const user = await this.validateUser(`${req.currentUser?.userId}`)
+      const user = req.user!
 
       const { id } = req.params
 
@@ -193,7 +196,7 @@ class Sale extends Product {
   public async updateStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // Validate user
-      const user = await this.validateUser(`${req.currentUser?.userId}`)
+      const user = req.user!
 
       // Validate and sanitize input 
       this.validateInput(saleStatusSchema, req.body)

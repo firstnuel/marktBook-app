@@ -1,10 +1,9 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios, { AxiosInstance } from 'axios'
 import { LoginData, RegisterData, passwordData } from '../types/auth'
 
-export let Token: string
-export const setToken = (token: string) => {
-  Token = token
-}
+export let Token: string | null
+export const setToken = (aToken :string | null) => Token = aToken
 
 class AuthService {
   private readonly BASE_PATH = import.meta.env.VITE_API_URL
@@ -17,7 +16,16 @@ class AuthService {
     })
   }
 
-  public async login(userData: LoginData): Promise<AxiosResponse> {
+  private handleAxiosError(error: unknown, defaultMessage: string): never {
+    if (axios.isAxiosError(error)) {
+      const errMsg = error.response?.data?.message || defaultMessage
+      throw new Error(errMsg)
+    }
+    throw error
+  }
+
+
+  public async login(userData: LoginData): Promise<any> {
     try {
       // Add a 3-second delay
       //await new Promise((resolve) => setTimeout(resolve, 3000))
@@ -25,71 +33,60 @@ class AuthService {
       const response = await this.axios.post('/login', userData)
       return response
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errMsg = error.response?.data.message
-        throw new Error(errMsg)
-      }
-      throw error
+      this.handleAxiosError(error, 'An error occurred while logging in user')
     }
   }
 
-  public async getUser(): Promise<AxiosResponse> {
+  public async getUser(): Promise<any> {
     try {
-      const response = await this.axios.get('/me')
+      const response = await this.axios.get('/me', {
+        headers: {
+          Authorization: `Bearer ${Token}`
+        }
+      })
       return response
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errMsg = error.response?.data.message
-        throw new Error(errMsg)
-      }
-      throw error
+      this.handleAxiosError(error, 'An error occurred while fetching user')
     }
   }
 
-  public async updatePassword(passwordData: passwordData, token: string): Promise<AxiosResponse> {
+  public async updatePassword(passwordData: passwordData, token: string): Promise<any> {
     try {
       const response = await this.axios.post(`/reset-password/${token}`, passwordData)
       return response
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errMsg = error.response?.data.message
-        throw new Error(errMsg)
-      }
-      throw error
+      this.handleAxiosError(error, 'An error occurred while updating user password')
     }
   }
 
-  public async passwordReset (email: string) :  Promise<AxiosResponse> {
+  public async passwordReset (email: string) :  Promise<any> {
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000))
-      const response = await this.axios.post('$/forgot-password', { email })
+      const response = await this.axios.post('/forgot-password', { email })
       return response
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errMsg = error.response?.data.message
-        throw new Error(errMsg)
-      }
-      throw error
+      this.handleAxiosError(error, 'An error occurred while perfoming user password reset')
     }
   }
 
-  public async logout(): Promise<AxiosResponse> {
-    const response = await this.axios.get('/logout')
-    return response
+  public async logout(): Promise<any> {
+    try {
+      const response = await this.axios.get('/logout')
+      return response
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while logging out user')
+    }
+
   }
 
-  public async register(registerData: RegisterData): Promise<AxiosResponse> {
+  public async register(registerData: RegisterData): Promise<any> {
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000))
 
-      const response = await this.axios.post('$/register', registerData)
-      return response.data
+      const response = await this.axios.post('/register', registerData)
+      return response
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errMsg = error.response?.data.message
-        throw new Error(errMsg)
-      }
-      throw error
+      this.handleAxiosError(error, 'An error occurred while registering user')
     }
 
   }

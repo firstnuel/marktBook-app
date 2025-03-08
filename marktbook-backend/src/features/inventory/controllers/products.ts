@@ -1,20 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { businessCache } from '@service/redis/business.cache'
 import HTTP_STATUS from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { Request, Response, NextFunction } from 'express'
-import { ZodValidationError, BadRequestError, NotFoundError, NotAuthorizedError, ServerError } from '@root/shared/globals/helpers/error-handlers'
+import { ZodValidationError, BadRequestError, ServerError } from '@root/shared/globals/helpers/error-handlers'
 import { productSchema, categorySchema, searchSchema } from '@inventory/schemes/productValidation'
 import { IProductDocument, IProductData, IFilterData } from '@inventory/interfaces/products.interface'
 import { singleImageUpload } from '@root/shared/globals/helpers/cloudinary-upload'
 import { productQueue } from '@service/queues/product.queue'
 import { config } from '@root/config'
 import { Utils } from '@root/shared/globals/helpers/utils'
-import { userCache } from '@service/redis/user.cache'
-import { userService } from '@service/db/user.service'
-import { businessService } from '@service/db/business.service'
-import { IuserDocument } from '@root/features/users/interfaces/user.interface'
-import { IBusinessDocument } from '@business/interfaces/business.interface'
 import { productService } from '@service/db/product.service'
 import { Schema } from 'zod'
 import { omit } from 'lodash'
@@ -44,24 +38,12 @@ export class Product {
 
       // validate incoming data
       this.validateInput(productSchema, req.body)
-
-      // Validate user 
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
-
-      // Sanitize input
+      const existingUser = req.user!
       const body = Utils.sanitizeInput(req.body) as IProductData
-
-      // Validate product uniqueness by SKU
-      await this.validateProduct(body.sku, new ObjectId(body.businessId))
-
-      // Validate business
-      await this.validateBusiness(body.businessId as string, existingUser)
-
-      // Generate unique identifier
       const productObjectId: ObjectId = new ObjectId()
 
       // Upload Product Images if provided
-      if (body.productImage) {
+      if (body.productImage && !body.productImage.startsWith('https')) {
         const result = await singleImageUpload(body.productImage, productObjectId.toString())
         if (!result) {
           return next(new BadRequestError('File Error: Failed to upload product image. Please try again.'))
@@ -119,55 +101,19 @@ export class Product {
     }
     return parsedDataOrError
   }
-
-  /**
-  * Protected method to validate user status
-  * @param userId string
-   * @returns IuserDocument
-    */
-  protected async validateUser(userId: string): Promise<IuserDocument> {
-    const cachedUser = await userCache.getUserfromCache(userId) as IuserDocument
-    const existingUser = cachedUser ? cachedUser : await userService.getUserById(userId) as IuserDocument
-
-    if (!existingUser || existingUser.status !== 'active') {
-      throw new NotAuthorizedError('Invalid User')
-    }
-
-    return existingUser
-  }
-
   /**
      * Protected method to validate product uniqueness by SKU
      * @param sku string
      */
-  protected async validateProduct(sku: string, businessId: ObjectId): Promise<void> {
-    const checkIfProductExist: IProductDocument | null = await productService.getBySku(sku, businessId)
-    if (checkIfProductExist) {
-      log.warn(`Product creation failed: Product with unique sku '${sku}' already exists for this business.`)
-      throw new BadRequestError(`Product creation failed: Product with unique sku '${sku}' already exists for this business.`)
-    }
+  protected generateSku(productName: string): string {
+    const timestamp = Date.now().toString(36)
+    const randomSegment = Math.random().toString(36).substring(2, 6) // Random 4-character string
+    const nameSegment = productName.substring(0, 3).toUpperCase()
+
+  
+    return `${nameSegment}${timestamp}${randomSegment}`.toUpperCase()
   }
-
-  /**
-     * Protected method to validate business and user authorization for it.
-     * @param businessId string
-     * @param user IuserDocument
-     * @returns IBusinessDocument
-     */
-  protected async validateBusiness(businessId: string, user: IuserDocument): Promise<IBusinessDocument> {
-    const cachedBusiness = await businessCache.getBusinessFromCache(businessId) as IBusinessDocument
-    const existingBusiness = cachedBusiness ? cachedBusiness :
-            await businessService.getBusinessById(businessId) as IBusinessDocument
-
-    if (!existingBusiness) {
-      throw new NotFoundError('Invalid Business: business not found')
-    } else if (existingBusiness._id.toString() !== user.associatedBusinessesId.toString()) {
-      throw new NotAuthorizedError('Invalid Business: not authorized for this business')
-    }
-
-    return existingBusiness
-  }
-
+  
   /**
      * Constructs the product document for a new product.
      * @param data product data
@@ -179,7 +125,7 @@ export class Product {
     return {
       _id: productId,
       stockId: null,
-      sku: data.sku,
+      sku: this.generateSku(data.productName),
       currency: data.currency,
       productName: Utils.firstLetterToUpperCase(data.productName),
       businessId: new ObjectId(data.businessId),
@@ -206,7 +152,7 @@ export class Product {
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
       // validate user 
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
 
       // fetch products
       const products = await productService.fetchAll(`${existingUser.associatedBusinessesId}`)
@@ -249,26 +195,46 @@ export class Product {
   public async categories(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // validate user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
+      req.params.category = Utils.firstLetterToUpperCase(req.params.category)
 
       // validate params
-      const parsedDataOrError = Utils.schemaParser(categorySchema, req.params) 
-      if (parsedDataOrError !== true) {
-        log.warn('Validation failed:', parsedDataOrError.toString())
-        return next(new ZodValidationError(parsedDataOrError.toString()))
-      }
+      this.validateInput(categorySchema, req.params)
 
-      const reqQuery = Utils.sanitizeInput(req.params)
-      const { category }  = reqQuery
-
+      const { category } = req.params
       // fetch products
       const products = await productService.fetchCategories(`${existingUser.associatedBusinessesId}`, category)
-      const message = products.length? 'Products data fetched successfully' : 'No product found'
-      res.status(HTTP_STATUS.OK).json({ message, data: products })
+      let transformedProducts
+      if (products) {
+        transformedProducts = products.map((product) => {
+          const productData = product.toJSON()
+          // Rename stockId to stock
+          if (productData.stockId) {
+            productData.stock = productData.stockId 
+            delete productData.stockId 
+          } else {
+            productData.stock = null
+            delete productData.stockId 
+          }
+      
+          // Omit unnecessary fields
+          return omit(productData, [
+            'isActive',
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+            '__v',
+          ])
+        })
+      }
+      
+      const message = products.length? `Products data for '${category}' fetched successfully` : 'No product found'
+      res.status(HTTP_STATUS.OK).json({ message, data: transformedProducts })
 
     } catch(error) {
       // Log and forward the error to a centralized error handler
-      log.error('Error fetching uses')
+      log.error('Error fetching Products data')
       next(error)
     }
   }
@@ -282,15 +248,10 @@ export class Product {
   public async search(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // validate user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
 
       // validate params
-      const parsedDataOrError = Utils.schemaParser(searchSchema, req.params) 
-      if (parsedDataOrError !== true) {
-        log.warn('Validation failed:', parsedDataOrError.toString())
-        return next(new ZodValidationError(parsedDataOrError.toString()))
-      }
-  
+      this.validateInput(searchSchema, req.params)
       const query = Utils.sanitizeInput(req.query)
       const { name, sku, barcode, tags } =  query
 
@@ -331,24 +292,15 @@ export class Product {
       req.body.forEach((product) => this.validateInput(productSchema, product))
 
       // Validate user
-      const existingUser = await this.validateUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
 
       // Sanitize input
       const sanitizedProducts = req.body.map((product) => Utils.sanitizeInput(product))
 
-      // Validate business
-      const businessId = sanitizedProducts[0].businessId // Assuming all products belong to the same business
-      await this.validateBusiness(businessId, existingUser)
-
-      // Check product uniqueness by SKU
-      await Promise.all(
-        sanitizedProducts.map((product) => this.validateProduct(product.sku, new ObjectId(businessId)))
-      )
-
       // Generate product data and queue jobs
       const productDataArray = sanitizedProducts.map((product) => {
         const productObjectId = new ObjectId()
-        if (product.productImage) {
+        if (product.productImage && !product.productImage.startsWith('https')) {
           product.productImage = singleImageUpload(product.productImage, productObjectId.toString())
         }
         return this.productData(product, productObjectId, existingUser._id)

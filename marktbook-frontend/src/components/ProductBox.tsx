@@ -5,15 +5,17 @@ import testImage from '@assets/images/file.png'
 import { Product } from '@typess/pos'
 import { usePos } from '@hooks/usePos'
 import '@styles/product-box.scss'
+import { getCurrencySymbol } from '@utils/helpers'
+import { useBusiness } from '@hooks/useBusiness'
 
 interface ProductBoxPrpos {
     show: boolean;
     onHide: ()=> void;
     product: Product
-
 }
 
 const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
+  const { business } = useBusiness()
   const [quantity, setQuantity] = useState(1)
   const { addToCart } = usePos()
   const incrementQuantity = () => {
@@ -34,7 +36,6 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
     <Modal
       show={show}
       onHide={onHide}
-      size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
       backdrop="static"
@@ -42,7 +43,7 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter" className='head.info'>
-          {`#${product.sku}`}
+          {product.sku}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -59,8 +60,8 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
         </div>
         <div className="name">{product.productName}</div>
         <div className="short-description">{product.shortDescription}</div>
-        <div className="price">{`$${product.salePrice.toFixed(2)}`}
-          <span className='base-price'>{`$${product.basePrice.toFixed(2)}`}</span>
+        <div className="price">{`${getCurrencySymbol(business?.currency?? 'USD')}${product.salePrice.toFixed(2)}`}
+          {product.salePrice !== product.basePrice && <span className='base-price'>{`${getCurrencySymbol(business?.currency?? 'USD')}${product.basePrice.toFixed(2)}`}</span>}
         </div>
         <div className="location">Location: {product.stock?.compartment ? product.stock?.compartment : 'Unknown'}</div>
         <div className="category">Category: {product.productCategory}</div>
@@ -68,6 +69,7 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
         <ul className="attribute">
           { product.attributes.brand && (<li className="attr-item">Brand: {product.attributes.brand}</li>)}
           {product.attributes.color && (<li className="attr-item">Color: {product.attributes.color}</li>)}
+          {product.attributes.size && (<li className="attr-item">Size: {product.attributes.size}</li>)}
           {product.attributes.manufacturer && (<li className="attr-item">Manufacturer: {product.attributes.manufacturer}</li>)}
           { product.attributes.dimensions &&
          <li className="attr-item">Dimensions:

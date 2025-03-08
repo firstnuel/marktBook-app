@@ -46,6 +46,17 @@ export interface ProductVariants {
     stockId: ObjectId | string;
 }
 
+// export interface ProductVariants {
+//   variantName: string; // e.g., "Small - Red"
+//   sku: string; // Unique identifier for the variant
+//   attributes: Record<string, string>; // e.g., { size: "Small", color: "Red" }
+//   priceAdjustment?: number; // Price difference compared to the base product
+//   image?: string; // URL to variant-specific image
+//   stock?: number; // Stock count for the variant (if managed at the variant level)
+// }
+
+
+
 export interface ProductAttributes {
   color?: string;
   size?: number;
@@ -75,7 +86,7 @@ export enum ProductCategory {
     Food = 'Food',                 
     Jewelry = 'Jewelry',         
     Textiles = 'Textiles',                 
-    Other = 'Other',                        // For categories not explicitly defined
+    Other = 'Other',
 }
 
 export enum ProductType {
@@ -124,16 +135,16 @@ export enum Unit {
     Unit = 'unit',              
     Custom = 'custom',             
 }
+ type Custom = string
 
 export interface IProductData {
-    sku: string;
     currency: Currency;
     productName: string;
     businessId: string | ObjectId;
     longDescription?: string;
     shortDescription?: string;
     attributes: ProductAttributes;
-    productCategory: ProductCategory;
+    productCategory: ProductCategory | Custom ;
     productType: ProductType;
     barcode?: string;
     productVariants?: ProductVariants[];

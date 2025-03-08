@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { AuthState, LoginData, RegisterData, passwordData } from '../types/auth'
-import { authService } from '@services/authService'
-import { setToken } from '@services/authService'
+import { authService, setToken } from '@services/authService'
 import { persistor, RESET_ALL } from '../store'
+
+
 
 const initialState: AuthState = {
   user: null,
@@ -15,6 +16,9 @@ const initialState: AuthState = {
 }
 
 export const fetchUser = createAsyncThunk( 'auth/fetchUser', async () => {
+  const userToken = localStorage.getItem('userToken')
+  if (userToken) setToken(userToken)
+
   const response = await authService.getUser()
   if (response.status !== 200) {
     throw new Error(response.data.message)
@@ -29,6 +33,7 @@ export const login = createAsyncThunk('auth/loginUser', async (userData: LoginDa
     throw new Error(response.data.message)
   }
   const userToken = response.data.token
+  localStorage.setItem('userToken', userToken)
   setToken(userToken)
   return userToken
 })
@@ -41,7 +46,9 @@ export const logout = createAsyncThunk('auth/logoutUser', async (_, { dispatch }
   }
   dispatch({ type: RESET_ALL })
   await persistor.purge()
-
+  dispatch({ type: 'STORE_RESET' })
+  window.location.reload()
+  localStorage.removeItem('userToken')
   return response.data
 })
 
@@ -95,10 +102,8 @@ const authSlice = createSlice({
     })
 
     //logout
-    builder.addCase(logout.fulfilled, (state) => {
-      state.error = null
-      state.userToken = null
-      state.user = null
+    builder.addCase(logout.fulfilled, () => {
+      return initialState
     })
     builder.addCase(logout.rejected, (state, action) => {
       state.error = action.error.message ||'User logout failed, Try again later'

@@ -11,9 +11,7 @@ import icons from '@assets/icons'
 import './index.scss'
 
 
-
 const PasswordResetForm = () => {
-
 
   const { reset: emailReset, ...email } = useField('email', 'email')
   const [success, setSuccess] = useState<boolean>(false)
@@ -28,13 +26,7 @@ const PasswordResetForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    try {
-      await passwordReset(email.value)
-
-    } catch (err) {
-      console.error('Password reset error:', err)
-    }
+    await passwordReset(email.value as string)
   }
 
   return (
@@ -57,12 +49,9 @@ const PasswordResetForm = () => {
             {loading? 'Loading...' : 'Reset Password'}
           </Button >
         </Form>
-
       </Container>
     </div>
   )
 }
-
-
 
 export default PasswordResetForm

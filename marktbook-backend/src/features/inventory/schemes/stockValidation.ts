@@ -1,6 +1,16 @@
 import { z } from 'zod'
 import { LocationTypes, Status} from '@inventory/interfaces/location.interfaces'
 
+
+
+const locationSchema = z.object({
+  locationName: z.string({ required_error: 'Name of location is required'}),
+  locationType: z.nativeEnum(LocationTypes),
+  address: z.string({ required_error: 'Address of location is required'}),
+  compartment: z.string().optional(),
+  capacity: z.number().min(1, { message: 'capacity can not be less than 1'}).optional(),
+  locationStatus: z.nativeEnum(Status)
+}).optional()
 export const StockDataSchema = z.object({
   businessId: z.string({required_error: 'business Id is required'})
     .refine((val) => /^[a-f\d]{24}$/i.test(val), {
@@ -17,12 +27,10 @@ export const StockDataSchema = z.object({
   }).optional(),
   notes: z.string().max(500, { message: 'Notes must not exceed 500 characters' }).optional(),
   //location Data
-  locationName: z.string({ required_error: 'Name of location is required'}),
-  locationType: z.nativeEnum(LocationTypes),
-  address: z.string({ required_error: 'Address of location is required'}),
-  compartment: z.string().optional(),
-  capacity: z.number().min(1, { message: 'capacity can not be less than 1'}).optional(),
-  locationStatus: z.nativeEnum(Status)
+  locationSchema,
+  locationId: z.string().refine((val) => /^[a-f\d]{24}$/i.test(val), {
+    message: 'Invalid ObjectId for locationId',
+  }).optional(),
 })
 
 export const editStockSchema = z.object({

@@ -20,9 +20,12 @@ const businessSchema: Schema = new Schema(
         username: { type: String, required: true }
       }
     ],
-    
+    customCategories: { type: [String], default: [] },
+    businessImg: { type: String, required: false },
+    currency: { type: String, required: true, default: 'USD' },
     businessLogo: { type: String, required: false },
     uId: { type: String, required: false },
+    taxRate: { type: Number, required: false},
     businessAddress: { type: String, required: false },
     businessType: { 
       type: String, 
@@ -40,22 +43,13 @@ const businessSchema: Schema = new Schema(
       bankName: { type: String, required: false },
       accountType: { type: String, required: false },
     },
-    businessBio: { type: String, required: false },
+    phoneNumber: { type: String, required: false },
     notifications: {
       sales: { type: Boolean, default: true },
       stockLevel: { type: Boolean, default: true },
       dueCreditSales: { type: Boolean, default: true },
       userDataChange: { type: Boolean, default: true },
-    },
-    social: {
-      facebook: { type: String, required: false },
-      instagram: { type: String, required: false },
-      twitter: { type: String, required: false },
-      youtube: { type: String, required: false },
-      website: { type: String, required: false },
-    },
-    bgImageVersion: { type: String, required: false },
-    bgImageId: { type: String, required: false },
+    }
   },
   {
     timestamps: true,

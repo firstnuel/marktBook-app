@@ -11,6 +11,7 @@ import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 import JWT from 'jsonwebtoken'
 import { omit } from 'lodash'
 import { userService } from '@service/db/user.service'
+import { businessService } from '@service/db/business.service'
 
 const logger: Logger = config.createLogger('signinController')
 
@@ -38,7 +39,13 @@ class Login {
     const body = Utils.sanitizeInput(req.body)
     const { username, email, password } = body
 
-    const existingUser: IAuthDocument | null = await authService.getUserByEmailAndUsername(email, username)
+    const business = await businessService.getBusinessByEmail(email)
+    if(!business) {
+      logger.warn('business not found')
+      return next(new BadRequestError('invalid credentials, business account not found'))
+    }
+
+    const existingUser: IAuthDocument | null = await authService.getUserByUsername(username)
     if(!existingUser) {
       logger.warn('user not found')
       return next(new BadRequestError('invalid credentials, user not found'))
@@ -48,6 +55,14 @@ class Login {
     if(!authUser) {
       logger.warn('incorrect password')
       return next(new BadRequestError('invalid credentials, password not correct'))
+    }
+
+    if (business._id.toString() !== authUser.associatedBusinessesId.toString()) {
+      return next(new BadRequestError('invalid credentials, user not associated to this business'))
+    }
+
+    if (authUser.status !== 'active') {
+      return next(new BadRequestError('User account is inactive, contact business administrator'))
     }
     // Update last login 
     await userService.updateUserLogin(authUser._id)
@@ -74,9 +89,6 @@ class Login {
       token: userToken,
     })
   }
-    
-       
-
 }
 
 export const login: Login = new Login()

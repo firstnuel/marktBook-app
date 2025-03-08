@@ -4,8 +4,10 @@
   "main": "app.js",
   "scripts": {
     "test": "jest ",
+   "build": "ts-patch install -s && tsc",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "test:ci": "jest --forceExit --detectOpenHandles --maxWorkers=50%",
+    "start": "node -r tsconfig-paths/register dist/app.js | ./node_modules/.bin/bunyan",
     "lint": "eslint 'src/**/*.ts' --fix",
     "lint:check": "eslint 'src/**/*.ts'",
     "seeds": "npx ts-node src/seeds.ts"
@@ -18,6 +20,7 @@
     "@bull-board/express": "^6.5.3",
     "@bull-board/ui": "^6.5.3",
     "@faker-js/faker": "^9.3.0",
+    "@paystack/inline-js": "^2.22.2",
     "@sendgrid/mail": "^8.1.4",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.7",
@@ -73,6 +76,7 @@
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.2",
     "@types/nodemailer": "^6.4.17",
+    "@types/redis-info": "^3.0.3",
     "@types/sanitize-html": "^2.13.0",
     "@types/supertest": "^6.0.2",
     "@types/yamljs": "^0.2.34",
@@ -91,6 +95,6 @@
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.2",
-    "typescript-transform-paths": "^3.5.2"
+    "typescript-transform-paths": "^3.5.3"
   }
 }

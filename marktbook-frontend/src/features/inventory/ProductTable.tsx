@@ -1,4 +1,5 @@
 import { Product } from '@typess/pos'
+import noImg from '@assets/images/file.png'
 import Table from 'react-bootstrap/Table'
 import Form from 'react-bootstrap/Form'
 import IconBox from '@components/IconBox'
@@ -10,10 +11,15 @@ import { useEffect, useState } from 'react'
 import Caret from '@components/Caret'
 import { usePos } from '@hooks/usePos'
 import { useInv } from '@hooks/useInv'
+import Loading from '@components/Spinner'
+import Notify from '@components/Notify'
+import { cutName, getCurrencySymbol } from '@utils/helpers'
+import { useBusiness } from '@hooks/useBusiness'
 
 const ProductTable = () => {
-  const { products, fetchProducts } = usePos()
+  const { products, fetchProducts, loading: pLoading, error, clearError, successMsg } = usePos()
   const { setSubOpt, fetchProduct, product } = useInv()
+  const { business } = useBusiness()
   const [sort, setSort] = useState({ key: 'Name', dir: 'asc' })
   const [search, setSearch] = useState('')
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products)
@@ -45,10 +51,8 @@ const ProductTable = () => {
     Category: 'productCategory',
     'Base Price': 'basePrice',
     'Sale Price': 'salePrice',
-    Quantity: 'stock.unitsAvailable', // Handle nested field
-    Discount: 'discount',
+    Quantity: 'stock.unitsAvailable',
     Type: 'productType',
-    Unit: 'unit',
   }
 
   const header = Object.keys(hFields)
@@ -93,9 +97,7 @@ const ProductTable = () => {
         product.basePrice.toFixed(2),
         product.salePrice.toFixed(2),
         product.stock?.unitsAvailable ?? 0,
-        product.discount,
         product.productType,
-        product.unit,
       ]),
     })
 
@@ -113,13 +115,12 @@ const ProductTable = () => {
     { label: 'Base Price', key: 'basePrice' },
     { label: 'Sale Price', key: 'salePrice' },
     { label: 'Quantity', key: 'stock.unitsAvailable' },
-    { label: 'Discount', key: 'discount' },
     { label: 'Type', key: 'productType' },
-    { label: 'Unit', key: 'unit' },
   ]
 
   return (
     <>
+      <Notify clearErrFn={clearError} success={successMsg} error={error} />
       <div className="topper">
         <div className="top-menu">
           <div className="title-box">Product List</div>
@@ -139,6 +140,7 @@ const ProductTable = () => {
         </div>
       </div>
       <div className="main-content">
+        {pLoading && <Loading />}
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -153,19 +155,27 @@ const ProductTable = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedProducts.map((product) => (
-              <tr key={product.id} onClick={() => handleProduct(product.id)}>
-                <td className='prod-name'>{product.productName}</td>
-                <td>{product.sku}</td>
-                <td>{product.productCategory}</td>
-                <td>{`$ ${product.basePrice.toFixed(2)}`}</td>
-                <td>{`$ ${product.salePrice.toFixed(2)}`}</td>
-                <td>{product.stock?.unitsAvailable ?? 0}</td>
-                <td>{product.discount}</td>
-                <td>{product.productType}</td>
-                <td>{product.unit}</td>
-              </tr>
-            ))}
+            {sortedProducts.length > 0 ?
+              sortedProducts.map((product) => (
+                <tr key={product.id} onClick={() => handleProduct(product.id)}>
+                  <td className='body-row'>
+                    <img src={product.productImage || noImg} alt="" className="prd-img" />
+                    <span className="prod-name prdname">{cutName(product.productName, 25)}</span>
+                  </td>
+                  <td>{product.sku}</td>
+                  <td>{product.productCategory}</td>
+                  <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.basePrice.toFixed(2)}`}</td>
+                  <td>{`${getCurrencySymbol(business?.currency?? 'USD')} ${product.salePrice.toFixed(2)}`}</td>
+                  <td>{product.stock?.unitsAvailable ?? 0}</td>
+                  <td>{product.productType}</td>
+                </tr>
+              ))
+              :
+              (
+                <tr>
+                  <td colSpan={8} className="no-user">No product found</td>
+                </tr>
+              )}
           </tbody>
         </Table>
       </div>

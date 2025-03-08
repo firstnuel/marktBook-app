@@ -22,7 +22,9 @@ class ProductService {
   }
 
   public async fetchCategories(id: string | ObjectId, productCategory: string): Promise<IProductDocument[] | []> {
-    const result =  await ProductModel.find({ productCategory,  businessId: id }).exec()
+    const result =  await ProductModel.find({ productCategory,  businessId: id })
+      .populate('stockId', ['compartment', 'unitsAvailable', 'minQuantity', ])
+      .exec()
     return result
   }
 

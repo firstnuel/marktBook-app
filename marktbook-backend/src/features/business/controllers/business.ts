@@ -3,12 +3,13 @@ import { singleImageUpload } from '@root/shared/globals/helpers/cloudinary-uploa
 import HTTP_STATUS from 'http-status-codes'
 import { Request, Response, NextFunction } from 'express'
 import { businessService } from '@service/db/business.service'
-import { v4 as uuidv4 } from 'uuid'
 import { config } from '@root/config'
 import { Utils } from '@global/helpers/utils'
 import { BadRequestError, ZodValidationError } from '@global/helpers/error-handlers'
 import { filterFields, IBusinessDocument, EDIT_BUSINESS_FIELDS } from '@business/interfaces/business.interface'
 import { omit } from 'lodash'
+import { authService } from '@service/db/auth.service'
+import { userService } from '@service/db/user.service'
 
 export const log = config.createLogger('businessController')
 
@@ -17,6 +18,7 @@ class Business {
   constructor( ) {
     this.editBusiness = this.editBusiness.bind(this)
     this.fetch = this.fetch.bind(this)
+    this.delete = this.delete.bind(this)
   }
 
   /**
@@ -46,17 +48,17 @@ class Business {
         filteredData.businessLogo = await singleImageUpload(filteredData.businessLogo, businessId)
       }
 
-      if (filteredData.bgImageId) {
-        filteredData.bgImageId = await singleImageUpload(filteredData.bgImageId, uuidv4())
-      }
-
       const editedBusinessData = await businessService.updateBusinessData(businessId, filteredData)
+
+      if (!editedBusinessData) {
+        throw new BadRequestError('Failed to update business data')
+      }
 
       // Respond to client
       res.status(HTTP_STATUS.CREATED).json({
         status: 'success',
         message: 'Business data updated successfully',
-        data: omit(editedBusinessData, ['uId', 'verifyData']), // Exclude sensitive fields
+        data: omit(editedBusinessData.toJSON(), ['uId', 'verifyData']), // Exclude sensitive fields
       })
 
     } catch (error) {
@@ -77,12 +79,16 @@ class Business {
       const { businessId } = req.params
 
       const businessData = await businessService.getBusinessById(businessId)
+      
+      if (!businessData) {
+        throw new BadRequestError('Can not find business account')
+      }
 
       // Respond to client
       res.status(HTTP_STATUS.CREATED).json({
         status: 'success',
         message: 'Business data fetched successfully',
-        data: omit(businessData, ['uId', 'verifyData']), // Exclude sensitive fields
+        data: omit(businessData.toJSON(), ['uId', 'verifyData','admins', '__v']), // Exclude sensitive fields
       })
 
 
@@ -92,6 +98,34 @@ class Business {
     }
   }
 
+
+  public async delete(req: Request, res: Response, next: NextFunction):Promise<void> {
+    try {
+      const { businessId } = req.params
+
+
+      const business = await businessService.getBusinessById(businessId)
+      
+      if (!business) {
+        throw new BadRequestError('Can not find business account')
+      }
+
+      await authService.deleteAllAuth(business._id)
+      await userService.deleteAllUsers(business._id)
+      await businessService.deleteBusiness(business._id)
+
+
+      // Respond to client
+      res.status(HTTP_STATUS.ACCEPTED).json({
+        status: 'success',
+        message: 'Business account data deleted successfully',
+      })
+      
+    } catch (error) {
+      log.error('Error fetching business data')
+      next(error)
+    }
+  }
 }
 
 

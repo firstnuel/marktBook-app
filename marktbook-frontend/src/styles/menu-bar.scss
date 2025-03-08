@@ -162,6 +162,13 @@
                 gap: 10px;
                 align-items: center;
 
+                .useprofile-img {
+                    border: 2px solid var(--dark-gray);
+                    border-radius: 50%;
+                    height: 2.5em;
+                    width: 2.5em;
+                }
+
                 .user-name-role{
                     display: flex;
                     padding: 12px 0;

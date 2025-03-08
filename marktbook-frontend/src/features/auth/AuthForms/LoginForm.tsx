@@ -16,8 +16,8 @@ import icons from '@assets/icons'
 import './index.scss'
 
 const LoginForm = () => {
-
-  const { reset: emailReset, ...email } = useField('email', 'email')
+  const savedEmail = localStorage.getItem('email')
+  const { reset: emailReset, ...email } = useField('email', 'email', savedEmail ?? '')
   const { reset: nameReset, ...username } = useField('username', 'text')
   const { reset: passwordReset, ...password } = useField('password', 'password')
   const [validationError, setValidationError] = useState<string | null>(null)
@@ -31,7 +31,7 @@ const LoginForm = () => {
       passwordReset()
       navigate('/')
     }
-  }, [emailReset, userToken, nameReset, passwordReset, navigate])
+  }, [emailReset, userToken, nameReset, passwordReset, navigate,])
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,6 +46,7 @@ const LoginForm = () => {
 
     try {
       const userData: LoginData = LoginFormSchema.parse(formData)
+      localStorage.setItem('email', email.value as string)
       await login(userData)
     } catch (err) {
       if (err instanceof ZodError) {
@@ -91,10 +92,10 @@ const LoginForm = () => {
           </Button >
         </Form>
         <div className='forgot-password'>
-          <NavLink to='/forgot-password' className='register-link'>Forgot Password ?</NavLink>
+          <NavLink to='/forgot-password' className='register-link'>Forgot password?</NavLink>
         </div>
         <div className='register'>
-          <p>No Account Yet? <NavLink to='/register' className='register-link'>Register</NavLink></p>
+          <p>No account yet? <NavLink to='/register' className='register-link'>Register</NavLink></p>
         </div>
       </Container>
     </div>
@@ -102,4 +103,3 @@ const LoginForm = () => {
 }
 
 export default LoginForm
-

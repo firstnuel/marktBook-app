@@ -19,7 +19,17 @@ export const uploads = (
         public_id, 
         overwrite, 
         invalidate, 
-        folder: 'marktBook' 
+        folder: 'marktBook' ,
+        transformation: [
+          {
+            crop: 'fill',
+            gravity: 'auto',
+            width: 500,
+            height: 500,
+            fetch_format: 'auto',
+            quality: 'auto'
+          }
+        ]
       } ,
       (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
         if (error) {
@@ -42,7 +52,7 @@ export const uploads = (
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const constructCloudinaryURL = (uploadResult: any): string => {
-  return `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/e_background_removal/v${uploadResult.version}/${uploadResult.public_id}`
+  return `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${uploadResult.version}/${uploadResult.public_id}`
 }
 
 

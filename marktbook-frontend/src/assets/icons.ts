@@ -2,6 +2,7 @@ import emailIcon from '@assets/icons/email-icon.svg'
 import userIcon from '@assets/icons/user-icon.svg'
 import passwordIcon from '@assets/icons/password-icon.svg'
 import arrowBackIcon from '@assets/icons/arrow-back.svg'
+import arrowUpIcon from '@assets/icons/arrow-up.svg'
 import businessIcon from '@assets/icons/business-icon.svg'
 import menuIcon from '@assets/icons/menu-icon.svg'
 import posIcon from '@assets/icons/pos-icon.svg'
@@ -30,7 +31,13 @@ import uploadicon from '@assets/icons/upload-icon.svg'
 import addNewIcon from '@assets/icons/add-nwe-icon.svg'
 import refreshIcon from '@assets/icons/refresh.icon.svg'
 import printIcon from '@assets/icons/print-icon.svg'
-
+import dashBoard from '@assets/icons/dashboard.svg'
+import imagePlaceholder from '@assets/icons/img-placeholder.png'
+import logoPlaceholder from '@assets/icons/logo-placeholder-image.png'
+import cameraIcon from '@assets/icons/camera-icon.svg'
+import editFields from '@assets/icons/edit.svg'
+import deleteField from '@assets/icons/delete.svg'
+import openField from '@assets/icons/open.svg'
 
 const icons = {
   email: emailIcon,
@@ -51,6 +58,7 @@ const icons = {
   help: helpIcon,
   logout: logoutIcon,
   arrowDropDown: arrowDropDown,
+  arrowUp: arrowUpIcon,
   date: dateIcon,
   time: timeIcon,
   allCategories: allCatIcon,
@@ -64,7 +72,14 @@ const icons = {
   upload: uploadicon,
   addNew: addNewIcon,
   refresh: refreshIcon,
-  print: printIcon
+  print: printIcon,
+  dashboard: dashBoard,
+  imagePlaceholder,
+  cameraIcon,
+  logoPlaceholder,
+  editFields,
+  deleteField,
+  openField,
 }
 
 export default icons

@@ -1,7 +1,7 @@
 .main-container {
     background-color: var(--white-color);
     width: 100%;
-    min-height: 100dvh;
+    height: 100dvh;
     padding: 0;
     display: flex;
     .main {
@@ -170,5 +170,86 @@
             }
         }
 
+    }
+}
+
+.edit-customer,
+.receipt-img {
+    cursor: pointer;
+}
+
+/* For Tablets (e.g., iPad) */
+@media (max-width: 1024px) {
+    .main-container-inv .main-con {
+        flex-direction: column;
+
+        .sec {
+            width: 100%;
+            height: auto;
+        }
+
+        .sec-show {
+            width: 100%;
+            height: auto;
+        }
+
+        .topper .top-menu .options {
+            width: 100%;
+            flex-wrap: wrap;
+        }
+    }
+}
+
+/* For Mobile Devices */
+@media (max-width: 768px) {
+    .main-container-inv .main-con {
+        padding: 0 0.5em;
+
+        .sec-show .main-content {
+            height: auto;
+        }
+
+        .topper .top-menu {
+            flex-direction: column;
+            gap: 0.5em;
+
+            .title-box {
+                font-size: 1em;
+            }
+
+            .options {
+                width: 100%;
+                gap: 0.5em;
+
+                input {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    .back img {
+        width: 1.2em;
+        height: 1.2em;
+    }
+}
+
+/* For Smaller Mobile Devices */
+@media (max-width: 480px) {
+    .main-container-inv .main-con {
+        .sec-show .main-content table {
+            font-size: 0.9em;
+        }
+
+        .topper .top-menu .options {
+            gap: 0.3em;
+
+            .add-product, .pdf, .excel, .print, .refresh {
+                img {
+                    width: 1.2em;
+                    height: 1.2em;
+                }
+            }
+        }
     }
 }

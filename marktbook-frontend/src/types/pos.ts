@@ -1,3 +1,5 @@
+import { Customer } from './contacts'
+
 export interface PosState {
     products: Product[];
     filteredProducts: Product[];
@@ -8,7 +10,9 @@ export interface PosState {
     loading: boolean;
     error: string | null;
     priceInfo: PriceInfo;
-    // selectValue: (keyof typeof ProductCategory);
+    successMsg: string | null;
+    customer: Customer | null;
+    taxRate: number | null
 }
 interface Stock {
     _id: string;
@@ -30,6 +34,7 @@ export interface PriceInfo {
   total: number,
   discount: number
   tax: number
+  paymentMethod: PaymentMethod
 }
 
 export enum SearchKeys {
@@ -43,6 +48,12 @@ export enum Currency {
     Naira = 'NGN',
     Dollars = 'USD',
     Euros = 'EUR'
+}
+
+export enum PaymentMethod {
+  Cash = 'CASH',
+  Card = 'CARD',
+  BankTransfer = 'BANK_TRANSFER'
 }
 export interface ProductAttributes {
     color?: string;
@@ -96,6 +107,8 @@ export enum ProductCategory {
     Other = 'Other',
 }
 
+export type CustomCategory = string
+
 export interface Product {
     _id: string;
     businessId: string;
@@ -106,10 +119,10 @@ export interface Product {
     currency: Currency;
     longDescription: string;
     shortDescription: string;
-    productCategory: ProductCategory;
+    productCategory: ProductCategory | CustomCategory;
     productType: ProductType;
     barcode: string;
-    productVariants: ProductVariants;
+    productVariants: ProductVariants[];
     productImage?: string;
     basePrice: number;
     salePrice: number;
