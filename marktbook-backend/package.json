@@ -4,10 +4,10 @@
   "main": "app.js",
   "scripts": {
     "test": "jest ",
-    "build": "tsc",
+   "build": "ts-patch install -s && tsc",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "test:ci": "jest --forceExit --detectOpenHandles --maxWorkers=50%",
-    "start": "ts-node --transpile-only -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
+    "start": "node -r tsconfig-paths/register dist/app.js | ./node_modules/.bin/bunyan",
     "lint": "eslint 'src/**/*.ts' --fix",
     "lint:check": "eslint 'src/**/*.ts'",
     "seeds": "npx ts-node src/seeds.ts"
@@ -95,6 +95,6 @@
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.2",
-    "typescript-transform-paths": "^3.5.2"
+    "typescript-transform-paths": "^3.5.3"
   }
 }

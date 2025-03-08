@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'  # Changed to a more widely supported version
+          node-version: '18.x'  # Changed to a more widely supported version
       - name: Cache dependencies for backend
         uses: actions/cache@v4
         with:
@@ -26,21 +26,25 @@ jobs:
       - name: Install backend dependencies
         working-directory: marktbook-backend
         run: npm install
+
       - name: Run backend style check
         working-directory: marktbook-backend
         run: npm run lint
 
-      # Create a proper deployment package
+      - name: Build backend
+        working-directory: marktbook-backend
+        run: npm run build
+      
       - name: Prepare backend for deployment
         run: |
           mkdir -p deploy
           cp -r marktbook-backend/* deploy/
           cd deploy
-          # Optional - remove test files and other non-production code
           rm -rf node_modules
           # Zip from the deploy directory
           cd ..
           zip -r release.zip deploy
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
