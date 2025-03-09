@@ -12,12 +12,11 @@ import { businessCache } from '@service/redis/business.cache'
 import { IuserDocument } from '@root/features/users/interfaces/user.interface'
 import { userCache } from '@service/redis/user.cache'
 import { omit } from 'lodash'
-import { authQueue } from '@service/queues/auth.queue'
-import { userQueue } from '@service/queues/user.queue'
-import { businessQueue } from '@service/queues/business.queue'
 import JWT from 'jsonwebtoken'
 import { config } from '@root/config'
 import Logger from 'bunyan'
+import { userService } from '@service/db/user.service'
+import { businessService } from '@service/db/business.service'
 
 
 const logger: Logger = config.createLogger('registerController')
@@ -115,12 +114,11 @@ export class Register {
 
       // Add jobs to queues
       try {
-        authQueue.addAuthUserJob('addAuthUserToDb', { value: authData })
-        userQueue.addUserJob('addUserToDb', { value: sanitizedUserData })
-        businessQueue.addBusinessJob('addBusinessToDb', { value: sanitizedBusinessData })
-        logger.info(`Added jobs to queues for businessId: ${businessObjectId}`)
-      } catch (queueError) {
-        logger.error(`Failed to add jobs to queues: ${(queueError as Error).message}`)
+        await authService.createAuthUser(authData)
+        await userService.addUserData(sanitizedUserData)
+        await businessService.addBusinessData(sanitizedBusinessData)
+      } catch (err) {
+        logger.error(`Failed to add jobs to queues: ${(err as Error).message}`)
         return next(new ServerError('Failed to process registration. Please try again.'))
       }
 

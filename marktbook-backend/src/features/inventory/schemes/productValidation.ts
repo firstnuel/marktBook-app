@@ -36,7 +36,7 @@ export const productSchema = z.object({
   businessId: z.string({required_error: 'business Id is required'}),
   longDescription: z.string().optional(),
   shortDescription: z.string().optional(),
-  productCategory: z.nativeEnum(ProductCategory),
+  productCategory: z.union([z.nativeEnum(ProductCategory), z.string()]),
   attributes: ProductAttributesSchema,
   productType: z.nativeEnum(ProductType),
   barcode: z.string().optional(),

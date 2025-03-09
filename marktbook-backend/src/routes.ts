@@ -1,7 +1,6 @@
 import { authRoutes } from '@auth/routes/authRoutes'
 import { currentUserRoutes } from '@auth/routes/currentUserRoutes'
 import { productRoutes } from '@inventory/routes/productRoutes'
-import { serverAdapter } from '@service/queues/base.queue'
 import { Application } from 'express'
 import { usersRoutes } from '@users/routes/userRoutes'
 import { swaggerRouter } from './docs/swagger'
@@ -21,7 +20,6 @@ export default (app: Application) => {
   const routes = () => {
 
     app.use(swaggerRouter) // Serve api docs
-    app.use('/queues', serverAdapter.getRouter()) //Serve bull UI
     app.use(BASE_PATH, authRoutes.routes())
     app.use(BASE_PATH, authRoutes.logoutRoute())
 
