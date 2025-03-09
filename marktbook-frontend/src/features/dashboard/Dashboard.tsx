@@ -17,14 +17,17 @@ import { useBusiness } from '@hooks/useBusiness'
 import { useAuth } from '@hooks/useAuth'
 import { useDashboard } from '@hooks/useDashboard'
 import { formattedNumber, percentageOf, sumNumber } from '@utils/helpers'
+import Notify from '@components/Notify'
+import loadingImg from '@assets/images/loading-loading-forever.gif'
 
 const Dashboard = () => {
   const { business } = useBusiness()
   const { user } = useAuth()
-  const { fetchSummary, period, data } = useDashboard()
+  const { fetchSummary, period, data, error, success, clearError, loading } = useDashboard()
 
   return(
     <div className='main-con-db'>
+      <Notify clearErrFn={clearError} error={error} success={success}/>
       <div className='head'>
         <div className="menu-name">
           <MenuBar />
@@ -38,19 +41,19 @@ const Dashboard = () => {
       </div>
       <div className="sub-head">
         <div className="greet">
-          <strong>{`👋 Hello ${user?.username ?? 'User'},`}</strong>
+          <strong>{`👋 Hello ${user?.name.split(' ')[0] ?? 'User'},`}</strong>
           <span> here’s what’s happening in your store today.</span>
         </div>
         <div className="actns">
           <PeriodBox />
-          <IconBox src={icons.refresh} clName='refresh'
+          <IconBox src={loading ? loadingImg : icons.refresh} clName='refresh'
             onClick={() => business?._id && fetchSummary(business._id, period)}
           />
         </div>
       </div>
       <div className="show-box-div">
         <ShowBox
-          tittleIcon={icons.user}
+          tittleIcon={icons.receipt}
           title='Total Sales Amount'
           amount={formattedNumber(data?.totalSales ?? []) as string}
           currency={business?.currency?? 'USD'}
@@ -59,7 +62,7 @@ const Dashboard = () => {
           up={percentageOf(data?.totalSales ?? [], data?.lastTotalSales ?? []) > 0}
         />
         <ShowBox
-          tittleIcon={icons.user}
+          tittleIcon={icons.receipt}
           title='Total Product Sales'
           amount={sumNumber(data?.totalProductSales ?? []) }
           unit='Items'
@@ -68,7 +71,7 @@ const Dashboard = () => {
           up={percentageOf(data?.totalProductSales ?? [], data?.lastTotalPdSales ?? []) > 0}
         />
         <ShowBox
-          tittleIcon={icons.user}
+          tittleIcon={icons.customer}
           title='Total Customers'
           amount={sumNumber(data?.totalCustomers ?? []) }
           unit='Persons'
@@ -77,7 +80,7 @@ const Dashboard = () => {
           up={percentageOf(data?.totalCustomers ?? [], data?.lastTotalPdSales ?? []) > 0}
         />
         <ShowBox
-          tittleIcon={icons.user}
+          tittleIcon={icons.profit}
           title='Net Profit'
           amount={formattedNumber(data?.netProfit ?? []) as string}
           currency={business?.currency?? 'USD'}

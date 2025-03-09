@@ -241,7 +241,6 @@ const invSlice = createSlice({
       state.loading = false
       state.error = null
       state.successMsg = action.payload.successMsg
-      state.product = null
       state.success = true
     })
     builder.addCase(deleteProduct.rejected, (state, action) => {

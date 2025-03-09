@@ -136,6 +136,7 @@ export interface IStockData {
     address: string;
     locationStatus: Status;
     capacity?: number;
+    locationId?: string
 }
 
 export interface ILocation {
@@ -196,6 +197,7 @@ export interface EditStockData {
     businessId: string;
     compartment?: string;
     unitsAvailable?: number;
+    totalValue?: number;
     maxQuantity?: number;
     minQuantity?: number;
     thresholdAlert?: boolean;

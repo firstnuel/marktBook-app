@@ -10,14 +10,14 @@ import { useNavigate } from 'react-router'
 const MenuBar = () => {
   const [showBar, setShowBar] = useState(false)
   const navigate = useNavigate()
-  const { logout, user } = useAuth()
+  const { logout, user, } = useAuth()
 
   const handleClose = () => setShowBar(false)
   const handleShow = () => setShowBar(true)
   const handleLogout = () => {
     logout()
     handleClose()
-    navigate('/login')
+    navigate('/')
   }
 
   return (

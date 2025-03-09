@@ -45,7 +45,7 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
               <div className="email">{business?.email}</div>
             </div>
             <div className="logo" >
-              <img src={business?.businessLogo} alt="" />
+              {business?.businessLogo && <img src={business?.businessLogo} alt="" />}
             </div>
           </div>
           <div className="customer-invinfo">
@@ -124,9 +124,9 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
                 <p>Please pay within 15 days from the date of invoice to the account details below, overdue interest @ 14% will be charged on delayed payments.
                 Also remember to use invoice reference when remitting funds.</p>
                 <ul>
-                  <li>Account Name: Business account name</li>
-                  <li>Account Number: Business account number</li>
-                  <li>Bank Name: Bank account name</li>
+                  <li>{`Account Name: ${business?.businessAccount?.accountName ?? ''}`}</li>
+                  <li>{`Account Number: ${business?.businessAccount?.accountNumber ?? ''}`}</li>
+                  <li>{`Bank Name: ${business?.businessAccount?.bankName ?? ''}`}</li>
                 </ul>
               </div>}
           </div>

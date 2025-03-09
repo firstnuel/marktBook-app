@@ -1,0 +1,172 @@
+.home-page {
+    height: 100vh;
+    width: 100%;
+    background-color: var(--light-blue);
+
+    .body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90dvh;
+        width: 100%;
+        overflow: hidden;
+
+        .cta {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 70%;
+            width: 40%;
+            padding: 0 20px;
+            animation: fadeInRight 1s ease-in-out;
+
+            h1 {
+                font-size: 3rem;
+                font-weight: 800;
+                color: var(--light-purple);
+                margin-bottom: 20px;
+            }
+
+            p {
+                font-size: 1.2rem;
+                color: var(--light-purple);
+                margin-bottom: 20px;
+            }
+
+            button {
+                background-color: var(--light-purple);
+                color: var(--white-color);
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background-color: var(--dark-blue);
+                    transform: scale(1.05);
+                }
+            }
+        }
+
+        .cta-img-div {  
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInLeft 1s ease-in-out;
+
+            img {
+                width: 70%;
+                height: 70%;
+                object-fit: cover;
+                transition: transform 0.3s ease-in-out;
+
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+        }
+
+    }
+
+    .nav {
+        width: 100%;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        animation: slideDown 0.8s ease-in-out;
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--light-purple);
+        }
+
+        .nav-btns {
+            button {
+                background-color: var(--light-purple);
+                color: var(--white-color);
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background-color: var(--dark-blue);
+                    transform: scale(1.05);
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .home-page {
+        height: 100dvh;
+        width: 100%;
+
+        .body {
+            flex-direction: column;
+            height: auto;
+            width: 100%;
+            border-color: aqua;
+            height: 90dvh;
+            gap: 20px;
+
+            .cta-img-div {
+                width: 100%;
+                height: 30%;
+                order: -1; // Moves cta-img-div above .cta
+            }
+
+            .cta {
+                width: 100%;
+                height: 60%;
+            }
+        }
+    }
+}
+
+/* Animations */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

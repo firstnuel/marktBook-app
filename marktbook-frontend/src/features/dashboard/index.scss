@@ -113,3 +113,46 @@ div.main-con-db {
         }
     }
 }
+
+.refresh {
+    img {
+        width: 1.5em;
+        height: 1.5em;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    div.main-con-db {
+        padding: 0 0.5em;
+
+        div.recent-activity,
+        div.summaries,
+        div.mid-body {
+            flex-direction: column;
+            height: auto;
+        }
+
+        div.recent-activity {
+            height: 30dvh;
+        }
+
+        div.summaries,
+        div.mid-body {
+            height: auto;
+        }
+
+        div.sub-head {
+            flex-direction: column;
+            height: auto;
+            padding: 0.5em;
+            gap: 0.5em;
+        }
+
+        div.head {
+            flex-direction: column;
+            height: auto;
+            padding: 0.5em;
+            gap: 0.5em;
+        }
+    }
+}

@@ -76,10 +76,10 @@ const StockForm = () => {
     address: address.value as string,
     compartment: compartment.value as string,
     locationStatus: selectedStatus as Status,
-    supplierId: selectedSupplierId ?? undefined,
-    locationId: selectedLocationId ?? undefined
+  } as IStockData : {} as IStockData
 
-  } : {}
+  if (selectedSupplierId) stockData.supplierId = selectedSupplierId
+  if (selectedLocationId) stockData.locationId = selectedLocationId
 
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -90,6 +90,7 @@ const StockForm = () => {
       minQuantity: parseInt(minQuantity.value as string),
       thresholdAlert: isChecked,
       compartment: compartment.value as string,
+      totalValue: parseInt(totalValue.value as string),
       costPerUnit: parseInt(costPerUnit.value as string),
       notes: notes.value as string?? '',
     }

@@ -35,9 +35,7 @@
 
             .main-content {
                 height: 93dvh;
-                overflow-y: auto;
-                scroll-behavior: smooth;
-                scroll-snap-type: y mandatory;
+                overflow-y: scroll;
                 gap: 0.5em;
 
                 &::-webkit-scrollbar {
@@ -176,10 +174,7 @@
 .cat-content {
     width: 100%;
     height: 83dvh;
-    overflow-y: auto;
-    scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
-
+    overflow-y: scroll;
     &::-webkit-scrollbar {
         display: none;
     }

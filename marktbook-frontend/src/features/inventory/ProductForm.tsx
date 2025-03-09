@@ -11,10 +11,9 @@ import IconBox from '@components/IconBox'
 import icons from '@assets/icons'
 import { useInv } from '@hooks/useInv'
 import { useAuth } from '@hooks/useAuth'
-import { usePos } from '@hooks/usePos'
 import Notify from '@components/Notify'
 import { useBusiness } from '@hooks/useBusiness'
-import ConfirmAction from '@features/pos/ClearCart'
+import ConfirmDeletePd from './ConfirmDeletePd'
 
 
 interface ProductForm {
@@ -24,7 +23,6 @@ interface ProductForm {
 
 const ProductForm = ({ product, error }: ProductForm) => {
   const { business } = useBusiness()
-  const { fetchProducts } = usePos()
   const { reset: nameReset, ...productName } = useField('productName', 'text', product?.productName?? '')
   const { reset: barcodeReset, ...barcode } = useField('barcode', 'text', product?.barcode?? '')
   const { reset: tagReset, ...productTag } = useField('productTag', 'text')
@@ -52,8 +50,7 @@ const ProductForm = ({ product, error }: ProductForm) => {
 
   const { resetOpt,
     updateProduct, successMsg,
-    success, fetchStock,
-    deleteProduct, clearError,
+    success, fetchStock, clearError,
     loading, createProduct,
     setMainOpt, setSubOpt,
     subOpt, mainOpt } = useInv()
@@ -134,12 +131,12 @@ const ProductForm = ({ product, error }: ProductForm) => {
 
   }
 
-  const handleDelete = (productID: string) => {
-    deleteProduct(productID)
-    setShow(false)
-    resetOpt()
-    fetchProducts()
-  }
+  // const handleDelete = (productID: string) => {
+  //   deleteProduct(productID)
+  //   setShow(false)
+  //   resetOpt()
+  //   fetchProducts()
+  // }
 
   const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -337,14 +334,12 @@ const ProductForm = ({ product, error }: ProductForm) => {
             {!product && <Button variant="danger" onClick={clearForm}>
                 Clear Form
             </Button>}
-            { product &&
+            {product &&
             <><Button onClick={() =>  setShow(true)} variant="danger">Delete</Button>
-              <ConfirmAction
-                handleClose={() => setShow(false)}
+              <ConfirmDeletePd
+                id={product?._id?? ''}
                 show={show}
-                message={`This will delete the ${product.productName}`}
-                handleDelete={handleDelete}
-                productId={product._id}
+                setShow={setShow}
               /></>
             }
           </div>
@@ -353,6 +348,5 @@ const ProductForm = ({ product, error }: ProductForm) => {
     </Container>
   )
 }
-// handleDelete(product._id)
 
 export default ProductForm
