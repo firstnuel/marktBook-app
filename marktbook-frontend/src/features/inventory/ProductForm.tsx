@@ -131,13 +131,6 @@ const ProductForm = ({ product, error }: ProductForm) => {
 
   }
 
-  // const handleDelete = (productID: string) => {
-  //   deleteProduct(productID)
-  //   setShow(false)
-  //   resetOpt()
-  //   fetchProducts()
-  // }
-
   const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const newProductData = {

@@ -13,3 +13,23 @@ tr > td.actions {
 div.head-info > input {
     width: 40%;
 }
+
+.actn-btns {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+}
+
+.top {
+    border-bottom: 2px solid var(--light-gray);
+    padding-right: 1rem;
+}
+
+.arr-icon-div {
+
+    img {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}

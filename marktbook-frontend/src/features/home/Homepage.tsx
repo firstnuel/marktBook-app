@@ -5,7 +5,7 @@ import { useAuth } from '@hooks/useAuth'
 import { useNavigate } from 'react-router'
 
 const Home = () => {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const nav = useNavigate()
 
   return (
@@ -14,8 +14,14 @@ const Home = () => {
         <div className="logo">MarktBook</div>
         <div className="nav-btns">
           {user ?
-            <button onClick={() => nav('/dashboard')}>Dashboard</button>
-            : <button onClick={() => nav('/login')}>Login</button>
+            <div className="btnss">
+              <button onClick={() => nav('/dashboard')}>Dashboard</button>
+              <div className="lg" onClick={() => logout()}>Log Out</div>
+            </div>
+            : <div className="btnss">
+              <button onClick={() => nav('/login')}>Login</button>
+              <a href="/register">Sign Up</a>
+            </div>
           }
         </div>
       </Container>
