@@ -73,6 +73,7 @@
 | **02.03.**  | 2 |  completed implemeting dashboard UI |
 | **9.03.**  | 4 |  Deployed backend, refactored backend product and stocks controller |
 | **9.03.**  | 3 |  Implemented home page |
-| **Total**  | **188** | |
+| **10.03.**  | 2 |  Implemented view sale details page UI |
+| **Total**  | **190** | |
 
 
