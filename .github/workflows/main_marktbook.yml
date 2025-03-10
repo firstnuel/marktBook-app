@@ -5,6 +5,7 @@ on:
           - main
         types: [opened, synchronize]
     workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +16,7 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'  # Changed to a more widely supported version
+          node-version: '18.x'  # Changed to a more widely supported version
       - name: Cache dependencies for backend
         uses: actions/cache@v4
         with:
@@ -25,9 +26,7 @@ jobs:
               ${{ runner.os }}-node-backend-
       - name: Install backend dependencies
         working-directory: marktbook-backend
-        run: |    
-          rm -rf node_modules
-          npm install
+        run: npm install
 
       - name: Run backend style check
         working-directory: marktbook-backend
