@@ -6,7 +6,6 @@ import { ZodValidationError, BadRequestError, ServerError } from '@root/shared/g
 import { productSchema, categorySchema, searchSchema } from '@inventory/schemes/productValidation'
 import { IProductDocument, IProductData, IFilterData } from '@inventory/interfaces/products.interface'
 import { singleImageUpload } from '@root/shared/globals/helpers/cloudinary-upload'
-import { productQueue } from '@service/queues/product.queue'
 import { config } from '@root/config'
 import { Utils } from '@root/shared/globals/helpers/utils'
 import { productService } from '@service/db/product.service'
@@ -23,7 +22,7 @@ export class Product {
     this.read = this.read.bind(this)
     this.categories = this.categories.bind(this)
     this.search = this.search.bind(this)
-    this.batch =     this.batch.bind(this)
+    this.batch = this.batch.bind(this)
   }
 
   /**
@@ -51,15 +50,11 @@ export class Product {
           body.productImage = result
         }
       }
-
       const productData: IProductDocument = this.productData(body, productObjectId, existingUser._id)
-
-      // Add jobs to queues
       try {
-        productQueue.addProductJob('addProductToDb', { value: productData })
-        log.info(`Added job to queue for productId: ${productObjectId}`)
-      } catch (queueError) {
-        log.error(`Failed to add jobs to queues: ${(queueError as Error).message}`)
+        await productService.createProduct(productData)
+      } catch (err) {
+        log.error(`Failed to add jobs to queues: ${(err as Error).message}`)
         return next(new ServerError('Failed to process product creation. Please try again.'))
       }
 
@@ -307,8 +302,8 @@ export class Product {
       })
 
       // Add jobs to the queue
-      productDataArray.forEach((productData) => {
-        productQueue.addProductJob('addProductToDb', { value: productData })
+      productDataArray.forEach(async (productData) => {
+        await productService.createProduct(productData)
       })
 
       // Log the batch creation

@@ -14,6 +14,7 @@ import { CustomError, IErrorResponse } from '@global/helpers/error-handlers'
 const log: Logger = config.createLogger('server')
 
 const PORT = config.PORT || 8080
+const HOST = process.env.HOST || '0.0.0.0'
 
 export class MarktBookServer {
   private readonly app: Application
@@ -90,7 +91,7 @@ export class MarktBookServer {
   }
 
   private startHttpServer(httpServer: http.Server): void {
-    httpServer.listen(PORT, () => {
+    httpServer.listen({ port: PORT, host: HOST }, () => {
       log.info(`Server running on ${PORT}`)
     })
   }

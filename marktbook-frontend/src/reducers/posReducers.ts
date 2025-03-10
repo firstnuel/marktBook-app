@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { inventoryService } from '@services/inventoryService'
 import { PosState } from '@typess/pos'
 import { calculatePrice, updateDiscount } from '@utils/helpers'
-import { ProductCategory, PaymentMethod } from '@typess/pos'
+import { PaymentMethod } from '@typess/pos'
 
 const initialState: PosState = {
   products: [],
@@ -63,7 +63,7 @@ const posSlice = createSlice({
       state.category = category
       if (category === 'ALL') {
         state.filteredProducts = [...state.products]
-      } else if (Object.values(ProductCategory).includes(category)) {
+      } else if (category !== 'ALL' && category) {
         state.filteredProducts = state.products.filter(
           product => product.productCategory === category
         )

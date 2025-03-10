@@ -8,10 +8,10 @@ import { IAuthDocument } from '@auth/interfaces/auth.interface'
 import { Utils } from '@global/helpers/utils'
 import crypto from 'crypto'
 import { forgotPasswordTemplate } from '@service/emails/templates/forgot-password/forgot-password-template'
-import { emailQueue } from '@service/queues/email.queue'
 import publicIP from 'ip'
 import moment from 'moment'
 import { IResetPasswordParams, resetPasswordTemplate } from '@service/emails/templates/reset-password/reset-password-template'
+import { mailTransport } from '@service/emails/mail.transport'
 
 
 const log = config.createLogger('password')
@@ -22,11 +22,11 @@ class Password {
   }
     
   /**
-       * Handles pasword reset.
-       * @param req Express Request object
-       * @param res Express Response object
-       * @param next Express NextFunction for error handling
-       */
+   * Handles pasword reset.
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express NextFunction for error handling
+   */
 
   public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     // parse data
@@ -55,14 +55,9 @@ class Password {
     const resetLink = `${config.CLIENT_URL}/reset-password?token=${randomChars}`
     const template = forgotPasswordTemplate.passwordResetTemplate(existingUser.username, resetLink)
 
-    emailQueue.addEmailJob('forgotPasswordEmail', { 
-      template, 
-      receiveEmail: email, 
-      subject: 'Reset your password'
-    })
+    await mailTransport.sendEmail(email, 'Reset your password', template)
 
     res.status(HTTP_STATUS.OK).json({ message: 'Password reset email sent'})
-
   }
 
   /**
@@ -105,7 +100,7 @@ class Password {
 
     // send confimation email
     const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams)
-    emailQueue.addEmailJob('forgotPasswordEmail', { template, receiveEmail: existingUser.email, subject: 'Password reset confirmation'} )
+    await mailTransport.sendEmail(existingUser.email, 'Password reset confirmation', template)
 
     res.status(HTTP_STATUS.OK).json({ message: 'Password updated successfully'})
 

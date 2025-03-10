@@ -5,6 +5,7 @@ import { useTrans } from '@hooks/useTrans'
 import SalesTable from './SalesTable'
 import InvoiceTable from './InvoiceTable'
 import Invoice from '@components/Invoice'
+import ViewSale from './ViewSale'
 import './index.scss'
 
 
@@ -23,10 +24,10 @@ const Transactions = () => {
           <SecOption name='Purchase Return' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
         </Container>
         <Container className='sec-show'>
-          {mainOpt === 'Sales' && <SalesTable />}
+          {mainOpt === 'Sales' && subOpt === 'None' && <SalesTable />}
           {mainOpt === 'Invoices' && subOpt === 'None' && <InvoiceTable />}
-          {mainOpt === 'Invoices' && subOpt === 'View Invoice' && sale &&
-          <Invoice sale={sale}/>}
+          {mainOpt === 'Invoices' && subOpt === 'View Invoice' && sale && <Invoice sale={sale}/>}
+          {mainOpt === 'Sales' && subOpt === 'View Sale'  && sale && <ViewSale/>}
         </Container>
       </div>
     </div>

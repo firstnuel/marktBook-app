@@ -16,7 +16,7 @@ import { Sale } from '@typess/trans'
 
 const SalesTable = () => {
   const { sales, fetchSales, loading, error,
-    clearError, success, setSale, sale, mainOpt, setSubOpt } = useTrans()
+    clearError, success, setSale, sale, mainOpt, setSubOpt, } = useTrans()
   const [sort, setSort] = useState({ key: 'Customer Name', dir: 'asc' })
   const [search, setSearch] = useState('')
   const [filteredSales, setFilteredSales] = useState(sales)
@@ -33,7 +33,7 @@ const SalesTable = () => {
 
   useEffect(() => {
     if( mainOpt === 'Sales' && sale) {
-      setSubOpt('Details')
+      setSubOpt('View Sale')
     }
   }, [mainOpt, setSubOpt, sale])
 

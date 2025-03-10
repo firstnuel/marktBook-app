@@ -25,7 +25,9 @@ jobs:
               ${{ runner.os }}-node-backend-
       - name: Install backend dependencies
         working-directory: marktbook-backend
-        run: npm install
+        run: |    
+          rm -rf node_modules
+          npm install
 
       - name: Run backend style check
         working-directory: marktbook-backend

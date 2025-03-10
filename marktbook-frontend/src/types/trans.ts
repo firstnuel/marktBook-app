@@ -8,6 +8,7 @@ type mainOption =
 type subOption =
   | 'None'
   | 'View Invoice'
+  | 'View Sale'
 
 export interface transState {
   sales: Sale[]
@@ -40,7 +41,7 @@ interface Customer {
     value: number;
   }
 
-  interface SaleItem {
+export interface SaleItem {
     productId: string;
     productName: string;
     productSKU: string;

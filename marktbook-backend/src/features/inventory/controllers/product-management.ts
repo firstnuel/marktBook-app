@@ -5,7 +5,7 @@ import { Product } from '@inventory/controllers/products'
 import { Response, Request, NextFunction } from 'express-serve-static-core'
 import { Utils } from '@global/helpers/utils'
 import { config } from '@root/config'
-import { productSchema } from '@inventory/schemes/productValidation'
+import { editProductSchema } from '@inventory/schemes/productValidation'
 import { filterProductFields, 
   ALLOWED_ALL_FIELDS, 
   ALLOWED_STAFF_FIELDS } from '@inventory/interfaces/products.interface'
@@ -66,7 +66,7 @@ class ProductManagement extends Product {
     try{
 
       // Validate input
-      this.validateInput(productSchema, req.body)
+      this.validateInput(editProductSchema, req.body)
 
       const { productId } = req.params
       const existingUser = req.user!

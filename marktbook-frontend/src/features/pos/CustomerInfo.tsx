@@ -14,7 +14,7 @@ const CustomerInfo = ({ salesId }: InfoProps) => {
   return(
 
     <div className="customer-info">
-      <IconBox clName='receipt-img'  src={icons.receipt} title='Generate Invoice'/>
+      <IconBox clName='receipt-img'  src={icons.user} />
       <div className='name-trans-id'>
         <div className="customer-name">{customer?.name ?  cutName(customer.name) : 'Unnamed Customer'}</div>
         <div className="trans-id">{`Sales Id #${salesId}`}</div>

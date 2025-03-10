@@ -70,7 +70,11 @@
 | **25.02.**  | 2 |  Implement payment processing feature |
 | **26.02.**  | 3 |  Extended payment processing feature, services, reducers and UI |
 | **28.02.**  | 3 |  Started implemeting dashboard UI |
-| **Total**  | **179** | |
+| **02.03.**  | 2 |  completed implemeting dashboard UI |
+| **9.03.**  | 4 |  Deployed backend, refactored backend product and stocks controller |
+| **9.03.**  | 3 |  Implemented home page |
+| **10.03.**  | 2 |  Implemented view sale details page UI |
+| **Total**  | **190** | |
 
 
 

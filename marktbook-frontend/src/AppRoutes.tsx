@@ -6,7 +6,7 @@ import PasswordResetForm from '@auth/AuthForms/PasswordReset'
 import PasswordUpdateForm from '@auth/AuthForms/PasswordUpdate'
 import PointOfSale from '@features/pos/PointOfSale'
 import StocksMangement from '@features/stocks/StocksMangement'
-import Home from '@features/home/home'
+import Home from '@features/home/Homepage'
 import { useAuth } from '@hooks/useAuth'
 import { useFetchData } from '@hooks/useFetchData'
 import Settings from '@features/business/BusinessSettings'
@@ -21,7 +21,7 @@ const ProtectedRoute = memo(({ children }: { children: ReactNode }) => {
   const { user } = useAuth()
 
   if (!user) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/" replace />
   }
   return <>{children}</>
 })
@@ -33,6 +33,7 @@ const AppRoutes = () => {
 
   return (
     <Routes>
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<LoginForm />} />
       <Route path="/register" element={<RegisterForm />} />
       <Route path="/forgot-password" element={<PasswordResetForm />} />
@@ -92,14 +93,6 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <StocksMangement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Home />
           </ProtectedRoute>
         }
       />

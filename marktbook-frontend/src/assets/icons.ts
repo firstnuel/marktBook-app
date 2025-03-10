@@ -38,6 +38,8 @@ import cameraIcon from '@assets/icons/camera-icon.svg'
 import editFields from '@assets/icons/edit.svg'
 import deleteField from '@assets/icons/delete.svg'
 import openField from '@assets/icons/open.svg'
+import profit from '@assets/icons/profit.svg'
+import customer from '@assets/icons/customers.svg'
 
 const icons = {
   email: emailIcon,
@@ -80,6 +82,8 @@ const icons = {
   editFields,
   deleteField,
   openField,
+  customer,
+  profit
 }
 
 export default icons

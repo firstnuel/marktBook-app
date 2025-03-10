@@ -2,7 +2,7 @@ import Container from 'react-bootstrap/Container'
 import { useField } from '@hooks/useField'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useBusiness } from '@hooks/useBusiness'
 import { useAuth } from '@hooks/useAuth'
 import '@styles/view-or-edit.scss'
@@ -17,7 +17,7 @@ interface ViewOrEditProps {
       fieldKey: string
     }
     disableEdit: boolean
-    setDisableEdit: React.Dispatch<React.SetStateAction<boolean>>
+    setDisableEdit: Dispatch<SetStateAction<boolean>>
     fe?: boolean
     dropDownFields?: string[]
     status?: boolean

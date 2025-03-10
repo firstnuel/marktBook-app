@@ -13,9 +13,6 @@ import { userCache } from '@service/redis/user.cache'
 import { IBusinessAdmin, IBusinessDocument } from '@business/interfaces/business.interface'
 import { businessService } from '@service/db/business.service'
 import { config } from '@root/config'
-import { userQueue } from '@service/queues/user.queue'
-import { authQueue } from '@service/queues/auth.queue'
-import { businessQueue } from '@service/queues/business.queue'
 import { Schema } from 'zod'
 import { authService } from '@service/db/auth.service'
 import { ActionType, createActivityLog, EntityType } from '@activity/interfaces/logs.interfaces'
@@ -94,12 +91,12 @@ export class Users {
       
       // Add jobs to queues
       try {
-        authQueue.addAuthUserJob('addAuthUserToDb', { value: authData })
-        userQueue.addUserJob('addUserToDb', { value: userData })
-        businessQueue.updateBusisnessJob('updateBusinessAdin', { value: { admin: adminData, id: existingBusiness._id } } )
+        await authService.createAuthUser(authData)
+        await userService.addUserData(userData)
+        await businessService.addBusinessAdmin(adminData, existingBusiness._id as string)
         log.info(`Added jobs to queues for userId: ${newUserId}`)
-      } catch (queueError) {
-        log.error(`Failed to add jobs to queues: ${(queueError as Error).message}`)
+      } catch (err) {
+        log.error(`Failed to add jobs to queues: ${(err as Error).message}`)
         return next(new ServerError('Failed to process registration. Please try again.'))
       }
 

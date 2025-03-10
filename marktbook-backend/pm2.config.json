@@ -1,0 +1,13 @@
+{
+    "apps": [
+      {
+        "name": "app",
+        "script": "dist/app.js",
+        "instances": 1,
+        "autorestart": true,
+        "exec_interpreter": "node",
+        "exec_mode": "fork"
+      }
+    ]
+  }
+  

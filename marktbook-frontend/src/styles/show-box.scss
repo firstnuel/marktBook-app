@@ -2,9 +2,8 @@ div.show-box-div {
     width: 100%;
     height: 20dvh;
     display: flex;
-    gap: .7em;
-    margin: .7em 0;
-
+    gap: 0.7em;
+    margin: 0.7em 0;
 
     .show-box {
         height: 100%;
@@ -13,7 +12,8 @@ div.show-box-div {
         border-radius: 1em;
         display: flex;
         flex-direction: column;
-        gap: .3em;
+        gap: 0.3em;
+        padding: 0.5em;
 
         .last {
             width: 100%;
@@ -22,19 +22,19 @@ div.show-box-div {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 .5em;
+            padding: 0 0.5em;
 
             .trend-amt, .pct {
                 display: flex;
-                padding: .3em .5em;
-                font-size: .7em;
+                padding: 0.3em 0.5em;
+                font-size: 0.7em;
                 border-radius: 1em;
-                gap: .3em;
+                gap: 0.3em;
 
                 .icon {
                     width: 1.5em;
                     height: 1.5em;
-                    padding: .1em;
+                    padding: 0.1em;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -56,15 +56,14 @@ div.show-box-div {
                 background-color: var(--secondary-red);
                 color: var(--secondary-color);
             }
-
-
         }
+
         .body {
             width: 100%;
             height: 40%;
             display: flex;
-            gap: .5em;
-            padding: 0 .5em;
+            gap: 0.5em;
+            padding: 0 0.5em;
             justify-content: space-between;
             align-items: center;
 
@@ -82,8 +81,8 @@ div.show-box-div {
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            gap: .5em;
-            padding: 0 .5em;
+            gap: 0.5em;
+            padding: 0 0.5em;
 
             .title {
                 width: 95%;
@@ -91,13 +90,39 @@ div.show-box-div {
             .icon {
                 width: 2.5em;
                 height: 2.5em;
-                padding: .5em;
+                padding: 0.5em;
                 align-items: center;
                 display: flex;
                 background-color: var(--light-gray);
                 border-radius: 50%;
             }
         }
+    }
+}
 
+/* Mobile Responsiveness */
+@media screen and (max-width: 768px) {
+    div.show-box-div {
+        flex-direction: column;
+        height: auto;
+        gap: 1em;
+        width: 100%;
+    }
+
+    .show-box {
+        align-self: center;
+        justify-self: center;
+        width: 80% !important;
+        height: 30% !important;
+        padding: 1em;
+    }
+
+    .body .amount {
+        font-size: 1.5em; /* Reduce font size for smaller screens */
+    }
+
+    .head {
+        flex-direction: row;
+        align-items: center;
     }
 }

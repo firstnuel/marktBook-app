@@ -11,7 +11,7 @@ export abstract class Basecache {
   log: Logger
 
   constructor(cacheName: string) {
-    this.client = createClient({ url: config.REDIS_HOST })
+    this.client = createClient({ url: config.REDIS_HOST || process.env.REDIS_URL })
     this.log = config.createLogger(cacheName)
     this.cacheError()
   }
