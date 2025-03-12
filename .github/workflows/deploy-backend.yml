@@ -33,23 +33,7 @@ jobs:
         working-directory: marktbook-backend
         run: npm run lint
   
-      - name: Build backend
-        working-directory: marktbook-backend
-        run: npm run build
-      
-      - name: Prepare backend for deployment
-        run: |
-          mkdir -p deploy
-          cp -r marktbook-backend/* deploy/
-          cd deploy
-          cd ..
-          zip -r release.zip deploy
-  
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: release.zip
+
   
     deploy:
       needs: build
@@ -58,20 +42,11 @@ jobs:
       concurrency: deploy-group   
       if: github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')
       steps:
-        - name: Download artifact from build job
-          uses: actions/download-artifact@v4
-          with:
-            name: node-app
-            path: ./
-  
-        - name: Unzip artifact for deployment
-          run: unzip release.zip
-  
-        - name: Setup Flyctl
-          uses: superfly/flyctl-actions/setup-flyctl@master
-  
-        - name: Deploy to fly.io
-          run: flyctl deploy --app marktbook-backend --config ./deploy/fly.toml
+        - uses: actions/checkout@v4
+        - name: Set working directory
+          run: cd marktbook-backend
+        - uses: superfly/flyctl-actions/setup-flyctl@master
+        - run: flyctl deploy --remote-only
           env:
             FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
