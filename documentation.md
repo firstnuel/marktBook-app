@@ -76,6 +76,9 @@ To get started, users must provide the following details:
 ### Logging In
 After registration, users can log in using their **Business Email, Username** and **Password**.
 
+### First-Time Setup
+After logging in for the first time, it is recommended to fill up business information like currency, tax rate, address, payments information and stock locations. 
+
 ## 6. User Guide
 
 ### Dashboard
@@ -128,7 +131,7 @@ State management is handled using Redux, primarily for managing UI state and han
 These measures help protect against brute-force attacks, prevent excessive API requests, and ensure a secure user authentication process.
 
 
-## Tutorials and AI usage
+## 9. Tutorials and AI usage
 
 I followed a Udemy tutorial [Node with React: Build & Deploy a Fullstack Web Application](https://www.udemy.com/course/node-with-react-build-deploy-a-fullstack-web-application/) course to learn the practical application of several backend technologies, such as caching with Redis and session management. Prior to this, I was unsure about how to structure my project files, and the tutorial provided a well-organized structure that I adopted.
 

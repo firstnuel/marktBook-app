@@ -1,0 +1,76 @@
+on:
+    push:
+      branches:
+        - main
+    pull_request:
+      branches: [main]
+      types: [opened, synchronize]
+  
+jobs:
+    build:
+      runs-on: ubuntu-latest
+      name: Build and lint code
+      steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js version
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x' 
+      - name: Cache dependencies for backend
+        uses: actions/cache@v4
+        with:
+          path: marktbook-backend/node_modules
+          key: ${{ runner.os }}-node-backend-${{ hashFiles('marktbook-backend/package-lock.json') }}
+          restore-keys: |
+           ${{ runner.os }}-node-backend-
+      - name: Install backend dependencies
+        working-directory: marktbook-backend
+        run: |    
+          rm -rf node_modules
+          npm install
+  
+      - name: Run backend style check
+        working-directory: marktbook-backend
+        run: npm run lint
+  
+      - name: Build backend
+        working-directory: marktbook-backend
+        run: npm run build
+      
+      - name: Prepare backend for deployment
+        run: |
+          mkdir -p deploy
+          cp -r marktbook-backend/* deploy/
+          cd deploy
+          cd ..
+          zip -r release.zip deploy
+  
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-app
+          path: release.zip
+  
+    deploy:
+      needs: build
+      name: Deploy app to fly.io
+      runs-on: ubuntu-latest
+      concurrency: deploy-group   
+      if: github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')
+      steps:
+        - name: Download artifact from build job
+          uses: actions/download-artifact@v4
+          with:
+            name: node-app
+            path: ./
+  
+        - name: Unzip artifact for deployment
+          run: unzip release.zip
+  
+        - name: Setup Flyctl
+          uses: superfly/flyctl-actions/setup-flyctl@master
+  
+        - name: Deploy to fly.io
+          run: flyctl deploy --app marktbook-backend --config ./deploy/fly.toml
+          env:
+            FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
