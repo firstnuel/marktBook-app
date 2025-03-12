@@ -74,3 +74,25 @@ jobs:
           run: flyctl deploy --app marktbook-backend --config ./deploy/fly.toml
           env:
             FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+        - name: Health check for deployed service URL
+          uses: jtalk/url-health-check-action@v4
+          with:
+            url: https://marktbook-backend.fly.dev/health
+
+    tag_release:
+      name: Tag and Release the code
+      needs: deploy
+      runs-on: ubuntu-latest
+      permissions:
+        contents: write
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: '0'
+        - name: Bump version and push tag
+          uses: anothrNick/github-tag-action@1.71.0
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            DEFAULT_BUMP: patch
+            WITH_V : true
