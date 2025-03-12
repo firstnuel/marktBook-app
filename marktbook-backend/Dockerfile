@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 
-# Adjust NODE_VERSION as needed
+# Use a lightweight Node.js base image
 ARG NODE_VERSION=23.5.0
 FROM node:${NODE_VERSION}-slim AS base
 
@@ -12,12 +12,12 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV="production"
 
-# Copy only essential files from the prebuilt CI artifact
-COPY dist ./dist
-COPY node_modules ./node_modules
-COPY package.json pm2.config.json fly.toml ./
+# Copy built files and dependencies from the deploy artifact
+COPY deploy/dist ./dist
+COPY deploy/node_modules ./node_modules
+COPY deploy/package.json deploy/pm2.config.json deploy/fly.toml ./
 
-# Expose port for the application
+# Expose the application port
 EXPOSE 3000
 
 # Start the application
