@@ -14,7 +14,6 @@ ENV NODE_ENV="production"
 
 # Copy built files and dependencies from the deploy artifact
 COPY deploy/dist ./dist
-COPY deploy/node_modules ./node_modules
 COPY deploy/package.json deploy/pm2.config.json deploy/fly.toml ./
 
 # Expose the application port
