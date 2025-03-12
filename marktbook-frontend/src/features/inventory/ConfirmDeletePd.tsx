@@ -40,9 +40,7 @@ const ConfirmDeletePd = ({ id, show, setShow }: ConfirmDeleteProps) => {
     <>
       <Modal
         show={show}
-        onHide={() => {
-          setShow(false)
-        }}
+        onHide={() => {setShow(false)}}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         backdrop="static"

@@ -13,7 +13,8 @@ type subOption =
 export interface transState {
   sales: Sale[]
   invoices: Sale[]
-  salesReturn: Sale[]
+  returns: Sale[]
+  salesReturns: Sale[]
   purchases: []
   purchaseReturn: []
   error: string | null,
@@ -22,6 +23,8 @@ export interface transState {
   mainOpt: mainOption
   subOpt: subOption,
   sale: Sale | null,
+  invoice: Sale | null,
+  saleReturn: Sale | null,
 }
 
 interface Customer {
@@ -58,6 +61,7 @@ export interface Sale {
     taxAmount: number;
     taxRate: number;
     currency: string;
+    invRef?: string;
     paymentMethod: string;
     status: string;
     refundStatus: string;

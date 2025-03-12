@@ -103,3 +103,19 @@
         }
     }
 }
+
+div.av {
+    font-size: .8em;
+    align-self: center;
+    padding: .2em .5em;
+    border-radius: 1em;
+    width: max-content;
+}
+div.up {
+    background-color: var(--light-green);
+    color: var(--tertiary-color);
+}
+div.down {
+    background-color: var(--secondary-red);
+    color: var(--secondary-color);
+}

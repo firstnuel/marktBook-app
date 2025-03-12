@@ -149,8 +149,9 @@ const SalesTable = () => {
                   <td>{sale.status}</td>
                   <td>{`${getCurrencySymbol(sale.currency)} ${sale.subtotalAmount}`}</td>
                   <td>{`${getCurrencySymbol(sale.currency)} ${sale.totalPrice}`}</td>
-                  <td className={sale.status === 'COMPLETED' ? 'paid' : 'unpaid'}>
-                    {sale.status === 'COMPLETED' ? 'paid' : 'unpaid'}</td>
+                  <td><div className={sale.status === 'COMPLETED' ? 'av up' : 'av down'}>
+                    {sale.status === 'COMPLETED' ? 'Paid' : 'Unpaid'}
+                  </div></td>
                   <td>{sale.initiatedBy.name}</td>
                   <td className='actions' onClick={() => setSale(sale)}>Details</td>
                 </tr>

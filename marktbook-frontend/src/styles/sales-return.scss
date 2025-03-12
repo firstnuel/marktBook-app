@@ -1,0 +1,59 @@
+// NewSaleReturn.scss
+.sale-return-modal {
+    .err {
+      color: #dc3545;
+      margin-left: 10px;
+      font-size: 0.85rem;
+    }
+  
+    .qty-control {
+      display: flex;
+      align-items: center;
+      
+      .btn-qty {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .qty-display {
+        min-width: 30px;
+        text-align: center;
+      }
+    }
+    
+    .available-qty {
+      font-size: 0.75rem;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+    
+    .qty-col {
+      width: 150px;
+    }
+    
+    .actions-col {
+      width: 100px;
+    }
+    
+    .total-row {
+      font-weight: 500;
+    }
+  
+    .btn-remove {
+      color: #dc3545;
+      border-color: #dc3545;
+      
+      &:hover {
+        background-color: #dc3545;
+        color: white;
+      }
+    }
+    
+    .process-return-btn {
+      margin-top: 20px;
+    }
+  }

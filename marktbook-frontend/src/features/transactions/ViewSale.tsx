@@ -4,12 +4,18 @@ import icons from '@assets/icons'
 import IconBox from '@components/IconBox'
 import Container from 'react-bootstrap/Container'
 import FieldDisplay from './FieldDisplay'
+import Notify from '@components/Notify'
+import ConfirmOperation from './ConfirmOperation'
+import { useState } from 'react'
 
 const ViewSale = () => {
-  const { sale, rmSale } = useTrans()
+  const { sale, rmSale, clearError, success, error } = useTrans()
+  const [showCancel, setShowCancel] = useState(false)
+  const [showComplete, setShowComplete] = useState(false)
 
   return (
     <div>
+      <Notify clearErrFn={clearError} success={success} error={error} />
       <div className="head-info top">
         <div className="name-desc">
           <div className="name">Sale Details</div>
@@ -24,8 +30,8 @@ const ViewSale = () => {
               <span className="text">Back</span>
             </div>
             {sale?.status !== 'COMPLETED' &&
-             <><Button variant="primary">Mark as Completed</Button>
-               <Button variant="danger">Cancel Sale</Button></>}
+             <><Button variant="primary" onClick={() => setShowComplete(true)}>Mark as Completed</Button>
+               <Button variant="danger" onClick={() => setShowCancel(true)}>Cancel Sale</Button></>}
           </div>
         </div>
       </div>
@@ -48,6 +54,8 @@ const ViewSale = () => {
         {sale?.updatedAt &&
         <FieldDisplay fieldName="Updated At" value={new Date(sale?.updatedAt ?? '').toLocaleString() || '-'} />}
       </Container>
+      <ConfirmOperation id={sale?.id ?? ''} setShow={setShowComplete} show={showComplete} complete />
+      <ConfirmOperation id={sale?.id ?? ''} setShow={setShowCancel} show={showCancel} />
     </div>
   )
 }

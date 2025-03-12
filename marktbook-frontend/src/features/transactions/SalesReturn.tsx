@@ -13,6 +13,7 @@ import { useTrans } from '@hooks/useTrans'
 import { formatDate, getCurrencySymbol } from '@utils/helpers'
 import { Sale } from '@typess/trans'
 import { Button } from 'react-bootstrap'
+import NewSaleReturn from './NewReturn'
 
 
 const SalesReturn = () => {
@@ -21,6 +22,7 @@ const SalesReturn = () => {
   const [sort, setSort] = useState({ key: 'Customer Name', dir: 'asc' })
   const [search, setSearch] = useState('')
   const [filteredSales, setFilteredSales] = useState(sales)
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
     if (search.length > 2) {
@@ -124,7 +126,7 @@ const SalesReturn = () => {
               onChange={(e) => setSearch(e.target.value)}
               style={{ width: '50%' }}
             />
-            <Button>New Sales Return</Button>
+            <Button onClick={() => setShow(true)}>New Sales Return</Button>
           </div>
         </div>
       </div>
@@ -166,6 +168,7 @@ const SalesReturn = () => {
           </tbody>
         </Table>
       </div>
+      <NewSaleReturn show={show} setShow={setShow} />
     </>
   )
 }
