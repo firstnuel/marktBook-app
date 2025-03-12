@@ -11,7 +11,6 @@ RUN npm install --only=production
 # Copy prebuilt files (excluding unnecessary ones)
 COPY dist ./dist
 COPY pm2.config.json ./
-COPY fly.toml ./
 
 EXPOSE 3000
 
