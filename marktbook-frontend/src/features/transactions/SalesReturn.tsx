@@ -12,14 +12,17 @@ import Notify from '@components/Notify'
 import { useTrans } from '@hooks/useTrans'
 import { formatDate, getCurrencySymbol } from '@utils/helpers'
 import { Sale } from '@typess/trans'
+import { Button } from 'react-bootstrap'
+import NewSaleReturn from './NewReturn'
 
 
-const SalesTable = () => {
+const SalesReturn = () => {
   const { sales, fetchSales, loading, error,
     clearError, success, setSale, sale, mainOpt, setSubOpt, } = useTrans()
   const [sort, setSort] = useState({ key: 'Customer Name', dir: 'asc' })
   const [search, setSearch] = useState('')
   const [filteredSales, setFilteredSales] = useState(sales)
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
     if (search.length > 2) {
@@ -109,7 +112,7 @@ const SalesTable = () => {
       <Notify clearErrFn={clearError} success={success} error={error} />
       <div className="topper">
         <div className="top-menu">
-          <div className="title-box">Sales List</div>
+          <div className="title-box">Sales Return</div>
           <div className="options">
             <IconBox clName="pdf" src={icons.pdf} onClick={() => exportToPDF(false)} />
             <CSVLink data={sales} headers={csvHeaders} filename="sales-list.csv">
@@ -121,7 +124,9 @@ const SalesTable = () => {
               placeholder="Search customer"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              style={{ width: '50%' }}
             />
+            <Button onClick={() => setShow(true)}>New Sales Return</Button>
           </div>
         </div>
       </div>
@@ -149,9 +154,8 @@ const SalesTable = () => {
                   <td>{sale.status}</td>
                   <td>{`${getCurrencySymbol(sale.currency)} ${sale.subtotalAmount}`}</td>
                   <td>{`${getCurrencySymbol(sale.currency)} ${sale.totalPrice}`}</td>
-                  <td><div className={sale.status === 'COMPLETED' ? 'av up' : 'av down'}>
-                    {sale.status === 'COMPLETED' ? 'Paid' : 'Unpaid'}
-                  </div></td>
+                  <td className={sale.status === 'COMPLETED' ? 'paid' : 'unpaid'}>
+                    {sale.status === 'COMPLETED' ? 'paid' : 'unpaid'}</td>
                   <td>{sale.initiatedBy.name}</td>
                   <td className='actions' onClick={() => setSale(sale)}>Details</td>
                 </tr>
@@ -164,8 +168,9 @@ const SalesTable = () => {
           </tbody>
         </Table>
       </div>
+      <NewSaleReturn show={show} setShow={setShow} />
     </>
   )
 }
 
-export default SalesTable
+export default SalesReturn

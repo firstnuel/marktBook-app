@@ -84,6 +84,11 @@ export class Utils {
     return mongoose.Types.ObjectId.isValid(id)
   }
 
-  
+  static generateInvoiceReference(): string {
+    const timestamp: string = Date.now().toString().slice(-6)
+    const randomNum: number = Math.floor(1000 + Math.random() * 9000) // 4-digit random number
+    return `INV-${timestamp}-${randomNum}`
+  }
+
     
 }

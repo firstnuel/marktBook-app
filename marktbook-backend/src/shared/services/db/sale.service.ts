@@ -13,6 +13,7 @@ class SaleService {
     return await SaleModel.findOne({ _id: sale._id })
       .populate('customer', ['name', 'businessName', 'address'])
       .populate('initiatedBy', 'name')
+      .populate('completedBy', 'name')
       .exec()
   }
 
@@ -25,9 +26,10 @@ class SaleService {
   }
 
   // Get a single sale by ID
-  public async getById(saleId: ObjectId, businessId: ObjectId): Promise<ISaleDocument | null> {
-    return await SaleModel.findOne({ _id: saleId, businessId })
-      .populate('customer', ['name', 'businessName',  'address'])
+  public async getById(saleIdOrRef: string, businessId: ObjectId): Promise<ISaleDocument | null> {
+    const query = saleIdOrRef.includes('-') ? { invRef: saleIdOrRef, businessId } : { _id: saleIdOrRef, businessId }
+    return await SaleModel.findOne(query)
+      .populate('customer', ['name', 'businessName', 'address'])
       .populate('initiatedBy', 'name')
       .exec()
   }
@@ -38,7 +40,10 @@ class SaleService {
       { _id: saleId,  businessId },
       { $set: updateData }, 
       { new: true } 
-    )
+    )  
+      .populate('customer', ['name', 'businessName', 'address'])
+      .populate('initiatedBy', 'name')
+      .exec()
   }
 
   // Process a refund for a sale

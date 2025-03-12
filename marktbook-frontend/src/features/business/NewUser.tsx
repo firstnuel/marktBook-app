@@ -1,12 +1,12 @@
 import { useBusiness } from '@hooks/useBusiness'
 import { useField } from '@hooks/useField'
 import { User } from '@typess/auth'
-import { useState, ChangeEvent, useEffect } from 'react'
+import { useState, ChangeEvent, useEffect, Dispatch, SetStateAction } from 'react'
 import { Button, Modal, Form, Container } from 'react-bootstrap'
 
 interface NewUserProps {
     show: boolean
-    setShow: React.Dispatch<React.SetStateAction<boolean>>
+    setShow: Dispatch<SetStateAction<boolean>>
 }
 
 
@@ -82,7 +82,7 @@ const NewUser = ({ show, setShow }: NewUserProps) => {
       </Modal.Header>
       <Modal.Body id='mod-body'>
         <Container>
-          <Form onSubmit={() => {}}>
+          <Form>
             <div className="user-name-div">
               <Form.Label>Name:</Form.Label>
               <Form.Control {...name}
@@ -146,7 +146,7 @@ const NewUser = ({ show, setShow }: NewUserProps) => {
         </Container>
       </Modal.Body>
       <Modal.Footer id='cat-footer'>
-        <Button id='save-btn'onClick={handleCreate}>
+        <Button id='save-btn' onClick={handleCreate}>
           {loading? 'Loading...' :'Create User'}
         </Button>
       </Modal.Footer>

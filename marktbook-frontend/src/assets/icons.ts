@@ -40,6 +40,7 @@ import deleteField from '@assets/icons/delete.svg'
 import openField from '@assets/icons/open.svg'
 import profit from '@assets/icons/profit.svg'
 import customer from '@assets/icons/customers.svg'
+import logIcon from '@assets/icons/logs.svg'
 
 const icons = {
   email: emailIcon,
@@ -83,7 +84,8 @@ const icons = {
   deleteField,
   openField,
   customer,
-  profit
+  profit,
+  logs: logIcon
 }
 
 export default icons

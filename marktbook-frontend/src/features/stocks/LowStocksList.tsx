@@ -16,8 +16,8 @@ const LowStockList = () => {
         <Button variant='secondary' onClick={() => fetchLowStock()}>Refresh</Button>
       </div>
       <div className="cat-content">
+        {loading && <Loading />}
         <div className="product-info">
-          {loading && <Loading />}
           <table>
             <thead>
               <tr>
@@ -29,7 +29,7 @@ const LowStockList = () => {
               </tr>
             </thead>
             <tbody>
-              {lowStocks ?
+              {lowStocks.length ?
                 lowStocks.map((stock, idx) => {
 
                   return (
@@ -43,7 +43,7 @@ const LowStockList = () => {
                   )
                 })
                 : (<tr>
-                  <td colSpan={5} className="no-user">No stock found</td>
+                  <td colSpan={5} className="no-user">No low stock data found</td>
                 </tr>)
               }
             </tbody>

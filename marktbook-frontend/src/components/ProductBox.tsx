@@ -55,7 +55,7 @@ const ProductBox = ({ show, onHide, product }: ProductBoxPrpos) => {
             {product.stock?.unitsAvailable? 'In Stock' : 'Out of Stock'}
           </span>
           <span className="units units-red">
-            {`${product.stock?.unitsAvailable ?? 0}${product.unit}${(product.stock?.unitsAvailable ?? 0) > 1 ? 's' : ''}`}
+            {`${product.stock?.unitsAvailable ?? 0} ${product.unit}${(product.stock?.unitsAvailable ?? 0) > 1 ? 's' : ''}`}
           </span>
         </div>
         <div className="name">{product.productName}</div>

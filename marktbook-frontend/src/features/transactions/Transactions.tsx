@@ -6,11 +6,12 @@ import SalesTable from './SalesTable'
 import InvoiceTable from './InvoiceTable'
 import Invoice from '@components/Invoice'
 import ViewSale from './ViewSale'
+import SalesReturn from './SalesReturn'
 import './index.scss'
 
 
 const Transactions = () => {
-  const { mainOpt, setMainOpt, sale, subOpt } = useTrans()
+  const { mainOpt, setMainOpt, sale, invoice, subOpt } = useTrans()
 
   return(
     <div className="main-container-inv">
@@ -20,14 +21,13 @@ const Transactions = () => {
           <SecOption name='Sales' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
           <SecOption name='Invoices' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
           <SecOption name='Sales Return' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
-          <SecOption name='Purchases'mainOpt={mainOpt} setMainOpt={setMainOpt}/>
-          <SecOption name='Purchase Return' mainOpt={mainOpt} setMainOpt={setMainOpt}/>
         </Container>
         <Container className='sec-show'>
-          {mainOpt === 'Sales' && subOpt === 'None' && <SalesTable />}
-          {mainOpt === 'Invoices' && subOpt === 'None' && <InvoiceTable />}
-          {mainOpt === 'Invoices' && subOpt === 'View Invoice' && sale && <Invoice sale={sale}/>}
+          {mainOpt === 'Sales'  && <SalesTable />}
+          {mainOpt === 'Invoices'  && subOpt !== 'View Invoice' && <InvoiceTable />}
+          {mainOpt === 'Invoices' && subOpt === 'View Invoice' && invoice && <Invoice sale={invoice}/>}
           {mainOpt === 'Sales' && subOpt === 'View Sale'  && sale && <ViewSale/>}
+          {mainOpt === 'Sales Return' && <SalesReturn />}
         </Container>
       </div>
     </div>

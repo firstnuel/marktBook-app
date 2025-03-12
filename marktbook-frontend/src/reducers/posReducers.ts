@@ -77,6 +77,7 @@ const posSlice = createSlice({
 
       // Decide whether to apply the filter to the entire product list or the filtered list
       const sourceProducts = state.category === 'ALL' ? state.products : state.filteredProducts
+      if (!(normalizedPhrase as string).length)  state.filteredProducts = [...state.products]
 
       switch (searchKey) {
       case 'SKU':
@@ -105,8 +106,6 @@ const posSlice = createSlice({
         )
         break
       default:
-        console.warn(`Invalid search key: ${searchKey}`)
-        // Decide whether to clear the filter or keep existing results
         state.filteredProducts = [...state.products]
       }
     },

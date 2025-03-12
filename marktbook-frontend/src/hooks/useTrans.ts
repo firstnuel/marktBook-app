@@ -6,6 +6,10 @@ import {
   setSale,
   processSale,
   rmSale,
+  setInvoice,
+  fetchSale,
+  updateSale,
+  cancelSale
 } from '@reducers/transReducer'
 import { useAppDispatch, useAppSelector } from '../store'
 import { useCallback, useEffect } from 'react'
@@ -18,14 +22,16 @@ export const useTrans = () => {
     mainOpt,
     subOpt,
     success,
+    invoice,
     error,
     loading,
     sales,
     sale,
-    salesReturn,
+    salesReturns,
     invoices,
     purchaseReturn,
-    purchases
+    purchases,
+    saleReturn
   } = useAppSelector(state => state.trans)
   const dispatch = useAppDispatch()
 
@@ -45,13 +51,29 @@ export const useTrans = () => {
 
   const fetchSalesHandler = useCallback(() => dispatch(fetchSales()), [dispatch])
 
+  const fetchSaleHandler = useCallback((id: string) => dispatch(fetchSale(id)), [dispatch])
+
   const setMainOption = useCallback((option: string) => dispatch(setMainOpt({ option })), [dispatch])
 
   const setSubOption = useCallback((option: string) => dispatch(setSubOpt({ option })), [dispatch])
 
   const setSaleHandler = useCallback((sale: Sale) => dispatch(setSale({ sale })), [dispatch])
 
+  const setInvoiceHandler = useCallback((invoice: Sale) => dispatch(setInvoice({ invoice })), [dispatch])
+
   const processSaleHandler = useCallback((data: Partial<Sale>) => dispatch(processSale(data)), [dispatch])
+
+  const updateSaleHandler = useCallback(
+    (saleId: string, data: { status: string; businessId: string }) =>
+      dispatch(updateSale({ saleId, data })),
+    [dispatch]
+  )
+
+  const cancelSaleHandler = useCallback(
+    (saleId: string, data: { reason: string; businessId: string }) =>
+      dispatch(cancelSale({ saleId, data })),
+    [dispatch]
+  )
 
   return {
     mainOpt,
@@ -60,17 +82,23 @@ export const useTrans = () => {
     success,
     error,
     sales,
-    salesReturn,
+    salesReturns,
+    saleReturn,
     invoices,
     purchaseReturn,
     purchases,
     sale,
+    invoice,
     rmSale: rmSaleHandler,
+    setInvoice: setInvoiceHandler,
     setSale: setSaleHandler,
     clearError: clearErrorHandler,
     setMainOpt: setMainOption,
     setSubOpt: setSubOption,
     fetchSales: fetchSalesHandler,
+    fetchSale: fetchSaleHandler,
     processSale: processSaleHandler,
+    updateSale: updateSaleHandler,
+    cancelSale: cancelSaleHandler,
   }
 }

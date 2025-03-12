@@ -90,7 +90,7 @@ const Dashboard = () => {
         />
       </div>
       <div className="mid-body">
-        <Charts period={period.slice(0, period.length - 2)}
+        <Charts period={period === 'daily'? 'day': period.slice(0, period.length - 2)}
           currentData={data?.totalProductSales ?? []}
           lastData={data?.lastTotalPdSales ?? []}
           currency={business?.currency?? 'USD'}

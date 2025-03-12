@@ -44,6 +44,15 @@ class TransService {
     }
   }
 
+  public async fetchSale(saleId: string): Promise<any> {
+    try {
+      const response = await this.axios.get(`/sales/${saleId}`)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while fetching sales data.')
+    }
+  }
+
   public async makeSale(data: Partial<Sale>): Promise<any> {
     try {
       const response = await this.axios.post('/sales', data)
@@ -53,13 +62,30 @@ class TransService {
     }
   }
 
-
   public async fetchSummary(businessId: string, period: QueryPeriod): Promise<any> {
     try {
       const response = await this.axios.get(`/sales/summary/${businessId}`, { params: { period } })
       return response.data
     } catch (error) {
       this.handleAxiosError(error, 'An error occurred while fetching summary data.')
+    }
+  }
+
+  public async updateSale(saleId: string, data: { status: string, businessId: string }): Promise<any> {
+    try {
+      const response = await this.axios.patch(`/sales/${saleId}`, data)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while updating sale.')
+    }
+  }
+
+  public async cancelSale(saleId: string, data: { reason: string, businessId: string }): Promise<any> {
+    try {
+      const response = await this.axios.patch(`/sales/${saleId}/cancel`, data)
+      return response.data
+    } catch (error) {
+      this.handleAxiosError(error, 'An error occurred while cancelling sale.')
     }
   }
 

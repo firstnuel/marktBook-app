@@ -36,3 +36,7 @@ export const saleStatusSchema = z.object({
   status: z.nativeEnum(SaleStatus)
 })
 
+export const returnSaleSchema = z.object({
+  items: z.array(saleItems).optional(),
+  reason: z.string({ required_error: 'reason is required'}),
+})

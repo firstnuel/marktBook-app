@@ -6,6 +6,7 @@ import { formatDate, getCurrencySymbol } from '@utils/helpers'
 import { useRef  } from 'react'
 import { useReactToPrint } from 'react-to-print'
 import { useTrans } from '@hooks/useTrans'
+import Barcode from 'react-barcode'
 
 
 interface InvoiceProp {
@@ -26,7 +27,7 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
   return (
     <div>
       <Button style={{ margin: '.5em' }}
-        onClick={() => handlePrint()}>print invoice</Button >
+        onClick={() => handlePrint()}>Print invoice</Button >
       {!hide && <Button variant='secondary' style={{ margin: '.5em' }}
         onClick={() => rmSale()}
       >Back</Button>}
@@ -60,16 +61,19 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
             <div className="invinfo">
               <div className="inv-ref">
                 <span className="field">Invoice Ref:</span>
-                <span>{sale.id.toUpperCase()}</span>
+                <span>{sale.invRef?.toUpperCase() ?? sale.id.toUpperCase()}</span>
               </div>
               <div className="inv-date">
                 <span className="field">Invoice Date:</span>
                 <span>{formatDate(sale.createdAt)}</span>
               </div>
-              {sale.status === 'COMPLETED' && <div className="inv-date paid">
+              {sale.status === 'COMPLETED' && <><div className="inv-date paid">
                 <span className="field">Invoice Staus:</span>
                 <span>PAID</span>
-              </div>}
+              </div><div className="inv-date paid">
+                <span className="field">Payment Method:</span>
+                <span>{sale.paymentMethod}</span>
+              </div></>}
             </div>
           </div>
           <Table bordered>
@@ -77,8 +81,8 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
               <tr>
                 <th className="qty">Qty</th>
                 <th className="desc">Item</th>
-                <th className="unit">{`Unit Price (${getCurrencySymbol(sale.currency)})`}</th>
-                <th className="total">Total</th>
+                <th className="unit">{`Unit Price (${sale.currency})`}</th>
+                <th className="total">{`Total (${sale.currency})`}</th>
               </tr>
             </thead>
             <tbody>
@@ -98,7 +102,7 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
               <div>{sale.subtotalAmount.toFixed(2)}</div>
             </div>
             <div className="cal tax">
-              <div>{`Tax(${sale.taxRate}%:)`}</div>
+              <div>{`Tax(${sale.taxRate}%):`}</div>
               <div>{sale.taxAmount.toFixed(2)}</div>
             </div>
             {sale.discount && (
@@ -115,7 +119,7 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
             </div>
             {sale.status === 'COMPLETED' ?
               <div className="status">
-                    The above amount has been <strong>paid</strong> in full and received by <strong>{sale.updateBy?.name ?? sale.initiatedBy.name}</strong>.
+                    The above amount has been <strong>paid</strong> in full and received by <strong>{sale.completedBy?.name ?? sale.initiatedBy.name}</strong>.
               </div>
 
               :
@@ -129,6 +133,9 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
                   <li>{`Bank Name: ${business?.businessAccount?.bankName ?? ''}`}</li>
                 </ul>
               </div>}
+          </div>
+          <div className="barcode">
+            <Barcode value={sale.invRef ?? sale.id} />
           </div>
         </div>
       </div>
