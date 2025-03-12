@@ -33,15 +33,20 @@ const ViewSale = () => {
       <Container className='edit-con'>
         <FieldDisplay fieldName='Customer Name' value={sale?.customer?.name?? '-'}  />
         <FieldDisplay fieldName="Initiated By" value={sale?.initiatedBy?.name ?? '-'} />
+        {sale?.completedBy &&
+        <FieldDisplay fieldName="Initiated By" value={sale?.completedBy?.name ?? '-'} />}
         <FieldDisplay fieldName="Subtotal Amount" value={`${sale?.subtotalAmount ?? 0} ${sale?.currency ?? '-'}`} />
         <FieldDisplay fieldName="Tax Amount" value={`${sale?.taxAmount ?? 0} ${sale?.currency ?? '-'}`} />
         <FieldDisplay fieldName="Tax Rate" value={`${sale?.taxRate ?? 0}%`} />
+        <FieldDisplay fieldName="Discount" value={`${sale?.discount?.value ?? 0} ${sale?.currency ?? '-'}`} />
         <FieldDisplay fieldName="Sold Items" items={sale?.saleItems || []} />
         <FieldDisplay fieldName="Payment Method" value={sale?.paymentMethod ?? '-'} />
         <FieldDisplay fieldName="Sale Status" value={sale?.status ?? '-'} />
         <FieldDisplay fieldName="Refund Status" value={sale?.refundStatus ?? '-'} />
         <FieldDisplay fieldName="Total Price" value={`${sale?.totalPrice ?? 0} ${sale?.currency ?? '-'}`} />
         <FieldDisplay fieldName="Created At" value={new Date(sale?.createdAt ?? '').toLocaleString() || '-'} />
+        {sale?.updatedAt &&
+        <FieldDisplay fieldName="Updated At" value={new Date(sale?.updatedAt ?? '').toLocaleString() || '-'} />}
       </Container>
     </div>
   )

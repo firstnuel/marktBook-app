@@ -47,6 +47,7 @@ const MenuBar = () => {
           <MenuOption handleClose={handleClose} option="Stocks" icon={icons.stock} to='/stocks' />
           <MenuOption handleClose={handleClose} option="Contacts" icon={icons.contacts} to='/contacts' />
           <MenuOption handleClose={handleClose} option="Settings" icon={icons.settings} to='/settings' />
+          <MenuOption handleClose={handleClose} option="Logs" icon={icons.logs} to='/settings' />
         </div>
         <div className="log-out-div">
           <div className="log-out" onClick={handleLogout}>

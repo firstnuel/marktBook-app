@@ -6,6 +6,7 @@ import SalesTable from './SalesTable'
 import InvoiceTable from './InvoiceTable'
 import Invoice from '@components/Invoice'
 import ViewSale from './ViewSale'
+import SalesReturn from './SalesReturn'
 import './index.scss'
 
 
@@ -28,6 +29,7 @@ const Transactions = () => {
           {mainOpt === 'Invoices' && subOpt === 'None' && <InvoiceTable />}
           {mainOpt === 'Invoices' && subOpt === 'View Invoice' && sale && <Invoice sale={sale}/>}
           {mainOpt === 'Sales' && subOpt === 'View Sale'  && sale && <ViewSale/>}
+          {mainOpt === 'Sales Return' && subOpt === 'None' && <SalesReturn />}
         </Container>
       </div>
     </div>

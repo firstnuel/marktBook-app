@@ -13,6 +13,7 @@ class SaleService {
     return await SaleModel.findOne({ _id: sale._id })
       .populate('customer', ['name', 'businessName', 'address'])
       .populate('initiatedBy', 'name')
+      .populate('completedBy', 'name')
       .exec()
   }
 

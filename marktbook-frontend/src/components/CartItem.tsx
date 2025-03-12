@@ -4,10 +4,13 @@ import testImage from '@assets/images/file.png'
 import { CartItemProps } from '@typess/pos'
 import icons from '@assets/icons'
 import '@styles/cart-item.scss'
+import { getCurrencySymbol } from '@utils/helpers'
+import { useBusiness } from '@hooks/useBusiness'
 
 
 const CartItem = ({ quantity, product }: CartItemProps) => {
   const { addQuantity, subQuantity } = usePos()
+  const { business } = useBusiness()
 
   return (
     <>
@@ -19,7 +22,7 @@ const CartItem = ({ quantity, product }: CartItemProps) => {
             </div>
             <div className="item-details">
               <div className="item-name">{product.productName}</div>
-              <div className="item-price">{`$${product.salePrice}`}</div>
+              <div className="item-price">{`${getCurrencySymbol(business?.currency?? 'USD')}${product.salePrice}`}</div>
               <IconBox clName="edit-item" src={icons.edit} />
             </div>
           </div>

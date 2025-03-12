@@ -6,6 +6,7 @@ import { formatDate, getCurrencySymbol } from '@utils/helpers'
 import { useRef  } from 'react'
 import { useReactToPrint } from 'react-to-print'
 import { useTrans } from '@hooks/useTrans'
+import Barcode from 'react-barcode'
 
 
 interface InvoiceProp {
@@ -26,7 +27,7 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
   return (
     <div>
       <Button style={{ margin: '.5em' }}
-        onClick={() => handlePrint()}>print invoice</Button >
+        onClick={() => handlePrint()}>Print invoice</Button >
       {!hide && <Button variant='secondary' style={{ margin: '.5em' }}
         onClick={() => rmSale()}
       >Back</Button>}
@@ -115,7 +116,7 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
             </div>
             {sale.status === 'COMPLETED' ?
               <div className="status">
-                    The above amount has been <strong>paid</strong> in full and received by <strong>{sale.updateBy?.name ?? sale.initiatedBy.name}</strong>.
+                    The above amount has been <strong>paid</strong> in full and received by <strong>{sale.completedBy?.name ?? sale.initiatedBy.name}</strong>.
               </div>
 
               :
@@ -129,6 +130,9 @@ const Invoice = ({ sale, hide }: InvoiceProp) => {
                   <li>{`Bank Name: ${business?.businessAccount?.bankName ?? ''}`}</li>
                 </ul>
               </div>}
+          </div>
+          <div className="barcode">
+            <Barcode value={sale.id} />
           </div>
         </div>
       </div>

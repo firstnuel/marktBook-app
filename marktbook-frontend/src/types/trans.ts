@@ -65,6 +65,7 @@ export interface Sale {
     discount?: Discount;
     saleItems: SaleItem[];
     createdAt: string;
+    updatedAt?: string;
     id: string;
-    updateBy?: InitiatedBy
+    completedBy?: InitiatedBy
   }

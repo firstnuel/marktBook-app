@@ -5,8 +5,8 @@ import { config } from '@root/config'
 import { ObjectId } from 'mongodb'
 import { Utils } from '@root/shared/globals/helpers/utils'
 import { Product } from '@inventory/controllers/products'
-import { salesDataSchema, saleStatusSchema } from '@transactions/schemes/salesValidation'
-import { ISaleData, ISaleDocument, SaleItem, validateTotals } from '@transactions/interfaces/sales.interface'
+import { returnSaleSchema, salesDataSchema, saleStatusSchema } from '@transactions/schemes/salesValidation'
+import { ISaleData, ISaleDocument, SaleItem, validateTotals, RefundStatus, SaleStatus } from '@transactions/interfaces/sales.interface'
 import { stockService } from '@service/db/stock.service'
 import { BadRequestError, NotFoundError } from '@global/helpers/error-handlers'
 import { IuserDocument } from '@users/interfaces/user.interface'
@@ -14,7 +14,6 @@ import { saleService } from '@service/db/sale.service'
 import { omit } from 'lodash'
 import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
-
 
 export const log = config.createLogger('saleController')
 
@@ -25,6 +24,8 @@ class Sale extends Product {
     this.read = this.read.bind(this)
     this.fetch = this.fetch.bind(this)
     this.updateStatus = this.updateStatus.bind(this)
+    this.returnSale = this.returnSale.bind(this)
+    this.cancelSale = this.cancelSale.bind(this)
   }
   /**
    * Handles the make a new sale.
@@ -201,14 +202,14 @@ class Sale extends Product {
       // Validate and sanitize input 
       this.validateInput(saleStatusSchema, req.body)
       const { id } = req.params
-      const { status } = Utils.sanitizeInput(req.body)
+
 
       // update saleData
       const  updatedSaleData = await saleService.updateStatus(
         new ObjectId(id),
         new ObjectId(user.associatedBusinessesId),
         {
-          status,
+          status: SaleStatus.COMPLETED,
           completedBy: new ObjectId(user._id),
           updatedAt: new Date(),
         }
@@ -225,7 +226,7 @@ class Sale extends Product {
         'UPDATE' as ActionType, 
         'SALE' as EntityType,
         `${id}`,
-        `Updated sale staus to '${status}'`)
+        'Updated sale staus to \'COMPLETED\'')
 
       await logService.createLog(logData)
       
@@ -238,9 +239,190 @@ class Sale extends Product {
       log.error(`Failed to update sale status: ${error.message}`)
       next(error)
     }
+  }
 
+  /**
+   * Handles returning items from a sale and updating inventory
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express NextFunction for error handling
+  */
+  public async returnSale(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      log.info('Sale return attempt implemented')
+      
+      // Validate user
+      const user = req.user!
+
+      // Get sale ID and validate it's a valid ObjectID
+      const { id } = req.params
+      this.validateInput(returnSaleSchema, req.body)
+      
+      // Sanitize input
+      const { 
+        items, 
+        reason, 
+      } = Utils.sanitizeInput(req.body)
+
+      let refundStatus = RefundStatus.FULL 
+      if (items.length) refundStatus = RefundStatus.PARTIAL
+      
+      // Fetch the original sale
+      const originalSale = await saleService.getById(
+        new ObjectId(id), 
+        new ObjectId(user.associatedBusinessesId)
+      )
+      
+      if (!originalSale) {
+        return next(new NotFoundError('Sale data not found'))
+      }
+      
+      // Check if sale can be returned (not already cancelled, etc)
+      if (originalSale.status === SaleStatus.CANCELLED) {
+        return next(new BadRequestError('Cannot return a cancelled sale'))
+      }
+      
+      // If no specific items provided, return all items
+      const itemsToReturn: SaleItem[] = items || originalSale.saleItems
+      
+      // Return stock to inventory
+      const bulkOperations = itemsToReturn.map(({ productId, quantity }) => ({
+        updateOne: {
+          filter: { productId },
+          update: { $inc: { unitsAvailable: quantity } },
+        },
+      }))
+      
+      await stockService.bulkUpdate(bulkOperations)
+      
+      // Update sale with return information
+      const updatedSaleData = await saleService.updateStatus(
+        new ObjectId(id),
+        new ObjectId(user.associatedBusinessesId),
+        {
+          refundStatus,
+          completedBy: new ObjectId(user._id),
+          updatedAt: new Date(),
+        }
+      )
+      
+      if (!updatedSaleData) {
+        return next(new BadRequestError('Failed to update sale with return information'))
+      }
+      
+      // Log the return activity
+      const logData = createActivityLog(
+        user._id,
+        user.username,
+        user.associatedBusinessesId,
+        'UPDATE' as ActionType,
+        'SALE' as EntityType,
+        `${id}`,
+        `Returned sale with reason: ${reason}. Refund status: ${refundStatus}`
+      )
+      
+      await logService.createLog(logData)
+      
+      // Send success response
+      res.status(HTTP_STATUS.OK).json({
+        status: 'success',
+        message: 'Sale returned successfully',
+        data: omit(updatedSaleData.toJSON(), ['businessId'])
+      })
+      
+    } catch (error: any) {
+      log.error(`Sale return attempt failed: ${error.message}`)
+      next(error)
+    }
   }
   
+  /**
+   * Handles cancelling a sale and returning items to inventory
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express NextFunction for error handling
+  */
+  public async cancelSale(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      log.info('Sale cancellation attempt implemented')
+      
+      // Validate user
+      const user = req.user!
+
+      // Get sale ID
+      const { id } = req.params
+      
+      // Validate the request body (can reuse status schema if it fits)
+      this.validateInput(saleStatusSchema, req.body)
+      
+      // Sanitize input
+      const { reason } = Utils.sanitizeInput(req.body)
+      
+      // Fetch the original sale
+      const originalSale = await saleService.getById(
+        new ObjectId(id), 
+        new ObjectId(user.associatedBusinessesId)
+      )
+      
+      if (!originalSale) {
+        return next(new NotFoundError('Sale data not found'))
+      }
+      
+      // Check if sale can be cancelled (only pending sales)
+      if (originalSale.status !== SaleStatus.PENDING) {
+        return next(new BadRequestError('Only pending sales can be cancelled'))
+      }
+      
+      // Return all items to inventory
+      const bulkOperations = originalSale.saleItems.map(({ productId, quantity }) => ({
+        updateOne: {
+          filter: { productId },
+          update: { $inc: { unitsAvailable: quantity } },
+        },
+      }))
+      
+      await stockService.bulkUpdate(bulkOperations)
+      
+      // Update sale status to cancelled
+      const updatedSaleData = await saleService.updateStatus(
+        new ObjectId(id),
+        new ObjectId(user.associatedBusinessesId),
+        {
+          status: SaleStatus.CANCELLED,
+          completedBy: new ObjectId(user._id),
+          updatedAt: new Date(),
+        }
+      )
+      
+      if (!updatedSaleData) {
+        return next(new BadRequestError('Failed to cancel sale'))
+      }
+      
+      // Log the cancellation
+      const logData = createActivityLog(
+        user._id,
+        user.username,
+        user.associatedBusinessesId,
+        'UPDATE' as ActionType,
+        'SALE' as EntityType,
+        `${id}`,
+        `Cancelled sale with reason: ${reason}`
+      )
+      
+      await logService.createLog(logData)
+      
+      // Send success response
+      res.status(HTTP_STATUS.OK).json({
+        status: 'success',
+        message: 'Sale cancelled successfully',
+        data: omit(updatedSaleData.toJSON(), ['businessId'])
+      })
+      
+    } catch (error: any) {
+      log.error(`Sale cancellation attempt failed: ${error.message}`)
+      next(error)
+    }
+  }
 }
 
 export const sale: Sale = new Sale()

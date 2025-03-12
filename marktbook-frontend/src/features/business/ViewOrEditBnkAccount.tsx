@@ -95,7 +95,7 @@ const ViewOrEditBank = ({ disableEdit, setDisableEdit, business, err }: VBNKProp
           {hideEdit?
             <button className={disableEdit? 'disable' : 'edit-or-cancel'}
               onClick={disableEdit? () => {} : handleEdit} disabled={disableEdit}>Edit</button>
-            : <button className="edit-or-cancel" onClick={handleCancel}>Cancel</button>
+            : <button className="edit-or-cancel" onClick={handleCancel}>Close</button>
           }
         </div>
       </div>

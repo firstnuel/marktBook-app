@@ -74,6 +74,7 @@
 | **9.03.**  | 4 |  Deployed backend, refactored backend product and stocks controller |
 | **9.03.**  | 3 |  Implemented home page |
 | **10.03.**  | 2 |  Implemented view sale details page UI |
+| **12.03.**  | 2 | Started the documentation of the project|
 | **Total**  | **190** | |
 
 
