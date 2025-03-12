@@ -41,7 +41,7 @@ MarktBook is an inventory and sales management system tailored for small and med
 - **Settings**: Configure system preferences and user permissions.
 - **Logs**: Track system activities for security and monitoring.
 
-   ![Features image](./assests/menubar-screenshot.png)
+   ![Features image](./assets/menubar-screenshot.png)
 
    Fig 1.0. MarktBook menu bar showing its features
 
