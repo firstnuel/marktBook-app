@@ -7,7 +7,7 @@ app = 'marktbook-backend'
 primary_region = 'arn'
 
 [build]
-  builtin = false
+  dockerfile = "Dockerfile"
 
 [http_service]
   internal_port = 3000
