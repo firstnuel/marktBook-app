@@ -76,6 +76,7 @@ const salesSchema: Schema<ISaleDocument> = new Schema(
     },
     totalPrice: { type: Number, required: true },
     paymentRef: { type: String },
+    invRef: { type: String },
     discount: { type: discountSchema },
     saleItems: { type: [saleItemSchema], required: true },
   },

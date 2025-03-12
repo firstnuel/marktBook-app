@@ -92,6 +92,7 @@ class Sale extends Product {
       paymentRef: data.paymentRef,
       taxRate: data.taxRate,
       currency: data.currency,
+      invRef: Utils.generateInvoiceReference(),
       paymentMethod: data.paymentMethod,
       discount: data.discount,
       status: data.paymentMethod === 'CASH' ? 'COMPLETED' : 'PENDING',
@@ -173,7 +174,7 @@ class Sale extends Product {
 
       const { id } = req.params
 
-      const saleData = await saleService.getById(new ObjectId(id), new ObjectId(user.associatedBusinessesId))
+      const saleData = await saleService.getById(id, new ObjectId(user.associatedBusinessesId))
 
       if (!saleData){
         return next(new NotFoundError('Sale data not found'))
@@ -268,10 +269,7 @@ class Sale extends Product {
       if (items.length) refundStatus = RefundStatus.PARTIAL
       
       // Fetch the original sale
-      const originalSale = await saleService.getById(
-        new ObjectId(id), 
-        new ObjectId(user.associatedBusinessesId)
-      )
+      const originalSale = await saleService.getById(id, new ObjectId(user.associatedBusinessesId))
       
       if (!originalSale) {
         return next(new NotFoundError('Sale data not found'))
@@ -352,17 +350,11 @@ class Sale extends Product {
       // Get sale ID
       const { id } = req.params
       
-      // Validate the request body (can reuse status schema if it fits)
-      this.validateInput(saleStatusSchema, req.body)
-      
       // Sanitize input
       const { reason } = Utils.sanitizeInput(req.body)
       
       // Fetch the original sale
-      const originalSale = await saleService.getById(
-        new ObjectId(id), 
-        new ObjectId(user.associatedBusinessesId)
-      )
+      const originalSale = await saleService.getById(id, new ObjectId(user.associatedBusinessesId))
       
       if (!originalSale) {
         return next(new NotFoundError('Sale data not found'))

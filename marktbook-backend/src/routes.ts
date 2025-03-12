@@ -19,6 +19,11 @@ const BASE_PATH = '/api/v1/'
 export default (app: Application) => {
   const routes = () => {
 
+    //Health check
+    app.get('/health', (req, res) => {
+      res.status(200).send('OK')
+    })
+
     app.use(swaggerRouter) // Serve api docs
     app.use(BASE_PATH, authRoutes.routes())
     app.use(BASE_PATH, authRoutes.logoutRoute())

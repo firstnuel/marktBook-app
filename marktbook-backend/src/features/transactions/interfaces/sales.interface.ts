@@ -15,6 +15,7 @@ export interface ISaleDocument extends Document {
     currency: Currency;
     paymentMethod: PaymentMethod;
     paymentRef?: string;
+    invRef?: string;
     discount?: {
         type: DiscountType;
         value: number;
@@ -24,7 +25,7 @@ export interface ISaleDocument extends Document {
     refundStatus?: RefundStatus;
     
     // Items and calculations
-    saleItems: [SaleItem, ...SaleItem[]]; // Ensure at least one item
+    saleItems: [SaleItem, ...SaleItem[]]; // at least one item
     totalPrice: number;
 }
 
@@ -43,7 +44,7 @@ export interface ISaleData {
         maxAmount?: number;
     };
     status: SaleStatus;
-    saleItems: [SaleItem, ...SaleItem[]]; // Ensure at least one item
+    saleItems: [SaleItem, ...SaleItem[]]; // at least one item
     totalPrice: number;
     businessId: string;
 }
