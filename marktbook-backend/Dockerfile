@@ -9,6 +9,9 @@ LABEL fly_launch_runtime="Node.js"
 # Set working directory
 WORKDIR /app
 
+# Install pm2 globally in the container
+RUN npm install -g pm2
+
 # Set production environment
 ENV NODE_ENV="production"
 
