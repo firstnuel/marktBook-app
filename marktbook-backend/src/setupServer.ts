@@ -48,17 +48,14 @@ export class MarktBookServer {
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
         maxAge: 24 * 60 * 60 * 1000,
         secure: config.NODE_ENV != 'development',
-        sameSite: 'lax',
-        httpOnly: true   
+        sameSite: 'none',
       })
     )
     app.use(helmet())
     app.use(hpp())
     app.use(
       cors({
-        origin: (origin, callback) => {
-          callback(null, true)
-        },
+        origin: config.CLIENT_URL,
         credentials: true,
         optionsSuccessStatus: 200,
         methods: ['GET', 'PUT', 'DELETE', 'POST', 'PATCH','OPTIONS']

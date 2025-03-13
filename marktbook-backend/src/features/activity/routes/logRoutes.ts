@@ -11,7 +11,9 @@ class LogsRoutes {
   }
 
   public logsRoutes(): Router {
-    this.router.get('/logs', authMiddleware.checkAuthentication, logs.read.bind(logs))
+    this.router.get('/logs', 
+      authMiddleware.checkAuthentication, 
+      logs.read.bind(logs))
 
 
     return this.router

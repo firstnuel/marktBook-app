@@ -227,7 +227,7 @@ class Sale extends Product {
         'UPDATE' as ActionType, 
         'SALE' as EntityType,
         `${id}`,
-        'Updated sale staus to \'COMPLETED\'')
+        `Updated sale with invoice ref ${updatedSaleData.invRef} staus to 'COMPLETED'`)
 
       await logService.createLog(logData)
       
@@ -313,10 +313,10 @@ class Sale extends Product {
         user._id,
         user.username,
         user.associatedBusinessesId,
-        'UPDATE' as ActionType,
+        'REFUND' as ActionType,
         'SALE' as EntityType,
         `${id}`,
-        `Returned sale with reason: ${reason}. Refund status: ${refundStatus}`
+        `Returned sale with invoice ref ${updatedSaleData.invRef}, reason: ${reason}. Refund status: ${refundStatus}`
       )
       
       await logService.createLog(logData)
@@ -398,7 +398,7 @@ class Sale extends Product {
         'UPDATE' as ActionType,
         'SALE' as EntityType,
         `${id}`,
-        `Cancelled sale with reason: ${reason}`
+        `Cancelled sale with invoice ref ${updatedSaleData.invRef}, reason: ${reason}`
       )
       
       await logService.createLog(logData)

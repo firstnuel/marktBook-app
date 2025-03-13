@@ -20,6 +20,7 @@ import contactsReducer from '@reducers/contactsReducer'
 import stocksReducer from '@reducers/stocksReducer'
 import transReducer from '@reducers/transReducer'
 import dashReducer from '@reducers/dashReducer'
+import logsReducer from '@reducers/logsReducer'
 
 // Add RESET_ALL action type
 export const RESET_ALL = 'RESET_ALL'
@@ -62,6 +63,13 @@ const stocksPersistConfig = {
     'locations', 'bySupplier', 'movements', 'sale']
 }
 
+const logsPersistConfig = {
+  key: 'logs',
+  storage,
+  whitlist: ['stock', 'mainOpt', 'transaction', 'inventory',
+    'contacts', 'business', 'users']
+}
+
 // the base reducer combination
 const combinedReducer = combineReducers({
   'auth': persistReducer(authPersistConfig, authReducer),
@@ -71,6 +79,7 @@ const combinedReducer = combineReducers({
   'contacts': persistReducer(contactsPersistConfig, contactsReducer),
   'stocks': persistReducer(stocksPersistConfig, stocksReducer),
   'trans': persistReducer(transPersistConfig, transReducer),
+  'logs': persistReducer(logsPersistConfig, logsReducer),
   'dash': persistReducer({ key: 'dash', storage, whitelist: ['data', 'period'] }, dashReducer)
 })
 

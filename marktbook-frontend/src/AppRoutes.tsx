@@ -14,6 +14,7 @@ import { memo, ReactNode } from 'react'
 import Contacts from '@features/contacts/Contacts'
 import Transactions from '@features/transactions/Transactions'
 import Dashboard from '@features/dashboard/Dashboard'
+import Activity from '@features/activity/Logs'
 
 
 // Memoize ProtectedRoute to prevent unnecessary re-renders
@@ -53,6 +54,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Inventory />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/logs"
+        element={
+          <ProtectedRoute>
+            <Activity />
           </ProtectedRoute>
         }
       />

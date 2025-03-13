@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance } from 'axios'
-import { Token } from './authService'
 import { Sale } from '@typess/trans'
 import { QueryPeriod } from '@typess/dashboard'
 
@@ -18,13 +17,6 @@ class TransService {
       headers: this.headers,
     })
 
-    this.axios.interceptors.request.use((config) => {
-      const token = Token || localStorage.getItem('userToken')
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-      }
-      return config
-    })
   }
 
   private handleAxiosError(error: unknown, defaultMessage: string): never {

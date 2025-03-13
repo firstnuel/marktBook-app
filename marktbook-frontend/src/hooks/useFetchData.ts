@@ -6,16 +6,19 @@ import { useContacts } from '@hooks/useContacts'
 import { useStocks } from '@hooks/useStocks'
 import { useTrans } from '@hooks/useTrans'
 import { useDashboard } from '@hooks/useDashboard'
+import { useLogs } from './useLogs'
 
 
 export const useFetchData = () => {
   const { user, fetchUser, userToken } = useAuth()
   const { fetchSales, sales } = useTrans()
+  const { inventory, fetchLogs } = useLogs()
   const { business, fetchBusiness, fetchBusinessUsers, users } = useBusiness()
   const { fetchProducts, products, setTaxRate } = usePos()
   const { fetchCustomers, fetchSuppliers, customers, suppliers } = useContacts()
   const { fetchLowStock, fetchStocks, stocks, lowStocks, fetchLocations, locations } = useStocks()
   const {  period, fetchSummary } = useDashboard()
+
 
   useEffect(() => {
     if (userToken && !user) fetchUser()
@@ -58,6 +61,10 @@ export const useFetchData = () => {
   useEffect(() => {
     if (business?._id && !stocks.length) fetchStocks()
   }, [business?._id, fetchStocks, stocks.length])
+
+  useEffect(() => {
+    if (business?._id && !inventory.length) fetchLogs()
+  }, [business?._id, fetchLogs, inventory.length])
 
   useEffect(() => {
     if (business?._id && !lowStocks.length) fetchLowStock()
