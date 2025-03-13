@@ -1,72 +1,89 @@
+name: CI/CD Pipeline
+
 on:
-    push:
-      branches:
-        - main
-    pull_request:
-      branches: [main]
-      types: [opened, synchronize]
-  
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
 jobs:
-    build:
-      runs-on: ubuntu-latest
-      name: Build and lint code
-      steps:
+  build:
+    runs-on: ubuntu-latest
+    name: Build and lint code
+    steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js version
+      
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x' 
-      - name: Cache dependencies for backend
-        uses: actions/cache@v4
-        with:
-          path: marktbook-backend/node_modules
-          key: ${{ runner.os }}-node-backend-${{ hashFiles('marktbook-backend/package-lock.json') }}
-          restore-keys: |
-           ${{ runner.os }}-node-backend-
+          node-version: '22.x'
+          cache: 'npm'
+          
       - name: Install backend dependencies
         working-directory: marktbook-backend
-        run: |    
-          rm -rf node_modules
-          npm install
-  
+        run: npm ci  # Clean install for consistency
+
       - name: Run backend style check
         working-directory: marktbook-backend
         run: npm run lint
 
-    deploy:
-      needs: build
-      name: Deploy app to fly.io
-      runs-on: ubuntu-latest
-      concurrency: deploy-group   
-      if: github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')
-      steps:
-        - uses: actions/checkout@v4
-        - uses: superfly/flyctl-actions/setup-flyctl@master
-        - name: Deploy to fly.io
-          working-directory: marktbook-backend 
-          run:  flyctl deploy --remote-only -a marktbook-backend
-          env:
-            FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Package application
+        run: zip -r release.zip marktbook-backend
 
-        - name: Health check for deployed service URL
-          uses: jtalk/url-health-check-action@v4
-          with:
-            url: https://marktbook-backend.fly.dev/health
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-app
+          path: release.zip
+
+  deploy:
+    needs: build
+    name: Deploy to fly.io
+    runs-on: ubuntu-latest
+    concurrency: deploy-group
+    if: github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')
+    
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: node-app
+          path: .
+
+      - name: Unzip artifact
+        run: unzip release.zip -d .
+
+      - name: Setup Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy application
+        working-directory: marktbook-backend
+        run: flyctl deploy --app marktbook-backend --config fly.toml
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Health check
+        uses: jtalk/url-health-check-action@v4
+        with:
+          url: https://marktbook-backend.fly.dev/health
 
 
-    tag_release:
-      name: Tag and Release the code
-      needs: deploy
-      runs-on: ubuntu-latest
-      permissions:
-        contents: write
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: '0'
-        - name: Bump version and push tag
-          uses: anothrNick/github-tag-action@1.71.0
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            DEFAULT_BUMP: patch
-            WITH_V : true
+  tag_release:
+    name: Create Release Tag
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+          
+      - name: Auto version tag
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: true
