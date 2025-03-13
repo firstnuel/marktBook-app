@@ -7,7 +7,7 @@
     "build": "tsc -p ./tsconfig.json",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
     "test:ci": "jest --forceExit --detectOpenHandles --maxWorkers=50%",
-    "start": "pm2 start pm2.config.json && pm2 logs --format | ./node_modules/.bin/bunyan",
+    "start": "pm2 start pm2.config.json",
     "stop": "pm2 stop all",
     "restart": "pm2 restart all",
     "delete": "pm2 delete all",
