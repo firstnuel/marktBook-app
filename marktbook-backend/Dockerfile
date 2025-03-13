@@ -21,12 +21,12 @@ RUN apt-get update -qq && \
 
 # Install node modules
 COPY package-lock.json package.json ./
-RUN ls -la
 
 RUN npm ci --include=dev
 
 # Copy application code
 COPY . .
+RUN ls -la
 
 # Build application
 RUN npm run build
