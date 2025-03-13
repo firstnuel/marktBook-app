@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "route": "/assets/*",
+      "route": "/assets/",
       "headers": {
         "cache-control": "must-revalidate, max-age=31536000"
       }
@@ -13,19 +13,25 @@
       }
     },
     {
-      "route": "/*.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)",
+      "route": "/.*[\\d\\w]{8}\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)",
       "headers": {
-        "cache-control": "must-revalidate, max-age=31536000"
+        "cache-control": "public, max-age=31536000, immutable"
       }
     },
     {
-      "route": "/*",
+      "route": "/.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)",
+      "headers": {
+        "cache-control": "no-cache, max-age=0"
+      }
+    },
+    {
+      "route": "/",
       "rewrite": "/index.html"
     }
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/images/*", "/css/*", "/js/*", "/assets/*"]
+    "exclude": ["/images/", "/css/", "/js/", "/assets/*"]
   },
   "mimeTypes": {
     ".json": "application/json",
