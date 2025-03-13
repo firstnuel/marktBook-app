@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection Issue - MarktBook</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-color: #2D71F8;
+            --dark-gray: #898989;
+            --light-gray: #F8F8F8;
+            --white-color: #FFFFFF;
+            --font-family: 'Urbanist', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .offline-container {
+            background: var(--white-color);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .btn-retry {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            font-weight: 600;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-retry:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <h1 id="status-title">Checking Connection...</h1>
+        <p id="status-message">Please wait while we determine the issue.</p>
+        <button class="btn-retry" onclick="window.location.reload()">Retry</button>
+    </div>
+
+    <script>
+        function checkConnection() {
+            if (!navigator.onLine) {
+                document.getElementById("status-title").textContent = "You are Offline";
+                document.getElementById("status-message").textContent = "Check your internet connection and try again.";
+            } else {
+                // Simulate a server check by attempting to fetch a small static file or endpoint
+                fetch('/ping')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Server error');
+                        }
+                        document.getElementById("status-title").textContent = "All Systems Operational";
+                        document.getElementById("status-message").textContent = "You are online, and the server is running.";
+                    })
+                    .catch(() => {
+                        document.getElementById("status-title").textContent = "Server is Down";
+                        document.getElementById("status-message").textContent = "We’re currently experiencing issues. Please try again later.";
+                    });
+            }
+        }
+
+        window.addEventListener('load', checkConnection);
+        window.addEventListener('online', checkConnection);
+        window.addEventListener('offline', checkConnection);
+    </script>
+</body>
+</html>
