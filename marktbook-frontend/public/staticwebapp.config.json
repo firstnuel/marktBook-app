@@ -1,8 +1,36 @@
 {
   "routes": [
     {
+      "route": "/assets/*",
+      "headers": {
+        "cache-control": "must-revalidate, max-age=31536000"
+      }
+    },
+    {
+      "route": "/manifest.json",
+      "headers": {
+        "content-type": "application/json"
+      }
+    },
+    {
+      "route": "/*.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)",
+      "headers": {
+        "cache-control": "must-revalidate, max-age=31536000"
+      }
+    },
+    {
       "route": "/*",
       "rewrite": "/index.html"
     }
-  ]
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/images/*", "/css/*", "/js/*", "/assets/*"]
+  },
+  "mimeTypes": {
+    ".json": "application/json",
+    ".css": "text/css",
+    ".js": "text/javascript",
+    ".html": "text/html"
+  }
 }
