@@ -6,6 +6,8 @@ export default defineConfig({
     devSourcemap: false,
   },
   plugins: [react()],
+  base: '/',
+  publicDir: 'public',
   resolve: {
     alias: {
       '@auth': '/src/features/auth',

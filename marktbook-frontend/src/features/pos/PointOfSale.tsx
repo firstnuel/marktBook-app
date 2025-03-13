@@ -100,7 +100,7 @@ const PointOfSale = () => {
         )}
       </Container>
       <Container className="checkout">
-        <CustomerInfo  salesId={1234567890} />
+        <CustomerInfo />
         <SelectCustomer customers={customers} selectCustomer={setCustomer} />
         <div className="cart-div">
           {cartItems.map(item => (
