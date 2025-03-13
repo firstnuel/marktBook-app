@@ -11,4 +11,3 @@ auth.http
 jest.config.js
 .eslint*
 .github/
-tsconfig.json
