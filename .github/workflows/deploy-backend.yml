@@ -62,7 +62,10 @@ jobs:
           path: .
 
       - name: Unzip artifact
-        run: unzip release.zip -d .
+        run: |
+          unzip release.zip -d .
+          rm -rf node_modules
+          ls -la
 
       - name: Setup Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master

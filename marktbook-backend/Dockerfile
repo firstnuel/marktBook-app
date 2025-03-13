@@ -22,6 +22,7 @@ RUN apt-get update -qq && \
 # Install node modules
 COPY package-lock.json package.json ./
 COPY tsconfig.json ./
+
 RUN npm ci --include=dev
 
 # Copy application code
