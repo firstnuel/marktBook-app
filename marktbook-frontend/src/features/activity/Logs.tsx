@@ -10,6 +10,8 @@ import ContactsLogs from './ContactsLogs'
 import BusinessLogs from './BusinessLogs'
 import './index.scss'
 
+
+
 const Activity = () => {
   const { mainOpt, setMainOpt } = useLogs()
 

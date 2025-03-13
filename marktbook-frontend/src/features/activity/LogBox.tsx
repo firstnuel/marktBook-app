@@ -9,6 +9,7 @@ interface LogBoxProps {
   fe? : boolean
 }
 
+
 const LogBox: React.FC<LogBoxProps> = ({ username, description, dateTime, actionType, fe }) => {
   return (
     <Container className={`log-con ${fe? 'fe': ''}`}>

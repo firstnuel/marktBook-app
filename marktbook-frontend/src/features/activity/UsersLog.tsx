@@ -6,6 +6,8 @@ import { useLogs } from '@hooks/useLogs'
 import { formatDate } from '@utils/helpers'
 
 
+
+
 const UsersLogs = () => {
   const { users, success, error, loading, clearError, fetchLogs } = useLogs()
 
@@ -36,7 +38,6 @@ const UsersLogs = () => {
             />))
           :
           <div className='log-con fe'>No Log found</div>
-
         }
       </Container>
     </Container>

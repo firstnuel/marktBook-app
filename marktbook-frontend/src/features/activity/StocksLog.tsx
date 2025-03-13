@@ -36,7 +36,6 @@ const StocksLog = () => {
             />))
           :
           <div className='log-con fe'>No Log found</div>
-
         }
       </Container>
     </Container>
