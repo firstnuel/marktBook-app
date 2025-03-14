@@ -61,270 +61,213 @@ class SaleService {
   }
 
   // Summary methods with detailed data for charts
-
-  // Get total sales amount with timeline data for charts
-  public async getTotalSales(filter: FilterQuery<FilterData>): Promise<number[]> {
-    // First get the total for the summary
-    const totalResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { status: { $ne: 'REFUNDED' } } },
-      { 
-        $group: {
-          _id: null,
-          totalAmount: { $sum: '$totalPrice' }
-        }
+// Get total sales amount with timeline data for charts
+public async getTotalSales(filter: FilterQuery<FilterData>): Promise<number[]> {
+  // First get the total for the summary
+  const totalResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { status: { $ne: 'REFUNDED' } } },
+    { 
+      $group: {
+        _id: null,
+        totalAmount: { $sum: '$totalPrice' }
       }
-    ]).exec()
-    
-    // Then get the time-series data for charts
-    const timelineResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { status: { $ne: 'REFUNDED' } } },
-      {
-        $group: {
-          _id: { 
-            $dateToString: { 
-              format: '%Y-%m-%d', 
-              date: '$createdAt' 
-            } 
-          },
-          dailyTotal: { $sum: '$totalPrice' }
-        }
-      },
-      { $sort: { _id: 1 } }, // Sort by date
-      {
-        $project: {
-          _id: 0,
-          date: '$_id',
-          amount: '$dailyTotal'
-        }
-      }
-    ]).exec()
-
-    // If we have timeline data, add it to the result
-    if (timelineResult.length > 0) {
-      return [
-        totalResult.length > 0 ? totalResult[0].totalAmount : 0,
-        ...timelineResult.map(item => item.amount)
-      ]
     }
-    
-    // Otherwise just return the total
-    return totalResult.length > 0 ? [totalResult[0].totalAmount] : [0]
-  }
-
-  // Get total product sales with product breakdown
-  public async getTotalProductSales(filter: FilterQuery<FilterData>): Promise<number[]> {
-    // Get the total quantity
-    const totalResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { status: { $ne: 'REFUNDED' } } },
-      { $unwind: '$saleItems' },
-      {
-        $group: {
-          _id: null,
-          totalQuantity: { $sum: '$saleItems.quantity' }
-        }
+  ]).exec();
+  
+  // Then get the time-series data for charts
+  const timelineResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { status: { $ne: 'REFUNDED' } } },
+    {
+      $group: {
+        _id: { 
+          $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } 
+        },
+        dailyTotal: { $sum: '$totalPrice' }
       }
-    ]).exec()
-    
-    // Get product-wise breakdown
-    const productResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { status: { $ne: 'REFUNDED' } } },
-      { $unwind: '$saleItems' },
-      {
-        $group: {
-          _id: '$saleItems.productName',
-          quantity: { $sum: '$saleItems.quantity' },
-          revenue: { $sum: { $multiply: ['$saleItems.unitSalePrice', '$saleItems.quantity'] } }
-        }
-      },
-      { $sort: { quantity: -1 } }, // Sort by quantity, highest first
-      {
-        $project: {
-          _id: 0,
-          product: '$_id',
-          quantity: 1,
-          revenue: 1
-        }
+    },
+    { $sort: { _id: 1 } },
+    {
+      $project: {
+        _id: 0,
+        date: '$_id',
+        amount: '$dailyTotal'
       }
-    ]).exec()
-
-    // Get daily product sales trends
-    const dailyTrendResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { status: { $ne: 'REFUNDED' } } },
-      { $unwind: '$saleItems' },
-      {
-        $group: {
-          _id: { 
-            date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
-          },
-          dailyQuantity: { $sum: '$saleItems.quantity' }
-        }
-      },
-      { $sort: { '_id.date': 1 } },
-      {
-        $project: {
-          _id: 0,
-          date: '$_id.date',
-          quantity: '$dailyQuantity'
-        }
-      }
-    ]).exec()
-
-    // Combine results
-    if (productResult.length > 0 || dailyTrendResult.length > 0) {
-      return [
-        totalResult.length > 0 ? totalResult[0].totalQuantity : 0,
-        ...productResult.map(item => item.quantity),
-        ...dailyTrendResult.map(item => item.quantity)
-      ]
     }
-    
-    return totalResult.length > 0 ? [totalResult[0].totalQuantity] : [0]
-  }
+  ]).exec();
 
-  // Get total customers with daily new customer trend
-  public async getTotalCustomers(filter: FilterQuery<FilterData>): Promise<number[]> {
-    // Get total unique customers
-    const totalResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { customer: { $exists: true } } },
-      {
-        $group: {
-          _id: '$customer'
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          count: { $sum: 1 }
-        }
-      }
-    ]).exec()
-    
-    // Get daily new customers
-    const dailyCustomersResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { customer: { $exists: true } } },
-      {
-        $group: {
-          _id: {
-            customer: '$customer',
-            date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }
-          }
-        }
-      },
-      {
-        $group: {
-          _id: '$_id.date',
-          newCustomers: { $sum: 1 }
-        }
-      },
-      { $sort: { _id: 1 } },
-      {
-        $project: {
-          _id: 0,
-          date: '$_id',
-          count: '$newCustomers'
-        }
-      }
-    ]).exec()
+  // Extract just the daily amounts in the same order as the timeline
+  const dailyAmounts = timelineResult.map(item => item.amount);
 
-    // Get customer frequency data (repeat purchase analysis)
-    const customerFrequencyResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { customer: { $exists: true } } },
-      {
-        $group: {
-          _id: '$customer',
-          purchaseCount: { $sum: 1 },
-          totalSpent: { $sum: '$totalPrice' }
-        }
-      },
-      {
-        $group: {
-          _id: '$purchaseCount',
-          customerCount: { $sum: 1 }
-        }
-      },
-      { $sort: { _id: 1 } },
-      {
-        $project: {
-          _id: 0,
-          purchaseFrequency: '$_id',
-          customerCount: 1
-        }
-      }
-    ]).exec()
+  return totalResult.length > 0 
+    ? [totalResult[0].totalAmount, ...dailyAmounts]
+    : [0];
+}
 
-    // Combine results
-    if (dailyCustomersResult.length > 0 || customerFrequencyResult.length > 0) {
-      return [
-        totalResult.length > 0 ? totalResult[0].count : 0,
-        ...dailyCustomersResult.map(item => item.count),
-        ...customerFrequencyResult.map(item => item.customerCount)
-      ]
+// Get total product sales with product breakdown
+public async getTotalProductSales(filter: FilterQuery<FilterData>): Promise<number[]> {
+  const totalResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { status: { $ne: 'REFUNDED' } } },
+    { $unwind: '$saleItems' },
+    {
+      $group: {
+        _id: null,
+        totalQuantity: { $sum: '$saleItems.quantity' }
+      }
     }
-    
-    return totalResult.length > 0 ? [totalResult[0].count] : [0]
-  }
-
-  // Calculate net profit with daily trend
-  public async getNetProfit(filter: FilterQuery<FilterData>): Promise<number[]> {
-    // Get total net profit
-    const totalResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { status: { $ne: 'REFUNDED' } } },
-      {
-        $group: {
-          _id: null,
-          totalRevenue: { $sum: '$totalPrice' },
-          totalTax: { $sum: '$taxAmount' }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          netProfit: { $subtract: ['$totalRevenue', '$totalTax'] }
-        }
+  ]).exec();
+  
+  const productResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { status: { $ne: 'REFUNDED' } } },
+    { $unwind: '$saleItems' },
+    {
+      $group: {
+        _id: '$saleItems.productName',
+        quantity: { $sum: '$saleItems.quantity' },
+        revenue: { $sum: { $multiply: ['$saleItems.unitSalePrice', '$saleItems.quantity'] } }
       }
-    ]).exec()
-    
-    // Get daily profit trend
-    const dailyProfitResult = await SaleModel.aggregate([
-      { $match: filter },
-      { $match: { status: { $ne: 'REFUNDED' } } },
-      {
-        $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
-          dailyRevenue: { $sum: '$totalPrice' },
-          dailyTax: { $sum: '$taxAmount' }
-        }
-      },
-      { $sort: { _id: 1 } },
-      {
-        $project: {
-          _id: 0,
-          date: '$_id',
-          profit: { $subtract: ['$dailyRevenue', '$dailyTax'] }
-        }
+    },
+    { $sort: { quantity: -1 } },
+    {
+      $project: {
+        _id: 0,
+        product: '$_id',
+        quantity: 1,
+        revenue: 1
       }
-    ]).exec()
-
-    // Combine results
-    if (dailyProfitResult.length > 0) {
-      return [
-        totalResult.length > 0 ? totalResult[0].netProfit : 0,
-        ...dailyProfitResult.map(item => item.profit)
-      ]
     }
-    
-    return totalResult.length > 0 ? [totalResult[0].netProfit] : [0]
-  }
+  ]).exec();
 
+  const dailyTrendResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { status: { $ne: 'REFUNDED' } } },
+    { $unwind: '$saleItems' },
+    {
+      $group: {
+        _id: { 
+          date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+        },
+        dailyQuantity: { $sum: '$saleItems.quantity' }
+      }
+    },
+    { $sort: { '_id.date': 1 } },
+    {
+      $project: {
+        _id: 0,
+        date: '$_id.date',
+        quantity: '$dailyQuantity'
+      }
+    }
+  ]).exec();
+
+  // Extract just the product quantities and daily quantities in order
+  const productQuantities = productResult.map(item => item.quantity);
+  const dailyQuantities = dailyTrendResult.map(item => item.quantity);
+
+  return totalResult.length > 0 
+    ? [totalResult[0].totalQuantity, ...productQuantities, ...dailyQuantities] 
+    : [0];
+}
+
+// Get total customers with daily new customer trend
+public async getTotalCustomers(filter: FilterQuery<FilterData>): Promise<number[]> {
+  const totalResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { customer: { $exists: true } } },
+    {
+      $group: { _id: '$customer' }
+    },
+    {
+      $group: { _id: null, count: { $sum: 1 } }
+    }
+  ]).exec();
+  
+  const dailyCustomersResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { customer: { $exists: true } } },
+    {
+      $group: {
+        _id: {
+          customer: '$customer',
+          date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }
+        }
+      }
+    },
+    {
+      $group: {
+        _id: '$_id.date',
+        newCustomers: { $sum: 1 }
+      }
+    },
+    { $sort: { _id: 1 } },
+    {
+      $project: {
+        _id: 0,
+        date: '$_id',
+        count: '$newCustomers'
+      }
+    }
+  ]).exec();
+
+  // Extract just the daily customer counts in order
+  const dailyCounts = dailyCustomersResult.map(item => item.count);
+
+  return totalResult.length > 0 
+    ? [totalResult[0].count, ...dailyCounts]
+    : [0];
+}
+
+// Calculate net profit with daily trend
+public async getNetProfit(filter: FilterQuery<FilterData>): Promise<number[]> {
+  const totalResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { status: { $ne: 'REFUNDED' } } },
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: '$totalPrice' },
+        totalTax: { $sum: '$taxAmount' }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        netProfit: { $subtract: ['$totalRevenue', '$totalTax'] }
+      }
+    }
+  ]).exec();
+  
+  const dailyProfitResult = await SaleModel.aggregate([
+    { $match: filter },
+    { $match: { status: { $ne: 'REFUNDED' } } },
+    {
+      $group: {
+        _id: { 
+          date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+        },
+        dailyProfit: { $sum: { $subtract: ['$totalPrice', '$taxAmount'] } }
+      }
+    },
+    { $sort: { '_id.date': 1 } },
+    {
+      $project: {
+        _id: 0,
+        date: '$_id.date',
+        profit: '$dailyProfit'
+      }
+    }
+  ]).exec();
+
+  // Extract just the daily profit amounts in order
+  const dailyProfits = dailyProfitResult.map(item => item.profit);
+
+  return totalResult.length > 0 
+    ? [totalResult[0].netProfit, ...dailyProfits]
+    : [0];
+}
   // NEW METHODS FOR HIGHEST SELLING PRODUCTS AND CATEGORIES
 
   // Get highest selling products

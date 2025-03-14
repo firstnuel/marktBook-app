@@ -28,6 +28,8 @@ RUN npm ci --include=dev
 COPY . .
 RUN ls -la
 
+RUN mkdir -p dist/shared/services/emails/templates
+
 # Build application
 RUN npm run build
 

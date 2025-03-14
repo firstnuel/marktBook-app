@@ -2,6 +2,7 @@ import { LogModel } from '@activity/models/logs.schema'
 import { IBusinessDocument, IBusinessAdmin } from '@business/interfaces/business.interface'
 import { BusinessModel } from '@business/models/business.schema'
 import { CustomerModel } from '@contacts/models/customer.schema'
+import { Utils } from '@global/helpers/utils'
 import { LocationModel } from '@inventory/models/locations.schema'
 import { ProductModel } from '@inventory/models/products.schema'
 import { StockModel } from '@inventory/models/stocks.schema'
@@ -25,7 +26,7 @@ class BusinessService {
   }
 
   public async getBusinessByEmail(email: string): Promise<IBusinessDocument | null> {
-    const result = await BusinessModel.findOne({ email }).exec()
+    const result = await BusinessModel.findOne({ email: Utils.lowerCase(email) }).exec()
     return result
   }
 

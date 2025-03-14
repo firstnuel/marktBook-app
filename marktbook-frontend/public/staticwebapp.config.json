@@ -13,13 +13,13 @@
       }
     },
     {
-      "route": "/*.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)",
+      "route": "/*.{js,css,png,jpg,jpeg,gif,ico,svg,woff,woff2,ttf,eot}",
       "headers": {
         "cache-control": "must-revalidate, max-age=31536000"
       }
     },
     {
-      "route": "/*",
+      "route": "/",
       "rewrite": "/index.html"
     }
   ],
