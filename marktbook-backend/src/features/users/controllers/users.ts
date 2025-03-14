@@ -71,7 +71,7 @@ export class Users {
       // Prepare authentication data
       const authData = {
         _id: authObjectId,
-        email,
+        email: Utils.lowerCase(email),
         businessId: existingBusiness._id,
         adminFullName: Utils.firstLetterToUpperCase(name),
         username: Utils.firstLetterToUpperCase(username),

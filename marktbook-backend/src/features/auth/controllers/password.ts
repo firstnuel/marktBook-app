@@ -7,10 +7,10 @@ import { ZodValidationError, BadRequestError } from '@global/helpers/error-handl
 import { IAuthDocument } from '@auth/interfaces/auth.interface'
 import { Utils } from '@global/helpers/utils'
 import crypto from 'crypto'
-import { forgotPasswordTemplate } from '@service/emails/templates/forgot-password/forgot-password-template'
+import { forgotPasswordTemplate } from '@service/emails/forgot-password-template'
 import publicIP from 'ip'
 import moment from 'moment'
-import { IResetPasswordParams, resetPasswordTemplate } from '@service/emails/templates/reset-password/reset-password-template'
+import { IResetPasswordParams, resetPasswordTemplate } from '@service/emails/reset-password-template'
 import { mailTransport } from '@service/emails/mail.transport'
 
 

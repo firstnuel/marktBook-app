@@ -27,6 +27,8 @@ RUN npm ci --include=dev
 # Copy application code
 COPY . .
 
+RUN mkdir -p dist/shared/services/emails/templates
+
 # Build application
 RUN npm run build
 
