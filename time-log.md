@@ -76,7 +76,8 @@
 | **10.03.**  | 2 |  Implemented view sale details page UI |
 | **12.03.**  | 2 | Started the documentation of the project|
 | **13.03.**  | 5 | Implement logs feature, deploy frontend to azure swa |
-| **Total**  | **197** | |
+| **14.03.**  | 2 | Completed project documentationn |
+| **Total**  | **199** | |
 
 
 
