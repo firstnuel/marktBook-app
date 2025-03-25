@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BadRequestError, NotAuthorizedError, NotFoundError, ZodValidationError } from '@global/helpers/error-handlers'
+import { BadRequestError, NotFoundError, ZodValidationError } from '@global/helpers/error-handlers'
 import { Utils } from '@global/helpers/utils'
 import { config } from '@root/config'
 import { Schema } from 'zod'
@@ -431,9 +431,6 @@ export class Stock {
   public async low(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const existingUser = req.user!
-      if (existingUser.role === 'Staff') {
-        return next(new NotAuthorizedError('Not Authorized: User not authorized to fetch low stock data'))
-      }
 
       // fetch low stock data
       const stocks = await stockService.lowStock(existingUser.associatedBusinessesId)

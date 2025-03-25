@@ -54,7 +54,7 @@ export class Product {
       try {
         await productService.createProduct(productData)
       } catch (err) {
-        log.error(`Failed to add jobs to queues: ${(err as Error).message}`)
+        log.error(`Error occured at ${(err as Error).message}`)
         return next(new ServerError('Failed to process product creation. Please try again.'))
       }
 
@@ -82,11 +82,6 @@ export class Product {
       next(error)
     }
   }
-  /**
-       * Protected method to validate input
-       * @param userId string
-       * @returns IuserDocument
-       */
   
   protected validateInput(schema: Schema, data: any): boolean  {
     const parsedDataOrError = Utils.schemaParser(schema, data)
@@ -96,10 +91,7 @@ export class Product {
     }
     return parsedDataOrError
   }
-  /**
-     * Protected method to validate product uniqueness by SKU
-     * @param sku string
-     */
+
   protected generateSku(productName: string): string {
     const timestamp = Date.now().toString(36)
     const randomSegment = Math.random().toString(36).substring(2, 6) // Random 4-character string
@@ -110,12 +102,12 @@ export class Product {
   }
   
   /**
-     * Constructs the product document for a new product.
-     * @param data product data
-     * @param productId ObjectId of the product
-     * @param userId ObjectId of the user
-     * @returns product document conforming to IProductDocument interface
-     */
+   * Constructs the product document for a new product.
+   * @param data product data
+   * @param productId ObjectId of the product
+   * @param userId ObjectId of the user
+   * @returns product document conforming to IProductDocument interface
+   */
   private productData(data: IProductData, productId: ObjectId, userId: ObjectId | string): IProductDocument {
     return {
       _id: productId,
