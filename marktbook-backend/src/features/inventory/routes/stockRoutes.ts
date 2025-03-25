@@ -21,7 +21,6 @@ class StockRoutes {
 
     this.router.get('/stocks/low-stock', 
       authMiddleware.checkAuthentication, 
-      authMiddleware.validateUserRole,
       stock.low)
 
     this.router.patch('/stocks/:productId', 

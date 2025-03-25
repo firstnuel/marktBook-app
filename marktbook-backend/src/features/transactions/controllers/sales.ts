@@ -147,7 +147,7 @@ class Sale extends Product {
 
       //remove sensitive fields
       const salesData = sales
-        .map(sale => omit(sale.toJSON(), ['businessId', 'customerId', 'updatedAt']))
+        .map(sale => omit(sale.toJSON(), ['businessId', 'customerId']))
 
       res.status(HTTP_STATUS.OK).json({ 
         status: sales.length? 'success': undefined,
