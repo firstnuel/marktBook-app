@@ -7,7 +7,7 @@ import { config } from '@root/config'
 import { Utils } from '@global/helpers/utils'
 import { editUserSchema } from '@users/schemes/userValidation'
 import { ADMIN_UPDATE_FIELDS, filterAllowedFields, IuserDocument, USER_UPDATE_FIELDS } from '@users/interfaces/user.interface'
-import { NotAuthorizedError, NotFoundError } from '@global/helpers/error-handlers'
+import { NotFoundError } from '@global/helpers/error-handlers'
 import { singleImageUpload } from '@global/helpers/cloudinary-upload'
 import { createActivityLog, ActionType, EntityType } from '@activity/interfaces/logs.interfaces'
 import { logService } from '@service/db/logs.service'
@@ -32,9 +32,6 @@ class UserManagement extends Users {
     try {
       // Extract Id
       const { id } = req.params
-
-      // Validate the requesting user
-      await this.checkUser(`${req.currentUser?.userId}`)
 
       const fetchedUser = await userService.getUserById(id)
 
@@ -72,12 +69,8 @@ class UserManagement extends Users {
       const body = Utils.sanitizeInput(req.body)
 
       let filteredData: Partial<IuserDocument>
-      
-      const userId = req.currentUser?.userId
-      if (!userId) {
-        throw new NotAuthorizedError('Invalid User: Not authorized for user role')
-      }
-      const user = await this.checkUser(userId)
+  
+      const user = req.user!
 
       if (user.role === 'Manager' || user.role === 'Owner') {
         filteredData = filterAllowedFields(body, ADMIN_UPDATE_FIELDS)
@@ -89,10 +82,7 @@ class UserManagement extends Users {
       const { id } = req.params
   
       // Check if user exists
-      const existingUser = await this.checkUser(id)
-      if (!existingUser) {
-        throw new NotFoundError('User not found')
-      } 
+      const existingUser = req.user! 
 
       // Upload profille picture if provided
       if (filteredData.profilePicture){ 
@@ -139,7 +129,7 @@ class UserManagement extends Users {
       // Extract ID
       const { id } = req.params
 
-      const admin = await this.checkUser(`${req.currentUser?.userId}`)
+      const admin = req.user!
 
       // Check if user exists
       const existingUser = await userService.getUserById(id)

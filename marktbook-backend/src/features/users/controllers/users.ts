@@ -9,7 +9,6 @@ import { IAuthDocument } from '@auth/interfaces/auth.interface'
 import { userSchema } from '../schemes/userValidation'
 import { Utils } from '@global/helpers/utils'
 import { userService } from '@service/db/user.service'
-import { userCache } from '@service/redis/user.cache'
 import { IBusinessAdmin, IBusinessDocument } from '@business/interfaces/business.interface'
 import { businessService } from '@service/db/business.service'
 import { config } from '@root/config'
@@ -25,7 +24,6 @@ const log  = config.createLogger('userController')
 export class Users {
   constructor(){
     this.userData = this.userData.bind(this)
-    this.checkUser = this.checkUser.bind(this)
     this.create = this.create.bind(this)
     this.read = this.read.bind(this)
 
@@ -46,7 +44,7 @@ export class Users {
       this.validateInput(userSchema, req.body)
 
       // validate user
-      const existingUser = await this.checkUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
 
       // sanitize input
       const body = Utils.sanitizeInput(req.body) as IuserData
@@ -148,12 +146,12 @@ export class Users {
      * @returns IuserDocument
      */
 
-  protected async checkUser(userId: string): Promise<IuserDocument> {
-    const cachedUser = await userCache.getUserfromCache(userId) as IuserDocument
-    const existingUser = cachedUser? cachedUser  : await userService.getUserById(userId) as IuserDocument
+  // protected async checkUser(userId: string): Promise<IuserDocument> {
+  //   const cachedUser = await userCache.getUserfromCache(userId) as IuserDocument
+  //   const existingUser = cachedUser? cachedUser  : await userService.getUserById(userId) as IuserDocument
 
-    return existingUser
-  }
+  //   return existingUser
+  // }
 
   /**
      * Protected method to validate business and user authorization for it.
@@ -234,7 +232,7 @@ export class Users {
 
     try{
       // validate user
-      const existingUser = await this.checkUser(`${req.currentUser?.userId}`)
+      const existingUser = req.user!
   
       let users = await userService.getAllUsers(existingUser.associatedBusinessesId)
       users = users?.filter(user => user._id.toString() !== existingUser._id.toString())
