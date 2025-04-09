@@ -2,27 +2,27 @@
 
 ## Table of Contents
 
-1. Introduction  
-2. Features Overview  
-3. System Requirements  
-4. Technology Used  
-5. User Roles & Permissions  
-6. Access & Registration  
-7. User Guide  
-   - Dashboard  
-   - Point of Sale  
-   - Inventory Management  
-   - Transactions  
-   - Stock Control  
-   - Contacts Management  
-   - Settings  
-   - Logging  
-8. State Management  
-9. Security Measures  
-10. Tutorials and AI Usage  
-11. API Documentation  
-12. Deployment  
-13. Future Enhancements  
+1. [Introduction](#1-introduction)  
+2. [Features Overview](#2-features-overview)  
+3. [System Requirements](#3-system-requirements)  
+4. [Technology Used](#4-technology-used)  
+5. [User Roles & Permissions](#5-user-roles--permissions)  
+6. [Access & Registration](#6-access--registration)  
+7. [User Guide](#7-user-guide)  
+   - [Dashboard](#dashboard)  
+   - [Point of Sale](#point-of-sale)  
+   - [Inventory Management](#inventory-management)  
+   - [Transactions](#transactions)  
+   - [Stock Control](#stock-control)  
+   - [Contacts Management](#contacts-management)  
+   - [Settings](#settings)  
+   - [Logging](#logs)  
+8. [State Management](#8-state-management)  
+9. [Security Measures](#9-security-measures)  
+10. [Tutorials and AI Usage](#10-tutorials-and-ai-usage)  
+11. [API Documentation](#11-api-documentation)  
+12. [Deployment](#12-deployment)  
+13. [Future Enhancements](#13-future-enhancements)  
 
 ---
 
